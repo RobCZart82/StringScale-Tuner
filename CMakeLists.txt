@@ -24,6 +24,15 @@ endif()
 option(STRINGS_BUILD_GUI "Build the Qt 6 desktop application" ON)
 if(STRINGS_BUILD_GUI)
     find_package(Qt6 6.5 REQUIRED COMPONENTS Core Gui Widgets Multimedia)
+    # Qt 6.8 adds legacy AGL even on 64-bit macOS. New Apple SDKs no
+    # longer ship it; this QWidget application does not use Carbon OpenGL.
+    if(APPLE AND TARGET WrapOpenGL::WrapOpenGL)
+        get_target_property(opengl_links WrapOpenGL::WrapOpenGL INTERFACE_LINK_LIBRARIES)
+        if(opengl_links)
+            list(FILTER opengl_links EXCLUDE REGEX "AGL")
+            set_property(TARGET WrapOpenGL::WrapOpenGL PROPERTY INTERFACE_LINK_LIBRARIES "${opengl_links}")
+        endif()
+    endif()
     qt_standard_project_setup()
     qt_add_executable(StringScaleTuner
         MACOSX_BUNDLE
