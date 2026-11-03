@@ -77,7 +77,8 @@ void MainWindow::buildInterface() {
     const auto stored=QSettings().value("tuning/profile","guitar-e").toString();
     int index=profileChoice_->findData(stored);profileChoice_->setCurrentIndex(index>=0?index:0);
     selected_=&strings::presets()[profileChoice_->currentIndex()];
-    inputChoice_=new QComboBox;inputChoice_->setAccessibleName("Hangbemenet");inputChoice_->setMinimumWidth(190);
+    inputChoice_=new QComboBox;
+    if(preview_)inputChoice_->addItem("Tesztbemenet");inputChoice_->setAccessibleName("Hangbemenet");inputChoice_->setMinimumWidth(190);
     controls->addWidget(profileChoice_,3);controls->addWidget(inputChoice_,2);layout->addLayout(controls);
     levelMeter_=new InputLevelMeter;levelMeter_->setLimits(minimumLevelDb_,warningPeakDb_);
     gauge_=new AnalogGauge;pitchScale_=new PitchScale;pitchScale_->setPreset(selected_,calibration_);
@@ -156,14 +157,14 @@ void MainWindow::handlePitch(double hz,double confidence) {
     if(!std::isfinite(hz)||hz<=0||!selected_){gauge_->setCents(0,false);gauge_->setReadout("—","","Pengess meg egy húrt");return;}
     auto* target=strings::closestString(*selected_,hz,calibration_);if(!target)return;
     const double cents=strings::centsBetween(hz,target->hz*calibration_/440);
-    QString state=std::abs(cents)<=2?"✓ Jól szól!":cents<0?"Túl mély – hangolj feljebb":"Túl magas – hangolj lejjebb";
-    if(std::abs(cents)>50)state+=" · több mint 50 cent";
+    QString state=std::abs(cents)<=2?"Jól szól!":cents<0?"Túl mély – hangolj feljebb":"Túl magas – hangolj lejjebb";
+    if(std::abs(cents)>50)state=(cents<0?QString("Túl mély"):QString("Túl magas"))+"\nEltérés: több mint 50 cent";
     gauge_->setCents(cents,true);
     gauge_->setReadout(QString::fromStdString(strings::measuredNote(hz,calibration_)),
         QString("Cél: %1. húr · %2").arg(target->number).arg(QString::fromStdString(target->note)),state);
 }
 void MainWindow::handleLevel(double rmsDb,double peakDb,bool clipped){levelMeter_->setLevel(rmsDb,peakDb,clipped);}
-void MainWindow::renderPreview(bool dark,double hz){applyTheme(dark);handlePitch(hz,1);handleLevel(-22,-12,false);}
+void MainWindow::renderPreview(bool dark,double hz){applyTheme(dark);handlePitch(hz,1);handleLevel(hz>0?-22:-120,hz>0?-12:-120,false);statusLabel_->setText("Tesztelőnézet – nincs élő hangbemenet");}
 void MainWindow::showSettings() {
     QDialog dialog(this);dialog.setWindowTitle("Beállítások");auto* layout=new QVBoxLayout(&dialog);auto* form=new QFormLayout;
     auto* theme=new QComboBox;theme->addItems({"Világos","Sötét"});theme->setCurrentIndex(dark_?1:0);

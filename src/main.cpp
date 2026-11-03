@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
         if (id < 0) return 5;
         font.setFamily(QFontDatabase::applicationFontFamilies(id).first());
     }
-    font.setPointSize(10);
+    font.setPointSize(13);
     app.setFont(font);
     MainWindow window(nullptr, preview);
     window.show();

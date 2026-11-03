@@ -4,8 +4,8 @@
 
 Status: **source-code prototype**. The self-written DSP module has been tested
 on synthetic tones, including low E1 / B0 bass notes, multiple harmonics,
-silence and noise. **Desktop GUI and real-world capture have not yet been
-compiled or hardware-tested in this release environment.** This is not a
+silence and noise. **Desktop GUI builds and synthetic GUI previews are checked in CI;
+real-world capture and hardware behavior still require manual testing.** This is not a
 finished or accuracy-certified tuner and there are no prebuilt installers yet.
 
 ## Concept / Koncepció

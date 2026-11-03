@@ -59,7 +59,7 @@ void AnalogGauge::paintEvent(QPaintEvent*) {
     }
     text(p,{240,285,320,60},note_,ink(this),58,true);
     text(p,{220,347,360,28},target_,ink(this),23,true);
-    text(p,{150,388,500,36},status_,ink(this),25,true);
+    text(p,{60,378,680,60},status_,ink(this),24,true);
     text(p,{35,300,160,35},"Túl mély",ink(this),21);
     text(p,{605,300,160,35},"Túl magas",ink(this),21);
 }
