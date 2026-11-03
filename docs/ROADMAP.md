@@ -12,7 +12,9 @@
 - [ ] M2: Improve latency: DSP thread, adaptive analysis window, resampler.
 - [ ] M2: Add user-selectable input channel for multichannel DI interfaces.
 - [ ] M2: Add optional manual target-string selection and clearer clip hold.
-- [ ] M3: Polish multi-resolution retina layouts, accessibility and localization.
+- [ ] M3: Polish multi-resolution retina layouts and accessibility.
+- [ ] M3: Add instant, persistent Magyar / English language selection in Settings
+      alongside the light/dark theme selector; see the detailed requirements below.
 - [ ] M3: GUI integration tests and platform build jobs.
 - [ ] M4: Signed/notarized macOS .app/.pkg and Windows installer, open-source
       license notices and reproducible release workflow.
@@ -122,3 +124,39 @@ rendelkezésre állnak, az ablak megvalósítása külön feladat.
 - [ ] Magyar és angol Névjegy-feliratok ellenőrzése.
 
 Forrásfájlok és használati megjegyzések: [branding README](../resources/branding/README.md).
+
+## Magyar–angol nyelvváltás – elfogadott terv (2026-11-03)
+
+Állapot: jóváhagyott követelmény, megvalósításra vár. A standalone GUI következő
+fejlesztési lépései közé tartozik; a későbbi VST3 felületre is érvényes.
+
+- A fogaskerékből megnyitható Beállítások / Settings ablakban a megjelenés
+  választója mellett, azzal azonos jellegű legördülő legyen a nyelvválasztó.
+- A mező felirata „Nyelv / Language”, a két lehetőség mindig „Magyar” és
+  „English”, a pillanatnyi felületnyelvtől függetlenül.
+- A váltás azonnal frissítse a főablak és a már nyitott beállításablak
+  feliratait; ne igényeljen újraindítást.
+- A választás mentődjön, és a következő indításkor is érvényesüljön.
+- A nyelv és a világos/sötét téma egymástól független beállítás.
+- A hangnevek oktávszámmal (E2, A2, D3 stb.), a húrszámok és a mért értékek
+  jelentése nem változik. Hz-érték egyik nyelven sem jelenhet meg.
+- A fordítás terjedjen ki a hangszer/hangolás választók saját felirataira,
+  állapotokra, hangolási útmutatásokra, beállításokra, saját hibaüzenetekre,
+  eszköztippekre és akadálymentes elnevezésekre. A rendszer által adott
+  eszközneveket meg kell őrizni.
+- A fordítás ne változtassa meg a mérés menetét, az aktív hangbemenetet
+  vagy a kiválasztott hangolást. Az olvashatóság mindkét nyelven maradjon
+  nagy betűs, kontrasztos és egyszerű.
+
+### Ellenőrzési feltételek
+
+- [ ] Magyar → English → Magyar váltás újraindítás nélkül, a nyitott
+      beállításablakban is.
+- [ ] A mentett nyelv visszaállítása az alkalmazás újraindításakor.
+- [ ] Mindkét nyelv ellenőrzése világos és sötét témában.
+- [ ] A hosszabb feliratok, az ékezetek és a figyelmeztetések nem vágódnak le.
+- [ ] A hangnevek, oktávok, húrszámok és a mérési viselkedés változatlansága.
+- [ ] Hiányzó fordítások és kevert nyelvű saját feliratok ellenőrzése.
+
+Az első indítás nyelvének meghatározása (rendszernyelv vagy rögzített alapérték)
+még külön eldöntendő; ezt a jelenlegi követelmény nem rögzíti.
