@@ -18,6 +18,7 @@ struct TuningPreset {
 };
 
 const std::vector<TuningPreset>& presets();
+std::string measuredNote(double hz, double a4Calibration = 440.0);
 double centsBetween(double hz, double referenceHz);
 const StringTarget* closestString(const TuningPreset& preset,
                                   double hz, double a4Calibration = 440.0);

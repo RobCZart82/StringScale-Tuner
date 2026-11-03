@@ -9,9 +9,11 @@ class AnalogGauge : public QWidget {
 public:
     explicit AnalogGauge(QWidget* parent = nullptr);
     void setCents(double cents, bool audibleTarget);
+    void setReadout(const QString& note, const QString& target, const QString& status);
 protected:
     void paintEvent(QPaintEvent*) override;
 private:
+    QString note_ = "—", target_, status_ = "Pengess meg egy húrt";
     double cents_ = 0.0;
     bool valid_ = false;
 };

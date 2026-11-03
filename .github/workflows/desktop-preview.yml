@@ -41,6 +41,12 @@ jobs:
         run: cmake --build build --config Release --parallel
       - name: Test pitch engine
         run: ctest --test-dir build -C Release --output-on-failure
+      - name: Upload rendered GUI previews
+        uses: actions/upload-artifact@v4
+        with:
+          name: GUI-${{ matrix.platform }}-${{ github.run_number }}
+          path: build/gui-previews/*.png
+          if-no-files-found: error
       - name: Install application and runtime dependencies
         run: cmake --install build --config Release --prefix "${{ github.workspace }}/stage"
       - name: Check macOS architecture and microphone description

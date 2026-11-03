@@ -58,6 +58,11 @@ int main() {
     expect(!detector.estimate(randomNoise, 12000).valid,
            "Broadband noise must not generate a confident pitch");
 
+    expect(strings::measuredNote(82.406889) == "E2", "Measured low E must include octave 2");
+    expect(strings::measuredNote(164.813778) == "E3", "Measured E3 must not be relabeled as target D3");
+    expect(strings::measuredNote(329.627557) == "E4", "Measured high E must include octave 4");
+    expect(strings::measuredNote(0) == "—", "Silence has no note name");
+    expect(strings::measuredNote(110.0 * 442.0 / 440.0, 442.0) == "A2", "Note naming must respect calibration");
     const auto& guitar = strings::presets().front();
     expect(strings::closestString(guitar, 110.0)->number == 5,
            "110 Hz must match 5th guitar string");

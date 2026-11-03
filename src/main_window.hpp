@@ -14,9 +14,11 @@ class QPushButton;
 class MainWindow : public QMainWindow {
     Q_OBJECT
 public:
-    explicit MainWindow(QWidget* parent = nullptr);
+    explicit MainWindow(QWidget* parent = nullptr, bool preview = false);
 
+    void renderPreview(bool dark, double hz);
 private:
+    void applyTheme(bool dark);
     void buildInterface();
     void refreshInputDevices();
     void selectInput();
@@ -29,9 +31,10 @@ private:
     QMediaDevices mediaDevices_;
     QComboBox* profileChoice_ = nullptr;
     QComboBox* inputChoice_ = nullptr;
-    QDoubleSpinBox* calibrationSpin_ = nullptr;
-    QLabel* frequencyLabel_ = nullptr;
-    QLabel* targetLabel_ = nullptr;
+    double calibration_ = 440.0;
+    bool dark_ = false;
+    bool preview_ = false;
+
     QLabel* statusLabel_ = nullptr;
     AnalogGauge* gauge_ = nullptr;
     PitchScale* pitchScale_ = nullptr;

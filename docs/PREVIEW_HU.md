@@ -27,9 +27,10 @@ megbízható forrásból letöltött alkalmazás megnyitása.
 - macOS arm64 architektúra és mikrofonhasználati leírás jelenléte.
 - Windows fő futtatható fájl és alapvető Qt DLL/plugin fájlok jelenléte.
 
-Ez nem automatizált GUI-indítás vagy valódi gitárjeles teszt. Az elfogadott
-új GUI és témaváltás még külön fejlesztési lépés; ez a csomag a jelenlegi
-prototípust teszi kipróbálhatóvá.
+A CI most mikrofonnyitás nélküli GUI-indítást is végez, és világos/sötét PNG
+előnézeteket készít (GUI-* artifactok). A felület az elfogadott három műszeres
+elrendezést és témaváltást használja, Hz-értékek nélkül. Ez még nem valódi
+gitárjeles teszt; a témaváltást, mentést és a bemenetet kézzel is ellenőrizni kell.
 
 ## Kézi próba
 
