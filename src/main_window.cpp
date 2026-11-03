@@ -29,13 +29,15 @@ MainWindow::MainWindow(QWidget* parent, bool preview)
     capture_.setWarningPeakDb(warningPeakDb_);
     buildInterface();
     applyTheme(settings.value("appearance/dark", false).toBool());
+    if (!preview_) {
     connect(&capture_, &AudioCapture::pitchReady, this, &MainWindow::handlePitch);
     connect(&capture_, &AudioCapture::levelReady, this, &MainWindow::handleLevel);
     connect(&capture_, &AudioCapture::errorOccurred, this, [this](const QString& message) {
         handlePitch(0,0); statusLabel_->setText(message);
     });
     connect(&mediaDevices_, &QMediaDevices::audioInputsChanged, this, &MainWindow::refreshInputDevices);
-    if (!preview_) refreshInputDevices();
+    refreshInputDevices();
+    }
 }
 
 void MainWindow::applyTheme(bool dark) {

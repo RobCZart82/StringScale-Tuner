@@ -1,3 +1,4 @@
+#include <utility>
 #include "tuner_widgets.hpp"
 #include <QPainter>
 #include <QPainterPath>

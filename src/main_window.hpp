@@ -16,7 +16,6 @@ class MainWindow : public QMainWindow {
 public:
     explicit MainWindow(QWidget* parent = nullptr, bool preview = false);
 
-public:
     void renderPreview(bool dark, double hz);
 private:
     void applyTheme(bool dark);
