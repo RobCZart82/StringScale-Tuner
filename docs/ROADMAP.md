@@ -88,3 +88,37 @@ külön ellenőrizni kell a csomagok terjesztése előtt.
 Források:
 - [VST3 SDK és platformok](https://steinbergmedia.github.io/vst3_dev_portal/pages/What%2Bis%2Bthe%2BVST%2B3%2BSDK/Index.html)
 - [VST3 licencelés](https://steinbergmedia.github.io/vst3_dev_portal/pages/VST%2B3%2BLicensing/Index.html)
+
+
+## Névjegy / About ablak – elfogadott arculati irány (2026-11-03)
+
+Állapot: tervezett funkció; az SVG-források a resources/branding mappában
+rendelkezésre állnak, az ablak megvalósítása külön feladat.
+
+- A jobb felső fogaskerék lenyíló menüt nyisson. A Beállítások / Settings és
+  Hang / Audio elemek alatt legyen elérhető a Névjegy / About.
+  Ez a jelenlegi, közvetlenül beállításablakot nyitó működés tervezett bővítése.
+- A Névjegy használja Robert GYR-logóját és a polgári nevéhez tartozó szignót.
+  A megadott logó SVG-címe: „GYR — Gyuricza Róbert”.
+- Az eredeti vektorgrafikák maradjanak meg SVG-ként; a megjelenítés méretarányosan,
+  az eredeti viewBox figyelembevételével történjen. Ne legyen nyújtás vagy
+  előzetesen kis felbontású raszterképpé alakítás.
+- Világos témában GYR-black.svg, sötét témában GYR-light.svg használható.
+- Az Alairas-Vektor.svg sötét színű szignó. Sötét témában is kontrasztosan kell
+  megjeleníteni, például világos hátterű panelen, az eredeti forrás megőrzésével.
+- A logó és a szignó külön grafikai elem; a Névjegy elrendezésében mindkettő
+  kapjon arányos méretet és elegendő helyet.
+- A Névjegy szöveges feliratai kövessék a tervezett Magyar / English
+  nyelvválasztást; a személynév és a grafikai elemek nem fordítandók.
+
+### Megvalósítás és ellenőrzés
+
+- [ ] Fogaskerék-menü és Névjegy / About menüpont.
+- [ ] SVG-k csomagolása az alkalmazás erőforrásai közé, a felhasználó gépén
+      külső SVG-fájlok vagy hálózati letöltés nélkül.
+- [ ] Méretarányos, éles megjelenítés kis és nagy ablakban, nagy DPI mellett is.
+- [ ] Kontraszt és vágás ellenőrzése mindkét témában.
+- [ ] A logó és a szignó mellett szöveges, akadálymentesen olvasható szerzőnév.
+- [ ] Magyar és angol Névjegy-feliratok ellenőrzése.
+
+Forrásfájlok és használati megjegyzések: [branding README](../resources/branding/README.md).
