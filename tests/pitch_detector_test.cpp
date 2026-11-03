@@ -35,7 +35,7 @@ void expect(bool ok, const char* msg) {
 int main() {
     strings::PitchDetector detector;
     for (const double hz : {30.867706, 41.203445, 73.416192, 82.406889,
-                            110.0, 146.832384, 196.0, 329.627557}) {
+                            110.0, 146.832384, 164.813778, 196.0, 246.941651, 329.627557}) {
         for (const bool harmonics : {false, true}) {
             const auto result = detector.estimate(signal(hz, 12000, harmonics),
                                                   12000, 25.0, 700.0);

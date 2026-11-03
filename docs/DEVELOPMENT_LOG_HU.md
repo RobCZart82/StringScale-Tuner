@@ -95,3 +95,13 @@ Az E2 és E4 külön céljelölés, az oktávszám nem hagyható el. Ha a méré
 A 2026-11-03-án ellenőrzött main commit: `c22e4a17aeb50b0cfa9a14fa0623f75f2dde8b10`. A v0.1.0 ZIP mind a 23 fájlja azonos a repóval. Az akkori Actions csak a motor tesztjeit fordítja és futtatja (`STRINGS_BUILD_GUI=OFF`), teljes grafikus buildet és letölthető csomagot nem készít. A motor tesztjei Windows, macOS és Linux alatt sikeresek voltak; a helyi CMake/CTest ellenőrzés szintén sikeres (1/1). Ez nem igazolja a GUI és a valódi hangbemenet működését.
 
 Kapcsolódó dokumentumok: [architektúra](ARCHITECTURE.md), [ütemterv](ROADMAP.md), [buildleírás](BUILD_HU.md), [korábbi teszteredmények](TEST_RESULTS.md).
+
+
+## 2026-11-03 – Teljes asztali build és próbacsomag előkészítése
+
+- A főág védelme aktív: PR, három kötelező motoros teszt, lezárt review-beszélgetések, törlés és force push tiltása; nincs bypass.
+- Új Desktop preview workflow: Windows x64 és macOS arm64 teljes Qt build, motoros tesztek, függőségek telepítése és letölthető ZIP artifactok.
+- CMake telepítéskor a Qt deployment script gyűjti a futásidejű függőségeket.
+- A szintetikus hangteszt B3 és E3 esetekkel bővült, felharmonikusokkal is.
+- Magyar próbaverzió-letöltési és kézi tesztleírás: PREVIEW_HU.md.
+- Az új grafikai felület, a Hz-feliratok eltávolítása és a témaváltás továbbra is megvalósítandó. Ez a lépés a jelenlegi GUI fordíthatóságát és csomagolását ellenőrzi.
