@@ -42,7 +42,7 @@ jobs:
       - name: Test pitch engine
         run: ctest --test-dir build -C Release --output-on-failure
       - name: Install application and runtime dependencies
-        run: cmake --install build --config Release --prefix stage
+        run: cmake --install build --config Release --prefix "${{ github.workspace }}/stage"
       - name: Check macOS architecture and microphone description
         if: runner.os == 'macOS'
         run: |
