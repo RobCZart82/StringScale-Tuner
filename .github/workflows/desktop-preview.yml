@@ -53,7 +53,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          @('stage/bin/StringScaleTuner.exe', 'stage/bin/Qt6Core.dll', 'stage/bin/Qt6Multimedia.dll', 'stage/bin/platforms/qwindows.dll') | ForEach-Object {
+          @('stage/bin/StringScaleTuner.exe', 'stage/bin/Qt6Core.dll', 'stage/bin/msvcp140.dll', 'stage/bin/vcruntime140.dll', 'stage/bin/Qt6Multimedia.dll', 'stage/plugins/platforms/qwindows.dll') | ForEach-Object {
             if (!(Test-Path $_)) { throw "Missing runtime file: $_" }
           }
       - name: Add testing guide
