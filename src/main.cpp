@@ -4,6 +4,7 @@
 #include <QApplication>
 #include <QCoreApplication>
 #include <QFont>
+#include <QFontDatabase>
 #include <QDir>
 #include <QPixmap>
 
@@ -13,11 +14,23 @@ int main(int argc, char* argv[]) {
     QCoreApplication::setOrganizationName("RobCZart");
     QCoreApplication::setApplicationVersion("0.1.0");
     app.setStyle("Fusion");
-    QFont font = app.font();
-    font.setPointSize(10);
-    app.setFont(font);
     const int previewArg = app.arguments().indexOf("--render-preview");
     const bool preview = previewArg >= 0;
+    QFont font = app.font();
+    if (preview) {
+#ifdef Q_OS_WIN
+        const QString fontPath = qEnvironmentVariable("WINDIR") + "/Fonts/segoeui.ttf";
+#elif defined(Q_OS_MACOS)
+        const QString fontPath = "/System/Library/Fonts/Supplemental/Arial.ttf";
+#else
+        const QString fontPath = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf";
+#endif
+        const int id = QFontDatabase::addApplicationFont(fontPath);
+        if (id < 0) return 5;
+        font.setFamily(QFontDatabase::applicationFontFamilies(id).first());
+    }
+    font.setPointSize(10);
+    app.setFont(font);
     MainWindow window(nullptr, preview);
     window.show();
     if (preview) {
