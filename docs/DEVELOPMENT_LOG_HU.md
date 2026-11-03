@@ -1,5 +1,16 @@
 # Fejlesztési és javítási napló
 
+## 2026-11-03 – VST3 bővítés felvétele a tervekbe
+
+Robert elfogadta a standalone elsődlegessége mellett a közös motorra épülő,
+másodlagos VST3-változat tervét. Első plugin cél: Windows x64 és macOS
+Universal (Intel + Apple Silicon); később Windows ARM és kísérleti Linux x64.
+A stabil standalone és az elfogadott új GUI megelőzi a plugin kiadását.
+A közös motor valós idejű átalakítása, a plugin bemenete, továbbengedés/némítás,
+GUI és hostkompatibilitási tesztek részletesen az [ütemtervben](ROADMAP.md#standalone-first-és-vst3-bővítés--elfogadott-irány-2026-11-03) szerepelnek.
+Ez dokumentált fejlesztési irány; plugin még nem készült. Keretrendszerváltást
+nem határoztunk el, a kiválasztott SDK és függőségek licence külön ellenőrizendő.
+
 ## 2026-11-03 – Elfogadott GUI-koncepció
 
 Állapot: Robert által elfogadott grafikai és működési irány, megvalósításra vár. Ez a bejegyzés követelményeket rögzít; nem jelenti a funkciók elkészültét.
