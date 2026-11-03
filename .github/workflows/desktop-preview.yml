@@ -46,7 +46,7 @@ jobs:
       - name: Check macOS architecture and microphone description
         if: runner.os == 'macOS'
         run: |
-          lipo -verify_arch arm64 stage/StringScaleTuner.app/Contents/MacOS/StringScaleTuner
+          lipo stage/StringScaleTuner.app/Contents/MacOS/StringScaleTuner -verify_arch arm64
           /usr/libexec/PlistBuddy -c 'Print :NSMicrophoneUsageDescription' stage/StringScaleTuner.app/Contents/Info.plist
           test -d stage/StringScaleTuner.app/Contents/Frameworks
       - name: Check Windows package
