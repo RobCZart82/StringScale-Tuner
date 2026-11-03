@@ -1,5 +1,21 @@
 # Fejlesztési és javítási napló
 
+## 2026-11-03 – Arculati SVG-k és a Névjegy / About terve
+
+Robert átadta a GYR-logó sötét és világos változatát, valamint a polgári
+nevéhez tartozó vektoros szignót. Az eredeti SVG-k a resources/branding
+mappába kerültek. XML-szerkezetük ellenőrizve: nincs bennük beágyazott
+raszterkép, script vagy külső hivatkozás.
+
+A tervezett jobb felső fogaskerék-menüben a Beállítások / Settings és
+Hang / Audio alatt lesz a Névjegy / About. Az ablakban mindkét arculati elem
+felhasználható, az eredeti képarány megőrzésével és témához illő kontraszttal.
+A feliratok a tervezett magyar–angol nyelvválasztást követik.
+Részletek: [ütemterv](ROADMAP.md) és [arculati fájlok](../resources/branding/README.md).
+
+Állapot: forrásfájlok archiválva és követelmények rögzítve; a menü és a
+Névjegy ablak megvalósítása még hátravan.
+
 ## 2026-11-03 – Magyar és angol felület felvétele a tervekbe
 
 Robert jóváhagyta a magyar–angol nyelvváltás tervét. A fogaskerékből megnyitott
