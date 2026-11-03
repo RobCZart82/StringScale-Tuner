@@ -1,0 +1,7 @@
+/build*/
+/.cache/
+*.user
+*.user.*
+*.DS_Store
+.vs/
+.idea/
