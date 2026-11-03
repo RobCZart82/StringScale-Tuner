@@ -10,10 +10,10 @@ finished or accuracy-certified tuner and there are no prebuilt installers yet.
 
 ## Concept / Koncepció
 
-- **Middle:** classic semicircular analog needle for **−50 to +50 cents**, only
-  active when a detected pitch is close enough to a selected tuning reference.
+- **Middle:** classic semicircular analog needle for **−50 to +50 cents**, with
+  a clamped needle and text warning for deviations beyond the visible range.
 - **Bottom:** horizontal *logarithmic* pitch map, rising from left (low) to
-  right (high); **string numbers above**, **note + octave below**; **one red
+  right (high); **string numbers above**, **note + octave below**; **one theme-colored
   circular indicator precisely on the scale line** driven by detected pitch.
 - **Top:** RMS level with minimum gate, peak warning and digital clipping.
 - **Tuning selection:** six-string E standard, Drop D, Eb, Open G, DADGAD,

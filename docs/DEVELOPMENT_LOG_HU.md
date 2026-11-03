@@ -132,3 +132,9 @@ Kapcsolódó dokumentumok: [architektúra](ARCHITECTURE.md), [ütemterv](ROADMAP
 - GUI renderellenőrzés mikrofonnyitás nélkül: világos/sötét, hangolt A2,
   E3 oktávpélda és csend. A CI PNG-ket ment külön artifactba.
 - A valódi gitárjeles és kézi akadálymentességi ellenőrzés továbbra is szükséges.
+
+- Ellenőrzés: Windows x64 teljes CI build, CTest 2/2 és próbacsomag sikeres;
+  a generált világos/sötét képek vizuálisan ellenőrizve, a levágott státuszszöveg javítva.
+- Helyi macOS Apple Silicon: Qt 6.8.3 teljes fordítás, CTest 2/2 és függőségcsomagolás sikeres.
+  Az új Apple SDK-ból hiányzó régi AGL linkfüggőség elhagyva a Qt importált
+  OpenGL céljáról. A GitHub macOS futtatógépének elérhetősége ettől független.
