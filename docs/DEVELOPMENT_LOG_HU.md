@@ -1,5 +1,18 @@
 # Fejlesztési és javítási napló
 
+## 2026-11-03 – Magyar és angol felület felvétele a tervekbe
+
+Robert jóváhagyta a magyar–angol nyelvváltás tervét. A fogaskerékből megnyitott
+beállításablakban a témaválasztóhoz hasonló legördülő kerül: „Nyelv / Language”,
+„Magyar” és „English” lehetőségekkel. A váltás azonnal, újraindítás nélkül
+frissítse a főablakot és a nyitott beállításablakot, a választás pedig mentődjön.
+A nyelv független a világos/sötét témától; az oktávos hangnevek, húrszámok és
+a mérés nem változnak, Hz-érték egyik nyelven sem jelenhet meg.
+Az ütemterv részletes követelményeket és ellenőrzőlistát tartalmaz mindkét
+nyelvhez és témához: [ROADMAP.md](ROADMAP.md).
+Állapot: fejlesztési terv, a nyelvváltás ebben a dokumentációs változtatásban
+még nem valósult meg.
+
 ## 2026-11-03 – VST3 bővítés felvétele a tervekbe
 
 Robert elfogadta a standalone elsődlegessége mellett a közös motorra épülő,
