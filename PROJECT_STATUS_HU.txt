@@ -1,0 +1,34 @@
+StringScale Tuner v0.1.0 - fejlesztoi allapot (2026-11-03)
+======================================================
+
+Teljesen uj, sajat forraskod. Az eredeti AP Tuner kodjat NEM hasznaljuk.
+
+Mar elkeszult a forraskodban:
+- YIN-csaladu hangmagassag-felismero motor, sajat C++20 implementacio
+- Github Actions Core DSP teszt workflow (Win/macOS/Linux)
+- Felső analog +/-50 cent mutato (Qt GUI)
+- Vizszintes logaritmikus frequencia/hangmagassag skala
+- Szamozott hur-jelolesek folul, hangnevek alul
+- Piros kerek indikator a skala VONALAN
+- Input RMS / peak / clip meter
+- Standard E, Drop D, Eb, Open G, DADGAD, 7 huros, 4 es 5 huros basszus
+- Hangbemenet valasztas, A4 kalibracio es erzekenysegi beallitasok
+
+Amit a mostani kornyezetben TENYLEGESEN teszteltunk:
+- A platformfuggetlen C++ motor lefordul es minden automatizalt tesztje zold.
+- Tiszta es felharmonikusokat tartalmazo szintetikus hangok tesztelve (B0-E4).
+- Csend / random zaj elutasitasa tesztelve.
+
+Amit MEG NEM teszteltunk:
+- Qt desktop grafikus alkalmazas build es inditas
+- Windows/macOS audio driver es USB audio interfesz mukodes
+- Elo gitar/hangolo pontossag, kesleltetes es oktavtevesztesek
+- GitHub Actions felhos futas
+- Exe/PKG telepitok
+
+A projektnek jelenleg nincs kesz installer binarisa. A csomag forraskod.
+A forraskod sajat resze MIT licencu; a Qt hasznalatahoz kulon licenc
+feltetelek (pl. LGPLv3) tartoznak.
+
+Kerlek, NE csereld le a teszteletlen prototipussal az alap hangolasi
+referenciaidat valos hangszer hangolasanal teszt es ellenorzes nelkul.
