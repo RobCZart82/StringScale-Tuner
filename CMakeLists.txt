@@ -42,6 +42,10 @@ if(STRINGS_BUILD_GUI)
         MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION}"
         MACOSX_BUNDLE_BUNDLE_NAME "StringScale Tuner"
     )
+    if(BUILD_TESTING)
+        add_test(NAME gui_preview COMMAND StringScaleTuner --render-preview "${CMAKE_CURRENT_BINARY_DIR}/gui-previews")
+        set_tests_properties(gui_preview PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen" TIMEOUT 30)
+    endif()
     install(TARGETS StringScaleTuner BUNDLE DESTINATION . RUNTIME DESTINATION bin)
     if(WIN32)
         include(InstallRequiredSystemLibraries)

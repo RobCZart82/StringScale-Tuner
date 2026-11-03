@@ -116,3 +116,19 @@ Kapcsolódó dokumentumok: [architektúra](ARCHITECTURE.md), [ütemterv](ROADMAP
 - A szintetikus hangteszt B3 és E3 esetekkel bővült, felharmonikusokkal is.
 - Magyar próbaverzió-letöltési és kézi tesztleírás: PREVIEW_HU.md.
 - Az új grafikai felület, a Hz-feliratok eltávolítása és a témaváltás továbbra is megvalósítandó. Ez a lépés a jelenlegi GUI fordíthatóságát és csomagolását ellenőrzi.
+
+
+## 2026-11-03 – Az elfogadott GUI első megvalósítása
+
+- Felső MIN–MAX jelszintmérő, nagy középső félköríves ±50 centes hangoló,
+  alsó logaritmikus húrskála húrszámokkal és oktávnevekkel.
+- Hz-értékek és a kalibrációs frekvenciavezérlő eltávolítása a felületről.
+  A korábban mentett kalibráció belső használata megmarad.
+- Külön mért hangnév és célhúr; E3 mérés E3 névvel jelenik meg.
+- Világos és sötét megjelenés a fogaskerékből, azonnali alkalmazással és
+  QSettings mentéssel. A téma a Mégse gomb ellenére is mentődik, ezt a dialog jelzi.
+- Csendben nincs középre állított, hamisan hangoltságot jelző mutató.
+  50 centen túli eltérésnél a mutató a szélen marad és szöveg jelzi a túllépést.
+- GUI renderellenőrzés mikrofonnyitás nélkül: világos/sötét, hangolt A2,
+  E3 oktávpélda és csend. A CI PNG-ket ment külön artifactba.
+- A valódi gitárjeles és kézi akadálymentességi ellenőrzés továbbra is szükséges.

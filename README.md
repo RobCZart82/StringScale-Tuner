@@ -10,15 +10,16 @@ finished or accuracy-certified tuner and there are no prebuilt installers yet.
 
 ## Concept / Koncepció
 
-- **Top:** classic semicircular analog needle for **−50 to +50 cents**, only
+- **Middle:** classic semicircular analog needle for **−50 to +50 cents**, only
   active when a detected pitch is close enough to a selected tuning reference.
-- **Middle:** horizontal *logarithmic* pitch map, rising from left (low) to
+- **Bottom:** horizontal *logarithmic* pitch map, rising from left (low) to
   right (high); **string numbers above**, **note + octave below**; **one red
   circular indicator precisely on the scale line** driven by detected pitch.
-- **Bottom:** RMS level with minimum gate, peak warning and digital clipping.
+- **Top:** RMS level with minimum gate, peak warning and digital clipping.
 - **Tuning selection:** six-string E standard, Drop D, Eb, Open G, DADGAD,
   seven-string guitar, four- and five-string bass.
-- Input device selection, A4 calibration (430–450 Hz), configurable level gates.
+- Input device selection, configurable level gates, persistent light/dark theme.
+- Child-readable Hungarian interface; measured note and octave, no Hz readouts.
 - Standard manufacturer numbering: highest string = 1, lowest = 6/7 or 4/5.
 - No AP Tuner proprietary code, trademark assets, or graphics are used.
 
@@ -54,8 +55,8 @@ The core tests run on Windows, macOS and Linux in GitHub Actions.
 The **Desktop preview** workflow additionally builds and packages the full Qt
 application for Windows x64 and macOS arm64. See [the preview guide](docs/PREVIEW_HU.md)
 for artifact download and manual testing. These are experimental archives, not installers.
-The accepted GUI redesign is documented in [the development log](docs/DEVELOPMENT_LOG_HU.md)
-and remains a separate implementation step.
+The first implementation of the accepted GUI redesign is documented in [the development log](docs/DEVELOPMENT_LOG_HU.md)
+with further real-instrument testing still required.
 
 ## Implementation
 
