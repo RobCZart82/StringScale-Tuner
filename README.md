@@ -50,9 +50,12 @@ cmake --build build-core --config Release
 ctest --test-dir build-core -C Release --output-on-failure
 ```
 
-The core tests run on Windows, macOS and Linux in GitHub Actions. The UI build
-and installer packaging are **next milestones**; CI currently only checks
-Qt-independent DSP code and tuning data.
+The core tests run on Windows, macOS and Linux in GitHub Actions.
+The **Desktop preview** workflow additionally builds and packages the full Qt
+application for Windows x64 and macOS arm64. See [the preview guide](docs/PREVIEW_HU.md)
+for artifact download and manual testing. These are experimental archives, not installers.
+The accepted GUI redesign is documented in [the development log](docs/DEVELOPMENT_LOG_HU.md)
+and remains a separate implementation step.
 
 ## Implementation
 

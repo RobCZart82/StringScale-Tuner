@@ -43,4 +43,12 @@ if(STRINGS_BUILD_GUI)
         MACOSX_BUNDLE_BUNDLE_NAME "StringScale Tuner"
     )
     install(TARGETS StringScaleTuner BUNDLE DESTINATION . RUNTIME DESTINATION bin)
+    if(WIN32 OR APPLE)
+        qt_generate_deploy_app_script(
+            TARGET StringScaleTuner
+            OUTPUT_SCRIPT deploy_script
+        )
+        install(SCRIPT ${deploy_script})
+    endif()
+    install(FILES LICENSE DESTINATION .)
 endif()

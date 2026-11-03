@@ -1,0 +1,75 @@
+name: Desktop preview
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  desktop:
+    name: Desktop (${{ matrix.platform }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-2022
+            platform: windows-x64
+            qt_arch: win64_msvc2022_64
+          - os: macos-14
+            platform: macos-arm64
+            qt_arch: clang_64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.3'
+          arch: ${{ matrix.qt_arch }}
+          modules: qtmultimedia
+          cache: true
+      - name: Configure Windows x64
+        if: runner.os == 'Windows'
+        run: cmake -S . -B build -A x64 -DSTRINGS_BUILD_GUI=ON
+      - name: Configure macOS Apple Silicon
+        if: runner.os == 'macOS'
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=arm64 -DSTRINGS_BUILD_GUI=ON
+      - name: Build full application
+        run: cmake --build build --config Release --parallel
+      - name: Test pitch engine
+        run: ctest --test-dir build -C Release --output-on-failure
+      - name: Install application and runtime dependencies
+        run: cmake --install build --config Release --prefix stage
+      - name: Check macOS architecture and microphone description
+        if: runner.os == 'macOS'
+        run: |
+          lipo -verify_arch arm64 stage/StringScaleTuner.app/Contents/MacOS/StringScaleTuner
+          /usr/libexec/PlistBuddy -c 'Print :NSMicrophoneUsageDescription' stage/StringScaleTuner.app/Contents/Info.plist
+          test -d stage/StringScaleTuner.app/Contents/Frameworks
+      - name: Check Windows package
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          @('stage/bin/StringScaleTuner.exe', 'stage/bin/Qt6Core.dll', 'stage/bin/Qt6Multimedia.dll', 'stage/bin/platforms/qwindows.dll') | ForEach-Object {
+            if (!(Test-Path $_)) { throw "Missing runtime file: $_" }
+          }
+      - name: Add testing guide
+        shell: pwsh
+        run: Copy-Item docs/PREVIEW_HU.md stage/OLVASS-EL.md
+      - name: Archive macOS bundle preserving permissions
+        if: runner.os == 'macOS'
+        run: ditto -c -k --sequesterRsrc --keepParent stage preview-macos-arm64.zip
+      - name: Archive Windows package
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: Compress-Archive -Path stage/* -DestinationPath preview-windows-x64.zip
+      - name: Upload downloadable preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: StringScaleTuner-${{ matrix.platform }}-${{ github.run_number }}
+          path: preview-${{ matrix.platform }}.zip
+          if-no-files-found: error
+          retention-days: 30
