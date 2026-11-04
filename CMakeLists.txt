@@ -84,6 +84,28 @@ if(STRINGS_BUILD_GUI)
         BASE "resources/icons"
         FILES resources/icons/chevron-down-dark.svg resources/icons/chevron-down-light.svg
     )
+    qt_add_resources(StringScaleTuner application_icon
+        PREFIX "/icons"
+        BASE "resources/icons"
+        FILES
+            resources/icons/app-icon-16.png
+            resources/icons/app-icon-32.png
+            resources/icons/app-icon-48.png
+            resources/icons/app-icon-64.png
+            resources/icons/app-icon-128.png
+            resources/icons/app-icon-256.png
+            resources/icons/app-icon-512.png
+            resources/icons/app-icon-1024.png
+    )
+    if(APPLE)
+        set(app_icon "${CMAKE_CURRENT_SOURCE_DIR}/resources/icons/StringScaleTuner.icns")
+        set_source_files_properties("${app_icon}" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+        target_sources(StringScaleTuner PRIVATE "${app_icon}")
+    elseif(WIN32)
+        enable_language(RC)
+        configure_file(resources/app-icon.rc.in generated/app-icon.rc @ONLY)
+        target_sources(StringScaleTuner PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/generated/app-icon.rc")
+    endif()
     set_target_properties(StringScaleTuner PROPERTIES
         WIN32_EXECUTABLE TRUE
         MACOSX_BUNDLE TRUE
@@ -92,6 +114,7 @@ if(STRINGS_BUILD_GUI)
         MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION}"
         MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION}"
         MACOSX_BUNDLE_BUNDLE_NAME "StringScale Tuner"
+        MACOSX_BUNDLE_ICON_FILE "StringScaleTuner.icns"
     )
     if(BUILD_TESTING)
         qt_add_executable(audio_capture_tests tests/audio_capture_test.cpp

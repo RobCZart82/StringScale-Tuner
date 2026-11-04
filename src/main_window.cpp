@@ -8,6 +8,8 @@
 #include <QApplication>
 #include <QPermissions>
 #include <QComboBox>
+#include <QListView>
+#include <QStyledItemDelegate>
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QDoubleSpinBox>
@@ -23,6 +25,41 @@
 #include <QPixmap>
 #include <algorithm>
 #include <cmath>
+
+namespace {
+class ComboOutlineDelegate final : public QStyledItemDelegate {
+public:
+    using QStyledItemDelegate::QStyledItemDelegate;
+    void paint(QPainter* painter, const QStyleOptionViewItem& option,
+               const QModelIndex& index) const override {
+        auto plain = option;
+        const bool outlined = (option.state & QStyle::State_Enabled) &&
+            (option.state & (QStyle::State_Selected | QStyle::State_MouseOver));
+        plain.state &= ~(QStyle::State_Selected | QStyle::State_MouseOver | QStyle::State_HasFocus);
+        plain.rect = option.rect.adjusted(8, 4, -8, -4);
+        QStyledItemDelegate::paint(painter, plain, index);
+        if(outlined) {
+            painter->save();
+            painter->setRenderHint(QPainter::Antialiasing);
+            painter->setBrush(Qt::NoBrush);
+            painter->setPen(QPen(option.palette.color(QPalette::Highlight), 1.0));
+            painter->drawRoundedRect(QRectF(option.rect).adjusted(0.5, 0.5, -0.5, -0.5), 4, 4);
+            painter->restore();
+        }
+    }
+    QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override {
+        return QStyledItemDelegate::sizeHint(option,index) + QSize(16, 8);
+    }
+};
+QComboBox* makeComboBox() {
+    auto* combo = new QComboBox;
+    auto* view = new QListView(combo);
+    view->setMouseTracking(true);view->viewport()->setMouseTracking(true);
+    combo->setView(view);
+    combo->setItemDelegate(new ComboOutlineDelegate(view));
+    return combo;
+}
+}
 
 MainWindow::MainWindow(QWidget* parent, bool preview)
     : QMainWindow(parent), capture_(this), mediaDevices_(this), preview_(preview) {
@@ -76,6 +113,10 @@ void MainWindow::applyTheme(bool dark) {
                       " QComboBox::drop-down { subcontrol-origin: padding; subcontrol-position: top right; width: 32px; border: none; background: transparent; }"
                       " QComboBox::down-arrow { image: url(:/icons/chevron-down-%1.svg); width: 16px; height: 16px; }")
                   .arg(dark?"light":"dark");
+    styles += " QComboBox QAbstractItemView { background: palette(base); color: palette(text); border: 1px solid palette(mid); outline: 0; }"
+              " QMenu { background: palette(base); color: palette(text); border: 1px solid palette(mid); }"
+              " QMenu::item { padding: 8px 18px; border: 1px solid transparent; border-radius: 4px; }"
+              " QMenu::item:selected { background: palette(base); color: palette(text); border: 1px solid palette(highlight); }";
     if(dark) styles += " QDialog { background-color: #303B49; border: 1px solid #718096; } QLabel#statusLabel { color: #B8C4D2; }";
     setStyleSheet(styles);
     // Draw the gear as vector strokes to avoid font-dependent missing glyphs.
@@ -96,12 +137,12 @@ void MainWindow::buildInterface() {
     header->addWidget(title);header->addStretch();
     auto* settings=new QPushButton;settings->setObjectName("settingsButton");settings->setIconSize(QSize(32,32));settings->setAccessibleName(uiText("Beállítások", "Settings"));settings->setToolTip(uiText("Beállítások", "Settings"));header->addWidget(settings);layout->addLayout(header);
     auto* controls=new QHBoxLayout;
-    profileChoice_=new QComboBox;profileChoice_->setObjectName("profileChoice");profileChoice_->setAccessibleName(uiText("Hangszer és hangolás", "Instrument and tuning"));
+    profileChoice_=makeComboBox();profileChoice_->setObjectName("profileChoice");profileChoice_->setAccessibleName(uiText("Hangszer és hangolás", "Instrument and tuning"));
     for(const auto& preset:strings::presets())profileChoice_->addItem(QString::fromStdString(preset.displayName),QString::fromStdString(preset.id));
     const auto stored=QSettings().value("tuning/profile","guitar-e").toString();
     int index=profileChoice_->findData(stored);profileChoice_->setCurrentIndex(index>=0?index:0);
     selected_=&strings::presets()[profileChoice_->currentIndex()];
-    inputChoice_=new QComboBox;inputChoice_->setObjectName("inputChoice");
+    inputChoice_=makeComboBox();inputChoice_->setObjectName("inputChoice");
     if(preview_)inputChoice_->addItem(uiText("Tesztbemenet", "Test input"));inputChoice_->setAccessibleName(uiText("Hangbemenet", "Audio input"));inputChoice_->setMinimumWidth(190);
     controls->addWidget(profileChoice_,3);controls->addWidget(inputChoice_,2);layout->addLayout(controls);
     levelMeter_=new InputLevelMeter;levelMeter_->setLimits(minimumLevelDb_,warningPeakDb_);
@@ -253,9 +294,9 @@ QDialog* MainWindow::openSettings(bool audio) {
     auto* form=new QFormLayout;form->setSpacing(14);layout->addLayout(form);
     auto* hint=new QLabel;hint->setWordWrap(true);layout->addWidget(hint);
     if(!audio) {
-        auto* theme=new QComboBox;theme->setObjectName("themeChoice");theme->addItems({QString(),QString()});theme->setCurrentIndex(dark_?1:0);
+        auto* theme=makeComboBox();theme->setObjectName("themeChoice");theme->addItems({QString(),QString()});theme->setCurrentIndex(dark_?1:0);
         auto* themeLabel=new QLabel;themeLabel->setBuddy(theme);form->addRow(themeLabel,theme);
-        auto* language=new QComboBox;language->setObjectName("languageChoice");language->addItem("Magyar","hu");language->addItem("English","en");language->setCurrentIndex(UiLanguage::instance().code()=="hu"?0:1);
+        auto* language=makeComboBox();language->setObjectName("languageChoice");language->addItem("Magyar","hu");language->addItem("English","en");language->setCurrentIndex(UiLanguage::instance().code()=="hu"?0:1);
         auto* languageLabel=new QLabel("Nyelv / Language");languageLabel->setBuddy(language);form->addRow(languageLabel,language);
         auto* buttons=new QDialogButtonBox(QDialogButtonBox::Close);layout->addWidget(buttons);
         connect(buttons,&QDialogButtonBox::rejected,dialog,&QDialog::close);
@@ -270,7 +311,7 @@ QDialog* MainWindow::openSettings(bool audio) {
         connect(language,QOverload<int>::of(&QComboBox::currentIndexChanged),dialog,[this,language](int){UiLanguage::instance().setCode(language->currentData().toString(),!preview_);});
         connect(&UiLanguage::instance(),&UiLanguage::changed,dialog,translate);translate();
     } else {
-        auto* channel=new QComboBox;channel->setObjectName("inputChannelChoice");
+        auto* channel=makeComboBox();channel->setObjectName("inputChannelChoice");
         auto* channelLabel=new QLabel;channelLabel->setBuddy(channel);form->addRow(channelLabel,channel);
         const auto refreshChannels=[this,channel] {
             const QSignalBlocker blocker(channel);channel->clear();

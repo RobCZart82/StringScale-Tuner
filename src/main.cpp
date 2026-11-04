@@ -6,6 +6,10 @@
 #include <QSettings>
 #include <QProcess>
 #include <QComboBox>
+#include <QAbstractItemView>
+#include <QMouseEvent>
+#include <QKeyEvent>
+#include <QIcon>
 #include <QAction>
 #include <QDialog>
 #include <QFile>
@@ -25,6 +29,10 @@ int main(int argc, char* argv[]) {
     QCoreApplication::setOrganizationName("RobCZart");
     QCoreApplication::setApplicationVersion(strings::build::version);
     app.setStyle("Fusion");
+    QIcon appIcon;
+    for(int size : {16,32,48,64,128,256,512,1024})
+        appIcon.addFile(QString(":/icons/app-icon-%1.png").arg(size),QSize(size,size));
+    app.setWindowIcon(appIcon);
     const int previewArg = app.arguments().indexOf("--render-preview");
     const bool preview = previewArg >= 0;
     QTemporaryDir testSettings;
@@ -94,6 +102,22 @@ int main(int argc, char* argv[]) {
                     if (!window.grab().save(folder + "/" + code + (dark ? "-dark-" : "-light-") + example.first + ".png")) return 4;
                 }
                 app.processEvents();
+                // Exercise hover without committing a different tuning profile.
+                const auto beforeHover = profile->currentData();
+                profile->showPopup();app.processEvents();
+                auto* list = profile->view();
+                const auto hoverIndex = profile->model()->index(1,profile->modelColumn());
+                const auto local = list->visualRect(hoverIndex).center();
+                QMouseEvent move(QEvent::MouseMove,QPointF(local),QPointF(list->viewport()->mapToGlobal(local)),
+                                 Qt::NoButton,Qt::NoButton,Qt::NoModifier);
+                QApplication::sendEvent(list->viewport(),&move);app.processEvents();
+                if(!require(list->currentIndex()==hoverIndex && profile->currentData()==beforeHover,
+                            "Popup hover changed committed tuning or did not highlight row"))return 17;
+                if(!list->window()->grab().save(folder+"/"+code+(dark?"-dark-":"-light-")+"combo-hover.png"))return 4;
+                QKeyEvent escape(QEvent::KeyPress,Qt::Key_Escape,Qt::NoModifier);
+                QApplication::sendEvent(profile,&escape);profile->hidePopup();app.processEvents();
+                if(!require(profile->currentData()==beforeHover,"Closing popup committed hovered tuning"))return 18;
+                if(!require(!app.windowIcon().pixmap(16,16).isNull(),"Missing application icon"))return 19;
                 for(auto* dialog:{settings,audio,about})
                     if(!dialog->grab().save(folder+"/"+code+(dark?"-dark-":"-light-")+dialog->objectName()+".png"))return 4;
             }

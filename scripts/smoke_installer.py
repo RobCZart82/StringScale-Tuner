@@ -3,6 +3,7 @@
 import argparse
 import json
 import os
+import plistlib
 from pathlib import Path
 import subprocess
 
@@ -32,9 +33,19 @@ for record in json.loads((documents / 'file-inventory.json').read_text(encoding=
 if mac:
     bundle = args.root / 'StringScaleTuner.app'
     subprocess.run(['codesign', '--verify', '--deep', '--strict', str(bundle)], check=True)
+    bundle_info = plistlib.loads((bundle / 'Contents/Info.plist').read_bytes())
+    icon = bundle / 'Contents/Resources' / bundle_info['CFBundleIconFile']
+    if not icon.is_file() or icon.read_bytes()[:4] != b'icns':
+        raise ValueError('Missing or invalid installed macOS app icon')
     executable = bundle / 'Contents/MacOS/StringScaleTuner'
 else:
     executable = args.root / 'bin/StringScaleTuner.exe'
+    import ctypes
+    extractor = ctypes.WinDLL('shell32').ExtractIconExW
+    extractor.argtypes = [ctypes.c_wchar_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_uint]
+    extractor.restype = ctypes.c_uint
+    if extractor(str(executable.resolve()), -1, None, None, 0) == 0:
+        raise ValueError('Windows executable has no native icon resource')
 # Do not let Qt SDK paths hide a missing deployed runtime dependency.
 env = dict(os.environ)
 for key in ['QT_QPA_PLATFORM', 'QT_PLUGIN_PATH', 'QT_QPA_PLATFORM_PLUGIN_PATH',
