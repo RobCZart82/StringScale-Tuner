@@ -34,6 +34,7 @@ VersionInfoVersion={#NumericVersion}
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
+SetupIconFile=..\..\resources\icons\StringScaleTuner.ico
 UninstallDisplayIcon={app}\bin\StringScaleTuner.exe
 CloseApplications=yes
 RestartApplications=no

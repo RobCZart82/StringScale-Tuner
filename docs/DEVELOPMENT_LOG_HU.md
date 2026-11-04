@@ -1,5 +1,24 @@
 # Fejlesztési és javítási napló
 
+## 2026-11-04 – Zöld listakeret és közös natív alkalmazásikon
+
+A lenyíló listák egérrel kijelölt vagy billentyűzettel aktív sora 1 logikai pixeles,
+a téma aktív zöldjét követő keretet kap, tömör zöld kitöltés nélkül. A listaelem
+mérete nem változik hoverkor. Az összes QComboBox és a fogaskerék menüje egységes
+keretes jelölést használ. Az egérmozgatás nem változtatja meg a mentett profilt;
+a GUI-teszt valódi mouse-move eseménnyel és Escape-pel is ellenőrzi ezt, valamint
+HU/EN, világos/sötét popup-előnézeteket ment.
+
+Új közös ikon: a sötét felület egyszerűsített miniatűrje, felső jelszintmérővel,
+analóg mutatóval és alsó húrskálával. Eredeti SVG-masterből 16–1024 pixeles
+PNG-k, Windows ICO és macOS ICNS készültek, átlátszó, lekerekített sarkokkal.
+A legkisebb méreteknél a mutató és ív erősebb, az apró osztások elmaradnak.
+A Windows EXE és telepítő, a Qt app, valamint a Mac bundle az új ikont használja.
+A telepítő-smoke teszt a natív ikon jelenlétét is vizsgálja.
+
+A helyi teljes Apple Silicon build és CTest 4/4 sikeres; a popupok és az ikon
+vizuálisan ellenőrizve. A hangoló motor változatlan.
+
 ## 2026-11-04 – Windows EXE és macOS PKG próbatelepitők
 
 A GitHub Actions a már ellenőrzött ZIP-stagingből natív telepítőt is készít.
