@@ -1,5 +1,13 @@
 # Fejlesztési és javítási napló
 
+## 2026-11-04 – Polgári név szöveges kiírásának eltávolítása a Névjegyből
+
+Robert kérésére a Névjegyben a polgári nevet kizárólag az eredeti SVG-szignó
+képviseli. A külön szöveges sorban csak a RobCZart82 név marad.
+A szignó akadálymentes leírása sem írja ki a polgári nevet: „A szerző szignója” /
+„Author signature”. Az eredeti SVG-források és a téma szerinti változatok megmaradnak.
+Ez felülírja a korábbi szöveges szerzőnévre vonatkozó felületi követelményt.
+
 ## 2026-11-04 – Választható bemeneti csatorna USB/DI hangkártyákhoz
 
 - A Hang / Audio ablakban választható a gitárhoz használt csatorna, magyar és angol

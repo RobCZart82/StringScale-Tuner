@@ -15,7 +15,8 @@ public:
     BrandImage(bool signature, QWidget* parent) : QWidget(parent), signature_(signature) {
         setMinimumHeight(signature ? 110 : 160);
         setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        setAccessibleName(signature ? "Gyuricza Róbert" : "GYR");
+        const auto describe=[this] { setAccessibleName(signature_ ? uiText("A szerző szignója","Author signature") : QString("GYR")); };
+        connect(&UiLanguage::instance(),&UiLanguage::changed,this,describe);describe();
     }
 protected:
     void paintEvent(QPaintEvent*) override {
@@ -47,7 +48,7 @@ AboutDialog::AboutDialog(QWidget* parent) : QDialog(parent) {
     auto* description=new QLabel;description->setAlignment(Qt::AlignCenter);description->setWordWrap(true);layout->addWidget(description);
     layout->addWidget(new BrandImage(false,this),2);
     auto* author=new QLabel;author->setAlignment(Qt::AlignCenter);layout->addWidget(author);
-    auto* name=new QLabel("Gyuricza Róbert · RobCZart82");name->setAlignment(Qt::AlignCenter);layout->addWidget(name);
+    auto* name=new QLabel("RobCZart82");name->setAlignment(Qt::AlignCenter);layout->addWidget(name);
     layout->addWidget(new BrandImage(true,this),1);
     auto* project=new QLabel("<a href=\"https://github.com/RobCZart82/StringScale-Tuner\">GitHub · StringScale Tuner</a>");
     project->setObjectName("projectLink");project->setAlignment(Qt::AlignCenter);project->setOpenExternalLinks(true);layout->addWidget(project);refreshProjectLink();

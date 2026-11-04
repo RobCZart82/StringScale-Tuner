@@ -122,7 +122,9 @@ rendelkezésre állnak, az ablak megvalósítása külön feladat.
       külső SVG-fájlok vagy hálózati letöltés nélkül.
 - [ ] Méretarányos, éles megjelenítés kis és nagy ablakban, nagy DPI mellett is.
 - [ ] Kontraszt és vágás ellenőrzése mindkét témában.
-- [ ] A logó és a szignó mellett szöveges, akadálymentesen olvasható szerzőnév.
+- [ ] A polgári név kizárólag a szignó vektorgrafikájában jelenjen meg, külön
+      szöveges kiírás nélkül. A RobCZart82 név megmaradhat; a szignó akadálymentes
+      leírása „A szerző szignója” / „Author signature”.
 - [ ] Magyar és angol Névjegy-feliratok ellenőrzése.
 
 Forrásfájlok és használati megjegyzések: [branding README](../resources/branding/README.md).
