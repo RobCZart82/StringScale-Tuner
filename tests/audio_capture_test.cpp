@@ -15,14 +15,15 @@ static void require(bool condition, const char* message) {
 class AudioCaptureTest {
 public:
     static void run() {
+        // Signal receivers outlive capture, which also emits reset on shutdown.
+        double pitch = 0, level = -120;
+        int pitchClears = 0, levelClears = 0;
         AudioCapture capture;
         capture.measureTimer_.stop();
         capture.format_.setSampleRate(48000);
         capture.format_.setChannelCount(2);
         capture.format_.setSampleFormat(QAudioFormat::Float);
         capture.channelSamples_.resize(2);
-        double pitch = 0, level = -120;
-        int pitchClears = 0, levelClears = 0;
         QObject::connect(&capture, &AudioCapture::pitchReady,
             [&](double hz, double) { pitch = hz; if (hz == 0) ++pitchClears; });
         QObject::connect(&capture, &AudioCapture::levelReady,

@@ -23,7 +23,9 @@ függőségeivel együtt csomagolja. A meglévő Core DSP tests változatlanul f
 
 Helyi Qt-, CMake- vagy Visual Studio-telepítés nem szükséges. A csomagok
 kísérleti, fejlesztői próbaverziók, nem telepítők. Nincs kiadói aláírás vagy
-Apple-notarizáció; az operációs rendszer figyelmeztethet. macOS-en a
+Apple-notarizáció; az operációs rendszer figyelmeztethet. A Mac-próbacsomag
+technikai (ad-hoc) aláírást kap, amely a csomag épségét ellenőrzi, kiadói
+azonosságot és Apple-jóváhagyást nem igazol. macOS-en a
 Rendszerbeállítások → Adatvédelem és biztonság alatt engedélyezhető a
 megbízható forrásból letöltött alkalmazás megnyitása.
 
@@ -31,6 +33,7 @@ megbízható forrásból letöltött alkalmazás megnyitása.
 
 - Teljes GUI fordítása, motor tesztjei, futásidejű függőségek telepítése.
 - macOS arm64 architektúra és mikrofonhasználati leírás jelenléte.
+- A végleges Mac-bundle ad-hoc aláírása és mély, szigorú ellenőrzése a ZIP előtt.
 - Windows fő futtatható fájl és alapvető Qt DLL/plugin fájlok jelenléte.
 
 A CI most mikrofonnyitás nélküli GUI-indítást is végez, és világos/sötét PNG

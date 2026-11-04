@@ -1,5 +1,18 @@
 # Fejlesztési és javítási napló
 
+## 2026-11-04 – Mac-próbacsomag aláírásának javítása
+
+A teljes Qt-deploy után a helyi bundle `codesign --verify --deep --strict`
+ellenőrzése hibát adott: „code has no resources but signature indicates they must
+be present”. A korábbi sérült alkalmazás figyelmeztetésnek ez is lehetséges oka;
+a karanténjelölés eltávolítása önmagában nem javítja a hibás aláírást.
+
+A közös csomagoló most az összes függőség telepítése után ad-hoc aláírja a teljes
+Mac-bundle-t, majd szigorú ellenőrzést futtat. Hiba esetén a csomagolás leáll.
+Csak ezután készül a fájlleltár és a ZIP ellenőrzőösszege. A build-info külön
+jelöli az ad-hoc aláírást, a kiadói aláírás és notarizáció továbbra is hamis.
+Ez nem helyettesíti a nyilvános kiadás előtti Developer ID/notarizációs döntést.
+
 ## 2026-11-04 – Villogó élő mérés: csomagszünet és csend szétválasztása
 
 Robert SSL 2+ interfészes videója alapján a mért hang és a mutató időnként eltűnik,
