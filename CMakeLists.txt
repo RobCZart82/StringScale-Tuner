@@ -45,7 +45,7 @@ if(STRINGS_BUILD_GUI)
             OUTPUT_VARIABLE revision OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
         if(revision MATCHES "^[0-9a-f]+$")
             set(STRINGS_REVISION "${revision}")
-            execute_process(COMMAND "${GIT_EXECUTABLE}" status --porcelain
+            execute_process(COMMAND "${GIT_EXECUTABLE}" status --porcelain --untracked-files=no
                 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
                 OUTPUT_VARIABLE changed_files ERROR_QUIET)
             if(changed_files)
