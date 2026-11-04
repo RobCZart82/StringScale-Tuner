@@ -1,51 +1,53 @@
-# StringScale Tuner – fordítás és első indítás (HU)
+# StringScale Tuner - fordítás és első indítás
 
-**Fejlesztői változat, v0.1.0.** A mellékelt ZIP forráskódot tartalmaz,
-nem kész EXE-t vagy PKG-t. A GUI-t és az élő hangbemenetet még nem sikerült
-Windows/macOS hardveren kipróbálni; ezért a prototípus mérési pontossága
-nem garantált.
+Ez fejlesztői buildleírás. A verzió egyetlen forrása a CMakeLists.txt;
+a Névjegy és a csomagok generált buildadatai ezt követik.
+Felhasználóknak nem szükséges fejlesztőkörnyezet: az EXE/PKG próbatelepitők és
+a kézikönyvek használata az [installer-útmutatóban](INSTALLERS_HU.md) szerepel.
+A forrás-ZIP, a developer ZIP és a telepítő különböző csomagok.
 
-## Szükséges szoftverek
+## Szükséges fejlesztőeszközök
 
-- CMake 3.21 vagy újabb.
-- Qt 6.5+ azonos platformhoz fordított csomagja, **Qt Widgets** és
-  **Qt Multimedia** modullal.
-- Windows 10/11: Visual Studio 2022 C++ build tools (MSVC), vagy Qt Creator
-  kompatibilis fejlesztői kittel.
-- macOS: Xcode parancssori eszközök és Qt clang/macOS kit.
+- C++20 fordító és CMake 3.21+.
+- Qt 6.5+ Core/Gui/Widgets/Multimedia/Svg modulokkal; a CI Qt 6.8.3-at használ.
+- Windows x64: Visual Studio 2022 C++ build tools vagy megfelelő Qt Creator kit.
+- macOS Apple Silicon: Xcode parancssori eszközök és Qt macOS kit.
+- Natív telepítő építéséhez Windowson Inno Setup 6, Macen pkgbuild/productbuild.
+- Python 3 a csomagoló és csomagellenőrző szkriptekhez.
 
-## Windows (példa; a saját Qt útvonaladhoz igazítsd)
+## Windows x64
 
 ```powershell
-cmake -S . -B build -DCMAKE_PREFIX_PATH="C:/Qt/6.8.3/msvc2022_64"
+cmake -S . -B build -A x64 -DCMAKE_PREFIX_PATH="C:/Qt/6.8.3/msvc2022_64"
 cmake --build build --config Release
 ctest --test-dir build -C Release --output-on-failure
+cmake --install build --config Release --prefix stage
+python -m unittest discover -s tests -p installer_payload_test.py
 ```
 
-A `StringScaleTuner.exe` a build/Release környékén keletkezik a választott
-CMake generátortól függően. Ha futtatásnál Qt DLL vagy multimédia-plugin
-hiányzik, Qt Creatorból indítsd a programot; önálló EXE-terjesztéshez később
-`windeployqt` és telepítő készítése szükséges.
+A generátortól függően a futtatható fájl például build/Release alatt készül.
+A cmake --install a Qt deployment scriptjét is futtatja; a stage tartalmazza a
+terjesztéshez szükséges Qt-függőségeket. Ha közvetlenül a buildből indítasz,
+Qt Creator vagy megfelelő fejlesztői környezet kellhet a DLL-ek megtalálásához.
 
-## macOS (példa; a saját Qt útvonaladhoz igazítsd)
+## macOS Apple Silicon
 
 ```bash
 xcode-select --install
-cmake -S . -B build -DCMAKE_PREFIX_PATH="$HOME/Qt/6.8.3/macos" -DCMAKE_BUILD_TYPE=Release
+cmake -S . -B build -DCMAKE_PREFIX_PATH="/path/to/Qt/6.8.3/macos" -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=arm64
 cmake --build build --config Release
 ctest --test-dir build -C Release --output-on-failure
-open build/StringScaleTuner.app
+cmake --install build --prefix stage
+python3 -m unittest discover -s tests -p installer_payload_test.py
 ```
 
-Engedélyezd a mikrofonhoz / audióbemenethez való hozzáférést a macOS
-adatvédelmi beállításaiban. A macOS app tartalmaz `NSMicrophoneUsageDescription`
-kulcsot. Ha futtatásnál Qt framework hiányzik, a valódi kiadáshoz
-`macdeployqt` és aláírás/notarizálás szükséges.
+Az app build/StringScaleTuner.app alatt készül. A projekt alapértelmezett macOS
+deployment targetje 12.0; ez nem minden rendszerverzió hardveres tanúsítása.
+A stage elkészítése a Qt frameworköket is bemásolja. A végső technikai aláírást
+és ellenőrzést a package_preview.py végzi a deploy után. Az alkalmazás
+mikrofonhasználati leírást tartalmaz, a hozzáférést a rendszerben engedélyezni kell.
 
-## Qt nélküli DSP-teszt
-
-A hangfelismerés és a referenciahangok tesztelhetők az előző fejlesztőkörnyezet
-telepítése nélkül, ha van C++20 fordító és CMake:
+## Qt nélküli motortesztek
 
 ```bash
 cmake -S . -B build-core -DSTRINGS_BUILD_GUI=OFF -DCMAKE_BUILD_TYPE=Release
@@ -53,16 +55,22 @@ cmake --build build-core --config Release
 ctest --test-dir build-core -C Release --output-on-failure
 ```
 
-## Első próba
+Ez a konfiguráció nem fordítja a GUI-t vagy az AudioCapture adaptert.
+A teljes GUI/capture/telepítő ellenőrzést a desktop konfiguráció és CI adja.
+A workflow az aktuális csomagolási parancsok forrása:
+[desktop-preview.yml](../.github/workflows/desktop-preview.yml).
 
-1. A **Tuning** menüből válaszd ki a gitár/basszus hangolását.
-2. Az **Input** listában jelöld ki a mikrofont vagy USB audiointerfészt.
-3. Az **A4** kalibráció alapértéke 440 Hz.
-4. Pengetésre az alsó sávban a szintjelző, a középső vízszintes skálán
-   a **piros pont**, és célhang közelében a felső analóg mutató reagál.
-5. A **Settings** alatt állítható a minimális RMS-jelszint és a magas
-   csúcsszintre figyelmeztető határ.
+## Első kézi próba
 
-**Biztonság:** Ha a mutató nem megbízható vagy nem jelenik meg, ellenőrizd a
-jelszintet, az audioeszközt és a helyes oktávot. A túlfeszített húr elszakadhat;
-a prototípust ne tekintsd hitelesített hangolóműszernek.
+1. A felső hangszerlistában válaszd ki a hangolási profilt.
+2. A bemeneti listában válaszd a mikrofont vagy USB-interfészt.
+3. A fogaskerék Hang pontjában válaszd a gitár fizikai bemenetéhez tartozó csatornát.
+4. Egyszerre egy húrt pengess. Felül a jelszint, középen az analóg mutató,
+   alul a húrskálán mozgó türkiz/zöld pont reagál.
+5. A mért hang oktávszámát és a célhúrt külön olvasd. A cél a legközelebbi
+   referenciahang, nem a fizikai húr biztos azonosítása.
+6. A Beállítások a nyelvet, témát és fix felületméretet kezeli; a Hang ablak
+   a bemeneti csatornát és jelszintküszöböket. Hz-értékek nem jelennek meg a GUI-n.
+
+A már elvégzett hardveres próbákat és korlátaikat a
+[tesztjegyzőkönyv](HARDWARE_TEST_RESULTS_HU.md) rögzíti.

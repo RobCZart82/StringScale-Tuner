@@ -1,5 +1,24 @@
 # Fejlesztési és javítási napló
 
+## 2026-11-04 – Külső audit ellenőrzése és elavult leírások javítása
+
+A StringScale-Tuner_audit_report.txt jelentést a 7554198 főági állapottal
+vetettük össze. A verzió-/állapoteltérés igazolt, több auditpont ennek ismétlése.
+A hardveres jegyzőkönyv állítólagos UTF-8 sérülése nem reprodukálható: szigorú
+dekódolással érvényes, helyettesítő karakter nincs benne. A jelentésben nem
+szerepelt forráscommit; az eredeti pillanatkép ezért nem rekonstruálható biztosan.
+
+PROJECT_STATUS_HU.txt, BUILD_HU.md, ARCHITECTURE.md, README, roadmap és kiadási
+jegyzet javítva. A verziót a CMake határozza meg; a műszerek sorrendje, zöld
+jelölő, ±50 centen túli befogott mutató, csatorna-/nyelv-/méretválasztó, CI és
+telepítők leírása a kódot követi. A történeti tesztnapló külön jelölést kapott;
+a régi események valódi verzióhivatkozásait nem írjuk át utólag.
+
+A mért hang és a legközelebbi célhúr különbsége pontosítva: az abszolút oktáv
+kijelzése segít az eltérés felismerésében, de nem bizonyítja a fizikai húr
+azonosságát. Nincs motor- vagy GUI-viselkedésváltoztatás. Részletes auditértékelés:
+AUDIT_REVIEW_HU.md.
+
 ## 2026-11-04 – Letisztított telepített felhasználói dokumentáció
 
 Robert jóváhagyta, hogy a publikált felhasználói csomagban csak a HU/EN PDF,
