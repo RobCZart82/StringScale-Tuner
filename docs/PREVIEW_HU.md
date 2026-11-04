@@ -56,3 +56,20 @@ ablak a szerző eredeti vektoros logóját és szignóját mutatja.
 Próbáld ki a két nyelvet mindkét témában, a nyitott ablakokkal is; újraindításkor
 ellenőrizd a nyelv és téma visszaállítását. A GUI-* artifactok már a Névjegy,
 a Hang és a Beállítások képeit is tartalmazzák.
+
+
+## Többcsatornás hangkártya kipróbálása
+
+A fogaskerék → Hang / Audio ablak Bemeneti csatorna / Input channel mezőjében
+válaszd ki a gitár csatlakozójához tartozó csatornát. A csatornaválasztás azonnal
+mentődik, a jelszintküszöbök továbbra is a Mentés / Save gombbal. A főablakban
+választott eszközhöz külön megjegyzi a csatornát. Első használatkor az 1. csatorna aktív.
+
+A csatornák számozása az operációs rendszer/Qt által adott sorrendet követi;
+a program nem ismeri a hangkártya fizikai csatlakozóinak feliratait. A lista
+csak a ténylegesen megnyitott formátumban elérhető csatornákat tartalmazza.
+
+Próba: gitár az első, majd a második bemeneten; váltáskor a megfelelő
+jelszint és hang jelenjen meg. A másik bemenet hangja vagy túlvezérlése ne
+befolyásolja a kiválasztott gitárcsatornát. Ellenőrizd az eszközváltást,
+kihúzást/visszacsatlakoztatást és az újraindítás utáni csatornaválasztást is.

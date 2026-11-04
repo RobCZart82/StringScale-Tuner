@@ -10,7 +10,8 @@
 - [ ] M2: Ground-truth pitch accuracy with guitar and bass at E2/E1/B0,
       detunings, transients, vibrato, noise and weak fundamentals.
 - [ ] M2: Improve latency: DSP thread, adaptive analysis window, resampler.
-- [ ] M2: Add user-selectable input channel for multichannel DI interfaces.
+- [x] M2: Add user-selectable input channel for multichannel DI interfaces
+      (implementation and synthetic tests; hardware validation still pending).
 - [ ] M2: Add optional manual target-string selection and clearer clip hold.
 - [ ] M3: Polish multi-resolution retina layouts and accessibility.
 - [ ] M3: Add instant, persistent Magyar / English language selection in Settings
@@ -121,7 +122,9 @@ rendelkezésre állnak, az ablak megvalósítása külön feladat.
       külső SVG-fájlok vagy hálózati letöltés nélkül.
 - [ ] Méretarányos, éles megjelenítés kis és nagy ablakban, nagy DPI mellett is.
 - [ ] Kontraszt és vágás ellenőrzése mindkét témában.
-- [ ] A logó és a szignó mellett szöveges, akadálymentesen olvasható szerzőnév.
+- [ ] A polgári név kizárólag a szignó vektorgrafikájában jelenjen meg, külön
+      szöveges kiírás nélkül. A RobCZart82 név megmaradhat; a szignó akadálymentes
+      leírása „A szerző szignója” / „Author signature”.
 - [ ] Magyar és angol Névjegy-feliratok ellenőrzése.
 
 Forrásfájlok és használati megjegyzések: [branding README](../resources/branding/README.md).

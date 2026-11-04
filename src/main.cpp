@@ -64,13 +64,16 @@ int main(int argc, char* argv[]) {
         auto* theme=settings->findChild<QComboBox*>("themeChoice");
         auto* profile=window.findChild<QComboBox*>("profileChoice");
         auto* input=window.findChild<QComboBox*>("inputChoice");
+        auto* channel=audio->findChild<QComboBox*>("inputChannelChoice");
+        if(!require(channel && channel->count()==2 && channel->isEnabled(),"Missing multichannel selector"))return 16;
+        channel->setCurrentIndex(1);
         const auto profileId=profile->currentData();const int inputIndex=input->currentIndex();
         for(const auto& code:{QString("hu"),QString("en"),QString("hu")}) {
             language->setCurrentIndex(code=="hu"?0:1);app.processEvents();
             const bool hu=code=="hu";
             if(!require(UiLanguage::instance().code()==code && settings->windowTitle()==(hu?"Beállítások":"Settings")
                 && audio->windowTitle()==(hu?"Hang":"Audio") && about->windowTitle()==(hu?"Névjegy":"About"),"Open dialogs did not switch language"))return 11;
-            if(!require(profile->currentData()==profileId && input->currentIndex()==inputIndex,"Language changed tuning or input selection"))return 12;
+            if(!require(profile->currentData()==profileId && input->currentIndex()==inputIndex && channel->currentData().toInt()==1,"Language changed tuning or input selection"))return 12;
             if(!require(language->itemText(0)=="Magyar" && language->itemText(1)=="English","Language choices must keep native names"))return 13;
         }
         // A separate process reads the isolated saved profile, exercising restart persistence.

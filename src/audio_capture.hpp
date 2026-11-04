@@ -22,7 +22,10 @@ public:
     explicit AudioCapture(QObject* parent = nullptr);
     ~AudioCapture() override;
 
-    bool start(const QAudioDevice& device);
+    bool start(const QAudioDevice& device, int channel = 0);
+    bool setInputChannel(int channel);
+    int inputChannel() const { return inputChannel_; }
+    int channelCount() const { return source_ ? format_.channelCount() : 0; }
     void stop();
     void setMinimumLevelDb(double db) { minimumLevelDb_ = db; }
     void setWarningPeakDb(double db) { warningPeakDb_ = db; }
@@ -40,10 +43,13 @@ private slots:
 
 private:
     void acceptSample(float sample);
+    void resetAnalysis();
     std::unique_ptr<QAudioSource> source_;
     QIODevice* input_ = nullptr; // Owned by QAudioSource.
     QAudioFormat format_;
     QByteArray partialFrame_;
+    int inputChannel_ = 0;
+    std::vector<float> channelSamples_;
     QTimer measureTimer_;
     strings::PitchDetector detector_;
     std::vector<float> pitchRing_;

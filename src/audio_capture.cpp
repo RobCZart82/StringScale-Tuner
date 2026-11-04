@@ -1,4 +1,5 @@
 #include "audio_capture.hpp"
+#include "input_frame.hpp"
 
 #include <QIODevice>
 
@@ -16,18 +17,17 @@ AudioCapture::AudioCapture(QObject* parent)
 
 AudioCapture::~AudioCapture() { stop(); }
 
-bool AudioCapture::start(const QAudioDevice& device) {
+bool AudioCapture::start(const QAudioDevice& device, int channel) {
     stop();
     if (device.isNull()) {
         emit errorOccurred("No audio input device selected.");
         return false;
     }
 
-    // Prefer 48 kHz mono Float for a simple calibrated input path; fall back to
-    // the audio device's advertised format (with interleaved channel handling).
+    // Preserve the advertised multichannel layout rather than requesting a mono downmix.
     QAudioFormat preferred;
     preferred.setSampleRate(48000);
-    preferred.setChannelCount(1);
+    preferred.setChannelCount(std::max(1, device.maximumChannelCount()));
     preferred.setSampleFormat(QAudioFormat::Float);
     if (device.isFormatSupported(preferred)) {
         format_ = preferred;
@@ -42,6 +42,8 @@ bool AudioCapture::start(const QAudioDevice& device) {
         return false;
     }
 
+    inputChannel_ = channel >= 0 && channel < format_.channelCount() ? channel : 0;
+    channelSamples_.resize(format_.channelCount());
     source_ = std::make_unique<QAudioSource>(device, format_);
     // Keep the platform-specific buffer moderately small; the analysis window
     // determines detection latency and can be optimized independently.
@@ -70,6 +72,11 @@ void AudioCapture::stop() {
     input_ = nullptr;
     format_ = QAudioFormat{};
     partialFrame_.clear();
+    channelSamples_.clear();
+    resetAnalysis();
+}
+
+void AudioCapture::resetAnalysis() {
     std::fill(pitchRing_.begin(), pitchRing_.end(), 0.0f);
     ringWrite_ = 0;
     ringCount_ = 0;
@@ -111,21 +118,14 @@ void AudioCapture::consumeAudio() {
 
     const char* data = partialFrame_.constData();
     for (qsizetype offset = 0; offset < available; offset += bytesPerFrame) {
-        double mono = 0.0;
-        double hottestChannel = 0.0;
-        for (int ch = 0; ch < format_.channelCount(); ++ch) {
-            const double channel = format_.normalizedSampleValue(
-                data + offset + ch * bytesPerSample);
-            mono += channel;
-            hottestChannel = std::max(hottestChannel, std::abs(channel));
-        }
-        mono /= static_cast<double>(format_.channelCount());
-        const float sample = static_cast<float>(std::clamp(mono, -1.0, 1.0));
+        for (int ch = 0; ch < format_.channelCount(); ++ch)
+            channelSamples_[ch] = format_.normalizedSampleValue(data + offset + ch * bytesPerSample);
+        const auto frame = strings::selectInputFrame(channelSamples_, inputChannel_);
+        const float sample = frame.sample;
         sumSquares_ += static_cast<double>(sample) * sample;
         ++blockSamples_;
-        // A clipped stereo input must not be masked by an empty channel.
-        peak_ = std::max(peak_, hottestChannel);
-        clipping_ = clipping_ || hottestChannel >= 0.999;
+        peak_ = std::max(peak_, frame.peak);
+        clipping_ = clipping_ || frame.clipped || !frame.valid;
         acceptSample(sample);
     }
     partialFrame_.remove(0, available);
@@ -174,4 +174,14 @@ void AudioCapture::updateMeasurements() {
     else
         smoothedHz_ = estimate.hz;
     emit pitchReady(smoothedHz_, estimate.confidence);
+}
+
+bool AudioCapture::setInputChannel(int channel) {
+    if (!source_ || channel < 0 || channel >= format_.channelCount()) return false;
+    if (channel != inputChannel_) {
+        inputChannel_ = channel;
+        // Keep partialFrame_: dropping its bytes would lose interleaved frame alignment.
+        resetAnalysis();
+    }
+    return true;
 }
