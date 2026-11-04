@@ -1,4 +1,9 @@
-# Validation log — 2026-11-03
+# Historical validation log - 2026-11-03
+
+This is the original source-package test snapshot, not the current project status.
+Subsequent desktop/installer CI and real-instrument feedback are documented in
+[HARDWARE_TEST_RESULTS_HU.md](HARDWARE_TEST_RESULTS_HU.md) and
+[PROJECT_STATUS_HU.txt](../PROJECT_STATUS_HU.txt).
 
 The Qt-independent DSP engine was compiled with GNU C++ and with Clang using
 AddressSanitizer and UndefinedBehaviorSanitizer (both passed). 

@@ -9,7 +9,8 @@ alul élő hangmagasságskálát mutat húrjelölésekkel. A mért hang oktávsz
 
 - Standard gitár, Drop D és további gitár-/basszusprofilok.
 - Bemeneti eszköz és csatorna választása, eszközönként megjegyzett csatorna.
-- Magyar/angol nyelv, világos és kékes antracit sötét téma.
+- Magyar/angol nyelv, kékes törtfehér világos és antracit sötét téma.
+- Arányos 75/100/125/150% fix felületméretek, natív Windows/Mac ikonok.
 - Elkülönülő párbeszédablakok és sík lefelé mutató listajelölők.
 - Rövid csomagszünetek és bizonytalan becslések miatti villogás javítása.
 - Névjegy eredeti vektoros logóval és szignóval.
@@ -18,16 +19,17 @@ alul élő hangmagasságskálát mutat húrjelölésekkel. A mért hang oktávsz
 
 Robert a Mac mini / SSL 2+ és Windows 10 / Behringer UCG-102 konfigurációkon
 sikeresen ellenőrizte a hat standard húrt és a ±25–40 centes eltéréseket.
-A részletek és korlátok a csomag HARDWARE-TESTS-HU.md fájljában, illetve
-a repository docs/HARDWARE_TEST_RESULTS_HU.md dokumentumában szerepelnek.
+A részletek és korlátok a repository docs/HARDWARE_TEST_RESULTS_HU.md
+dokumentumában szerepelnek; a felhasználói telepítő nem mellékel tesztjegyzőkönyvet.
 
 ## Indítás és korlátok
 
-Kicsomagolható próbacsomag, nem telepítő. Qt/CMake/Visual Studio telepítése nem
-szükséges. Windows: bin/StringScaleTuner.exe. Mac: StringScaleTuner.app;
-a mikrofonhozzáférést engedélyezni kell. Nincs kiadói aláírás/notarizáció;
+Windows x64 EXE és macOS Apple Silicon PKG próbatelepitő is készül.
+Qt/CMake/Visual Studio telepítése a felhasználónál nem szükséges.
+A külön developer ZIP kicsomagolható fejlesztői csomag.
+A mikrofonhozzáférést engedélyezni kell. Nincs kiadói aláírás/notarizáció;
 a Mac-csomag ellenőrzött technikai ad-hoc aláírást kap. Az operációs rendszer
-figyelmeztethet. A kézi indítási útmutató a csomag START-HERE-HU.md fájlja.
+figyelmeztethet. A telepített rövid README és a két PDF-kézikönyv ismerteti az indítást.
 
 A többi hangszer-/hangolási profil valós hardveres tesztelése részleges.
 VST3, Linux, Intel Mac és Windows ARM nem része ennek a kiadásnak.

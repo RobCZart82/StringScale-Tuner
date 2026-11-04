@@ -1,34 +1,37 @@
-StringScale Tuner v0.1.0 - fejlesztoi allapot (2026-11-03)
-======================================================
+StringScale Tuner - ellenőrzött fejlesztési állapot (2026-11-04)
+============================================================
 
-Teljesen uj, sajat forraskod. Az eredeti AP Tuner kodjat NEM hasznaljuk.
+Verzióforrás: CMakeLists.txt (PROJECT_VERSION + STRINGS_VERSION).
+A Névjegy és a build-info ugyanebből a generált értékből készül.
+Ez a fájl állapotösszefoglaló, nem külön alkalmazásverzió-forrás.
 
-Mar elkeszult a forraskodban:
-- YIN-csaladu hangmagassag-felismero motor, sajat C++20 implementacio
-- Github Actions Core DSP teszt workflow (Win/macOS/Linux)
-- Felső analog +/-50 cent mutato (Qt GUI)
-- Vizszintes logaritmikus frequencia/hangmagassag skala
-- Szamozott hur-jelolesek folul, hangnevek alul
-- Piros kerek indikator a skala VONALAN
-- Input RMS / peak / clip meter
-- Standard E, Drop D, Eb, Open G, DADGAD, 7 huros, 4 es 5 huros basszus
-- Hangbemenet valasztas, A4 kalibracio es erzekenysegi beallitasok
+Elkészült:
+- Önálló C++20/Qt gitár- és basszushangoló, saját YIN-családú motorral.
+- Felül jelszintmérő, középen ±50 centes analóg mutató, alul logaritmikus
+  húrskála türkiz/zöld jelölővel; mért hang és oktáv, külön célhúr.
+- Standard és alternatív gitár-/basszusprofilok, eszköz- és csatornaválasztás.
+- Magyar/angol nyelv, világos/sötét téma, mentett 75/100/125/150% fix méret.
+- Windows x64 EXE és macOS Apple Silicon PKG próbatelepitők, natív ikonokkal.
+- Magyar és angol PDF-kézikönyv, letisztított telepített dokumentáció.
 
-Amit a mostani kornyezetben TENYLEGESEN teszteltunk:
-- A platformfuggetlen C++ motor lefordul es minden automatizalt tesztje zold.
-- Tiszta es felharmonikusokat tartalmazo szintetikus hangok tesztelve (B0-E4).
-- Csend / random zaj elutasitasa tesztelve.
+Ellenőrzések:
+- A főág motortesztjei Linuxon, Windowson és macOS-en sikeresek.
+- Mindkét desktop build teljes GUI-t, capture-regressziót és GUI-integrációs
+  tesztet futtat. A telepítőket a CI valóban telepíti és indítja; Windowson
+  az eltávolítást is ellenőrzi. Külön teszt vizsgálja a dokumentumszűrést.
+- Robert Mac mini M1 / SSL 2+ és Windows 10 / Behringer UCG-102 konfigurációkon
+  mind a hat standard húrt és ±25–40 centes eltéréseket sikeresen próbálta.
+- A további kézi próbák pontos hatóköre: docs/HARDWARE_TEST_RESULTS_HU.md.
 
-Amit MEG NEM teszteltunk:
-- Qt desktop grafikus alkalmazas build es inditas
-- Windows/macOS audio driver es USB audio interfesz mukodes
-- Elo gitar/hangolo pontossag, kesleltetes es oktavtevesztesek
-- GitHub Actions felhos futas
-- Exe/PKG telepitok
+A forrásarchívum, fejlesztői ZIP és telepítő külön csomag. Letölthető, aláíratlan
+próbatelepitők az Actions artifactjai között készülnek. Ez nem jelenti, hogy
+végleges, nyilvános GitHub Release már közzé lett téve.
 
-A projektnek jelenleg nincs kesz installer binarisa. A csomag forraskod.
-A forraskod sajat resze MIT licencu; a Qt hasznalatahoz kulon licenc
-feltetelek (pl. LGPLv3) tartoznak.
+Kiadás előtt még szükséges:
+- A ténylegesen mellékelt függőségek teljes licenc-/forráselérhetőségi auditja.
+- A végleges forráscommit, csomagok, ellenőrzőösszegek és kiadási jegyzet lezárása.
+- A további hangszerek, interfészek és OS-verziók próbái a dokumentált körön túl.
 
-Kerlek, NE csereld le a teszteletlen prototipussal az alap hangolasi
-referenciaidat valos hangszer hangolasanal teszt es ellenorzes nelkul.
+A saját kód MIT-licencű. A függőségek feltételei külön érvényesek.
+A Mac app technikai ad-hoc aláírása nem kiadói aláírás vagy Apple-notarizáció.
+Nem hitelesített mérőműszer. Részletek: README.md és docs/RELEASE_CHECKLIST_HU.md.

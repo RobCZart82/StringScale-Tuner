@@ -21,6 +21,7 @@ licence bundle are still being prepared. Preview ZIPs are not installers.
 - **Tuning selection:** six-string E standard, Drop D, Eb, Open G, DADGAD,
   seven-string guitar, four- and five-string bass.
 - Input device and per-device channel selection, configurable level gates, persistent light/dark theme.
+- Fixed proportional 75/100/125/150% UI sizes, with screen-fit limits.
 - Child-readable Hungarian/English interface; measured note and octave, no Hz readouts.
 - Standard manufacturer numbering: highest string = 1, lowest = 6/7 or 4/5.
 - No AP Tuner proprietary code, trademark assets, or graphics are used.
@@ -78,11 +79,14 @@ latency and input-device behavior need validation with actual DI guitar and
 bass across macOS/Windows. The YIN-family method is implemented from the
 published algorithmic ideas, not copied from any prior tuner project.
 The displayed "cent" meter targets the nearest *string reference*, not the
-nearest chromatic note. This prevents a mistaken octave from appearing in tune.
+nearest chromatic note. Measured note/octave and target number remain visible
+separately. The app cannot identify the intended physical string: an unintended
+octave can coincide with another valid string reference.
 
 **Mérés:** a 0 cent target is based on the selected tuning preset and A4
 calibration. The audio amplitude gate is not the same as a pitch-confidence
-gate. Both must pass before a pitch is shown.
+gate. A valid estimate must pass both; brief uncertainty is bridged by a bounded
+220 ms hold. Clipping clears pitch immediately.
 
 See `docs/ARCHITECTURE.md` and `docs/ROADMAP.md` for technical details and the
 planned release-quality work.
@@ -94,6 +98,7 @@ framework with its own license requirements; LGPLv3 compliance may be needed
 for publicly distributed binaries. Do not incorporate AP Tuner source code,
 logos, UI artwork or protected names without permission.
 
-No warranty. Do not rely on this unvalidated prototype to avoid string breakage.
+No warranty; not an accuracy-certified instrument. The documented successful
+hardware trials do not establish performance on all instruments or interfaces.
 
 Release preparation: [checklist](docs/RELEASE_CHECKLIST_HU.md) · [hardware test sheet](docs/TEST_CHECKLIST_HU.md).
