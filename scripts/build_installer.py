@@ -9,6 +9,7 @@ import shutil
 import subprocess
 import tempfile
 import xml.etree.ElementTree as ET
+import zipfile
 
 from package_preview import digest
 from verify_preview import verify
@@ -42,7 +43,7 @@ def build_mac(stage, destination, numeric_version):
                         '--identifier', 'org.robczart.stringscaletuner.pkg', '--version', numeric_version,
                         '--ownership', 'recommended', '--component-plist', str(components), str(component)], check=True)
         requirements = work / 'requirements.plist'
-        requirements.write_bytes(plistlib.dumps(dict(arch=['arm64'])))
+        requirements.write_bytes(plistlib.dumps(dict(arch=['arm64'], os=['12.0'])))
         distribution = work / 'Distribution.xml'
         subprocess.run(['productbuild', '--synthesize', '--product', str(requirements),
                         '--package', str(component), str(distribution)], check=True)
@@ -112,6 +113,10 @@ def main():
     info = json.loads((stage / 'build-info.json').read_text(encoding='utf-8'))
     if any(info[key] != expected[key] for key in ('version', 'revision', 'qt_version')):
         raise ValueError('Stage is not the verified build')
+    with zipfile.ZipFile(args.archive) as archive:
+        for metadata in ['build-info.json', 'file-inventory.json']:
+            if (stage / metadata).read_bytes() != archive.read(args.archive.stem + '/' + metadata):
+                raise ValueError(f'Stage metadata changed: {metadata}')
     # Recheck stage contents: installer compilers consume this directory, not ZIP.
     inventory = json.loads((stage / 'file-inventory.json').read_text(encoding='utf-8'))
     listed = {item['path'] for item in inventory} | {'build-info.json', 'file-inventory.json'}

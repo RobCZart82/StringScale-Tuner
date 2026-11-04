@@ -16,6 +16,8 @@ A Mac PKG kibontott payloadját is fájlonként és aláírás szerint ellenőri
 A Windows CI telepít, ellenőrzi és indítja az appot, majd eltávolít; a Mac CI
 a saját eldobható VM-jén telepít, ellenőrzi és mikrofon nélkül indít. A helyi
 csomagépítés nem telepít semmit Robert gépére. Részletek: INSTALLERS_HU.md.
+A telepítők Qt-alapú minimuma Windows 10 1809 és macOS 12.0; a Mac deployment
+target explicit 12.0, így egy új helyi SDK nem emeli észrevétlenül a minimumot.
 
 ## 2026-11-04 – Főág összevezetése és első kiadás előkészítése
 

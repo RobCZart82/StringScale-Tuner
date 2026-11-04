@@ -1,4 +1,9 @@
 cmake_minimum_required(VERSION 3.21)
+# Match the Qt 6.8 runtime baseline instead of silently inheriting the build
+# machine's macOS version (which would make a local installer needlessly new).
+if(CMAKE_HOST_APPLE AND NOT DEFINED CMAKE_OSX_DEPLOYMENT_TARGET)
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "12.0" CACHE STRING "Minimum macOS version")
+endif()
 project(StringScaleTuner VERSION 0.2.0 LANGUAGES CXX)
 set(STRINGS_VERSION "${PROJECT_VERSION}-alpha.1")
 

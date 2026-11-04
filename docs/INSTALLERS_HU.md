@@ -43,3 +43,16 @@ használja. A technikai aláírás és ellenőrzőösszeg nem jelent kiadói hit
 
 A Windows fordításhoz Inno Setup 6 kell (a Windows Actions-image tartalmazza).
 A Mac-fordításhoz az Xcode Command Line Tools pkgbuild/productbuild/pkgutil kell.
+
+## Rendszerkövetelmények
+
+A csomagok Qt 6.8.3-at használnak. A telepítő küszöbe Windows 10 1809 (17763)
+és macOS 12.0 / Apple Silicon. A Mac deployment target és az Info.plist is 12.0;
+a helyi új SDK ezért nem emeli automatikusan a szükséges macOS-verziót.
+Ezek a Qt-alapú technikai minimumok, nem minden OS-verzió hardveres tanúsítása.
+Robert konkrét próbái a HARDWARE_TEST_RESULTS_HU.md dokumentumban vannak.
+
+Hivatkozások:
+- https://doc.qt.io/qt-6.8/supported-platforms.html
+- https://jrsoftware.org/ishelp/topic_setup_privilegesrequired.htm
+- https://developer.apple.com/documentation/xcode/packaging-mac-software-for-distribution
