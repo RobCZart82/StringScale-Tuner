@@ -44,3 +44,15 @@ gitárjeles teszt; a témaváltást, mentést és a bemenetet kézzel is ellenő
 
 A Qt külön licencelt keretrendszer. Nyilvános kiadás előtt a harmadik fél
 licenceinek és forráselérhetőségének teljes kiadási ellenőrzése még szükséges.
+
+
+## Nyelv és Névjegy (2026-11-04)
+
+A fogaskerék Beállítások / Settings pontjában választható a Magyar / English
+nyelv és a világos/sötét téma. Mindkettő azonnal alkalmazódik és mentődik.
+A Hang / Audio külön kezeli a bemeneti jelszintküszöböket. A Névjegy / About
+ablak a szerző eredeti vektoros logóját és szignóját mutatja.
+
+Próbáld ki a két nyelvet mindkét témában, a nyitott ablakokkal is; újraindításkor
+ellenőrizd a nyelv és téma visszaállítását. A GUI-* artifactok már a Névjegy,
+a Hang és a Beállítások képeit is tartalmazzák.

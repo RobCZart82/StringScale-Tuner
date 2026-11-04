@@ -23,7 +23,7 @@ endif()
 
 option(STRINGS_BUILD_GUI "Build the Qt 6 desktop application" ON)
 if(STRINGS_BUILD_GUI)
-    find_package(Qt6 6.5 REQUIRED COMPONENTS Core Gui Widgets Multimedia)
+    find_package(Qt6 6.5 REQUIRED COMPONENTS Core Gui Widgets Multimedia Svg)
     # Qt 6.8 adds legacy AGL even on 64-bit macOS. New Apple SDKs no
     # longer ship it; this QWidget application does not use Carbon OpenGL.
     if(APPLE AND TARGET WrapOpenGL::WrapOpenGL)
@@ -37,12 +37,20 @@ if(STRINGS_BUILD_GUI)
     qt_add_executable(StringScaleTuner
         MACOSX_BUNDLE
         src/main.cpp
+        src/ui_language.hpp src/ui_language.cpp
+        src/about_dialog.hpp src/about_dialog.cpp
         src/main_window.hpp src/main_window.cpp
         src/audio_capture.hpp src/audio_capture.cpp
         src/tuner_widgets.hpp src/tuner_widgets.cpp
     )
     target_link_libraries(StringScaleTuner PRIVATE strings_core
-        Qt6::Core Qt6::Gui Qt6::Widgets Qt6::Multimedia)
+        Qt6::Core Qt6::Gui Qt6::Widgets Qt6::Multimedia Qt6::Svg)
+    qt_add_resources(StringScaleTuner branding
+        PREFIX "/branding"
+        BASE "resources/branding"
+        FILES resources/branding/GYR-black.svg resources/branding/GYR-light.svg
+              resources/branding/Alairas-Vektor.svg resources/branding/Alairas-Vektor-light.svg
+    )
     set_target_properties(StringScaleTuner PROPERTIES
         WIN32_EXECUTABLE TRUE
         MACOSX_BUNDLE TRUE

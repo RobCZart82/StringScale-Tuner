@@ -19,7 +19,7 @@ finished or accuracy-certified tuner and there are no prebuilt installers yet.
 - **Tuning selection:** six-string E standard, Drop D, Eb, Open G, DADGAD,
   seven-string guitar, four- and five-string bass.
 - Input device selection, configurable level gates, persistent light/dark theme.
-- Child-readable Hungarian interface; measured note and octave, no Hz readouts.
+- Child-readable Hungarian/English interface; measured note and octave, no Hz readouts.
 - Standard manufacturer numbering: highest string = 1, lowest = 6/7 or 4/5.
 - No AP Tuner proprietary code, trademark assets, or graphics are used.
 
@@ -29,7 +29,7 @@ Requirements:
 
 - C++20 compiler (MSVC 2022, recent Clang or GCC)
 - CMake 3.21+
-- Qt 6.5+ with **Widgets** and **Multimedia** modules (open-source Qt license
+- Qt 6.5+ with **Widgets**, **Multimedia** and **SVG** modules (open-source Qt license
   obligations apply, including LGPLv3 where applicable)
 
 ```bash

@@ -106,8 +106,9 @@ rendelkezésre állnak, az ablak megvalósítása külön feladat.
   az eredeti viewBox figyelembevételével történjen. Ne legyen nyújtás vagy
   előzetesen kis felbontású raszterképpé alakítás.
 - Világos témában GYR-black.svg, sötét témában GYR-light.svg használható.
-- Az Alairas-Vektor.svg sötét színű szignó. Sötét témában is kontrasztosan kell
-  megjeleníteni, például világos hátterű panelen, az eredeti forrás megőrzésével.
+- Világos témában az eredeti Alairas-Vektor.svg sötét szignó, sötét témában
+  az Alairas-Vektor-light.svg világos szignó jelenjen meg átlátszó háttérrel.
+  Külön fehér vagy világos panel nem szükséges; az eredeti forrás megmarad.
 - A logó és a szignó külön grafikai elem; a Névjegy elrendezésében mindkettő
   kapjon arányos méretet és elegendő helyet.
 - A Névjegy szöveges feliratai kövessék a tervezett Magyar / English
@@ -158,5 +159,7 @@ fejlesztési lépései közé tartozik; a későbbi VST3 felületre is érvénye
 - [ ] A hangnevek, oktávok, húrszámok és a mérési viselkedés változatlansága.
 - [ ] Hiányzó fordítások és kevert nyelvű saját feliratok ellenőrzése.
 
-Az első indítás nyelvének meghatározása (rendszernyelv vagy rögzített alapérték)
-még külön eldöntendő; ezt a jelenlegi követelmény nem rögzíti.
+2026-11-04-i megvalósítás: mentett választás hiányában magyar rendszernyelvhez
+magyar, más rendszernyelvhez angol induló felület tartozik. A felhasználó ezt
+bármikor felülírhatja. A nyelvváltás és a Névjegy első megvalósításának ellenőrzéseit
+a [fejlesztési napló](DEVELOPMENT_LOG_HU.md) rögzíti.
