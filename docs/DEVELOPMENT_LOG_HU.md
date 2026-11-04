@@ -1,5 +1,28 @@
 # Fejlesztési és javítási napló
 
+## 2026-11-04 – Hűvös világos téma és fix felületméretek
+
+Robert kérésére a világos fő háttér enyhén kékes törtfehér (#F2F6FB), a panelek
+fehérek (#FFFFFF), a finom szegélyek #CBD5E1 árnyalatúak. A sötét paletta és a
+hangoló motor nem változott.
+
+A Beállításokban 75%, 100%, 125%, 150% választható; a korábbi 1000×850 logikai
+pixeles méret a 125%-os alap. A főablak méretei rendre 600×510, 800×680,
+1000×850 és 1200×1020. Az ablakok fixek; betűk, ikonok, vezérlők, térközök és
+festegetett műszerek együtt skálázódnak. A Névjegy/Hang/Beállítások ablakokra
+is érvényes, az eredeti font- és layoutértékekből, felhalmozódó kerekítési hiba nélkül.
+A méret azonnal mentődik; az operációs rendszer DPI-beállításától független.
+
+A kijelző munkaterületére túl nagy fokozatok letiltottak. Indításkor és
+kijelzőváltáskor a program a legnagyobb elférő, legfeljebb kért fokozatot használja.
+A legkisebb felülethez 600×510 logikai pixel és a rendszer ablakkeretének helye kell.
+
+A GUI-teszt mind a négy méretet mindkét nyelvvel és témával ellenőrzi: pontos
+fix ablakméret, kilógó vezérlők, levágott QLabel-feliratok és minden hangszerprofil
+nevének elférése, valamint külön folyamatból visszaolvasott mentett méret.
+A teljes helyi Apple Silicon build és CTest 4/4 sikeres. A legkisebb főablak,
+Beállítások és Névjegy, valamint a 125%/150% előnézetek vizuálisan ellenőrizve.
+
 ## 2026-11-04 – Zöld listakeret és közös natív alkalmazásikon
 
 A lenyíló listák egérrel kijelölt vagy billentyűzettel aktív sora 1 logikai pixeles,

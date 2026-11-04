@@ -1,5 +1,7 @@
 #include "about_dialog.hpp"
 #include "ui_language.hpp"
+#include "ui_scale.hpp"
+#include <QApplication>
 #include "build_info.hpp"
 #include <QCoreApplication>
 #include <QEvent>
@@ -27,7 +29,7 @@ protected:
             : (dark ? ":/branding/GYR-light.svg" : ":/branding/GYR-black.svg");
         if (path != source_) { renderer_.load(path); source_ = path; }
         QPainter p(this); p.setRenderHint(QPainter::Antialiasing);
-        const QRectF available = QRectF(rect()).adjusted(20,12,-20,-12);
+        const QRectF available = QRectF(rect()).adjusted(UiScale::instance().px(20),UiScale::instance().px(12),-UiScale::instance().px(20),-UiScale::instance().px(12));
         // The SVG renderer maps its original nonzero viewBox into this aspect-preserving rectangle.
         const QSizeF size = renderer_.viewBoxF().size().scaled(available.size(), Qt::KeepAspectRatio);
         renderer_.render(&p, QRectF(available.center()-QPointF(size.width()/2,size.height()/2),size));
@@ -39,6 +41,7 @@ private:
 };
 }
 AboutDialog::AboutDialog(QWidget* parent) : QDialog(parent) {
+    setFont(qApp->font());
     setObjectName("aboutDialog");
     auto* layout = new QVBoxLayout(this);
     layout->setContentsMargins(24,20,24,20); layout->setSpacing(10);

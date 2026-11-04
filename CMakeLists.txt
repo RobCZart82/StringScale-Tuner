@@ -65,6 +65,7 @@ if(STRINGS_BUILD_GUI)
         MACOSX_BUNDLE
         src/main.cpp
         src/ui_language.hpp src/ui_language.cpp
+        src/ui_scale.hpp src/ui_scale.cpp
         src/about_dialog.hpp src/about_dialog.cpp
         src/main_window.hpp src/main_window.cpp
         src/audio_capture.hpp src/audio_capture.cpp

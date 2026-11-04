@@ -83,3 +83,13 @@ Próba: gitár az első, majd a második bemeneten; váltáskor a megfelelő
 jelszint és hang jelenjen meg. A másik bemenet hangja vagy túlvezérlése ne
 befolyásolja a kiválasztott gitárcsatornát. Ellenőrizd az eszközváltást,
 kihúzást/visszacsatlakoztatást és az újraindítás utáni csatornaválasztást is.
+
+## Felületméret
+
+A fogaskerék → Beállítások → Felület mérete listában 75%, 100%, 125% és 150%
+választható. A korábbi induló méret a 125%. A választás azonnal alkalmazódik
+és mentődik, a nyitott párbeszédablakokra is. Az ablakot egérrel nem kell méretezni.
+A kijelzőn el nem férő fokozatok szürkék; kisebb kijelzőn automatikusan kisebb
+fokozat indulhat. A százalék a program felületének mérete, nem a Windows/macOS
+rendszerszintű kijelzőnagyítása. 75%-hoz 600×510 logikai pixel és az ablakkeret
+helye szükséges. A GUI artifactok mind a négy fokozatról képeket tartalmaznak.

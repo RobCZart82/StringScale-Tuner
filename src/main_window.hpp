@@ -7,6 +7,7 @@
 #include <QMediaDevices>
 #include <QPointer>
 class QDialog;
+class QShowEvent;
 class QAction;
 
 class QComboBox;
@@ -24,8 +25,17 @@ public:
     QDialog* openAbout();
 signals:
     void inputChannelsChanged();
+    void scaleAvailabilityChanged();
+protected:
+    void showEvent(QShowEvent* event) override;
 private:
     void applyTheme(bool dark);
+    void applyUiPercent(int percent, bool persist = false);
+    QSize availableUiSize() const;
+    void watchScreen();
+    int preferredPercent_ = 125;
+    bool watchingScreen_ = false;
+    QMetaObject::Connection geometryConnection_;
     void retranslate();
     void refreshStatus();
     void chooseInputChannel(int channel);
