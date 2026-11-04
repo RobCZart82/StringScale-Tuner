@@ -35,6 +35,14 @@ def main():
                   else stage / "StringScaleTuner.app/Contents/MacOS/StringScaleTuner")
     if not executable.is_file():
         raise FileNotFoundError(executable)
+    # Deployment rewrites load paths and adds Qt libraries after linking, which
+    # invalidates the linker's provisional signature. Seal the final bundle
+    # before inventory/archive generation; do not claim Developer ID trust.
+    if args.platform == "macos-arm64":
+        bundle = stage / "StringScaleTuner.app"
+        subprocess.run(["codesign", "--force", "--deep", "--sign", "-", str(bundle)], check=True)
+        subprocess.run(["codesign", "--verify", "--deep", "--strict", str(bundle)], check=True)
+        info["signing_type"] = "ad-hoc"
     root = Path(__file__).resolve().parent.parent
     for source, target in [("docs/PREVIEW_HU.md", "START-HERE-HU.md"),
                            ("docs/TEST_CHECKLIST_HU.md", "TEST-RESULTS-HU.md"),
