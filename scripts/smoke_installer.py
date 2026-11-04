@@ -37,7 +37,7 @@ if mac:
     icon = bundle / 'Contents/Resources' / bundle_info['CFBundleIconFile']
     if not icon.is_file() or icon.read_bytes()[:4] != b'icns':
         raise ValueError('Missing or invalid installed macOS app icon')
-    executable = bundle / 'Contents/MacOS/StringScaleTuner' 
+    executable = bundle / 'Contents/MacOS/StringScaleTuner'
 else:
     executable = args.root / 'bin/StringScaleTuner.exe'
     import ctypes
