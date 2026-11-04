@@ -1,4 +1,5 @@
 #include "ui_language.hpp"
+#include "ui_scale.hpp"
 #include "main_window.hpp"
 #include "tuning.hpp"
 #include "about_dialog.hpp"
@@ -9,6 +10,11 @@
 #include <QPermissions>
 #include <QComboBox>
 #include <QListView>
+#include <QScreen>
+#include <QWindow>
+#include <QShowEvent>
+#include <QStandardItemModel>
+#include <QTimer>
 #include <QStyledItemDelegate>
 #include <QDialog>
 #include <QDialogButtonBox>
@@ -36,19 +42,20 @@ public:
         const bool outlined = (option.state & QStyle::State_Enabled) &&
             (option.state & (QStyle::State_Selected | QStyle::State_MouseOver));
         plain.state &= ~(QStyle::State_Selected | QStyle::State_MouseOver | QStyle::State_HasFocus);
-        plain.rect = option.rect.adjusted(8, 4, -8, -4);
+        const auto& scale=UiScale::instance();
+        plain.rect = option.rect.adjusted(scale.px(8), scale.px(4), -scale.px(8), -scale.px(4));
         QStyledItemDelegate::paint(painter, plain, index);
         if(outlined) {
             painter->save();
             painter->setRenderHint(QPainter::Antialiasing);
             painter->setBrush(Qt::NoBrush);
             painter->setPen(QPen(option.palette.color(QPalette::Highlight), 1.0));
-            painter->drawRoundedRect(QRectF(option.rect).adjusted(0.5, 0.5, -0.5, -0.5), 4, 4);
+            painter->drawRoundedRect(QRectF(option.rect).adjusted(0.5, 0.5, -0.5, -0.5), UiScale::instance().px(4), UiScale::instance().px(4));
             painter->restore();
         }
     }
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override {
-        return QStyledItemDelegate::sizeHint(option,index) + QSize(16, 8);
+        return QStyledItemDelegate::sizeHint(option,index) + QSize(UiScale::instance().px(16), UiScale::instance().px(8));
     }
 };
 QComboBox* makeComboBox() {
@@ -73,6 +80,10 @@ MainWindow::MainWindow(QWidget* parent, bool preview)
     applyTheme(settings.value("appearance/dark", false).toBool());
     connect(&UiLanguage::instance(), &UiLanguage::changed, this, &MainWindow::retranslate);
     retranslate();
+    UiScale::instance().prepare(this,QSize(1000,850));
+    connect(&UiScale::instance(),&UiScale::changed,this,[this]{applyTheme(dark_);});
+    preferredPercent_=UiScale::savedPercent();
+    applyUiPercent(preferredPercent_);
     if(preview_) { channelCount_=2; emit inputChannelsChanged(); }
     if (!preview_) {
     connect(&capture_, &AudioCapture::pitchReady, this, &MainWindow::handlePitch);
@@ -88,8 +99,8 @@ MainWindow::MainWindow(QWidget* parent, bool preview)
 void MainWindow::applyTheme(bool dark) {
     dark_=dark;
     QPalette pal;
-    const QColor bg(dark?"#252D38":"#fffaf0"), base(dark?"#303B49":"#fffdf8");
-    const QColor fg(dark?"#EDF1F5":"#14263c"), mid(dark?"#718096":"#c9c8c1");
+    const QColor bg(dark?"#252D38":"#F2F6FB"), base(dark?"#303B49":"#FFFFFF");
+    const QColor fg(dark?"#EDF1F5":"#14263c"), mid(dark?"#718096":"#CBD5E1");
     const QColor active(dark?"#39dcc1":"#00846f");
     pal.setColor(QPalette::Window,bg);pal.setColor(QPalette::Base,base);
     pal.setColor(QPalette::AlternateBase,bg);pal.setColor(QPalette::WindowText,fg);
@@ -111,16 +122,17 @@ void MainWindow::applyTheme(bool dark) {
     // and a bundled vector chevron. Reserve space so long labels cannot overlap.
     styles += QString(" QComboBox { padding-right: 36px; }"
                       " QComboBox::drop-down { subcontrol-origin: padding; subcontrol-position: top right; width: 32px; border: none; background: transparent; }"
-                      " QComboBox::down-arrow { image: url(:/icons/chevron-down-%1.svg); width: 16px; height: 16px; }")
+                      " QComboBox::down-arrow { image: url(:/icons/chevron-down-%1.svg); width: 16px; height: 16px; }"
+                      " QPushButton#settingsButton::menu-indicator { image: url(:/icons/chevron-down-%1.svg); width: 10px; height: 10px; subcontrol-position: bottom right; right: 4px; bottom: 4px; }")
                   .arg(dark?"light":"dark");
     styles += " QComboBox QAbstractItemView { background: palette(base); color: palette(text); border: 1px solid palette(mid); outline: 0; }"
               " QMenu { background: palette(base); color: palette(text); border: 1px solid palette(mid); }"
               " QMenu::item { padding: 8px 18px; border: 1px solid transparent; border-radius: 4px; }"
               " QMenu::item:selected { background: palette(base); color: palette(text); border: 1px solid palette(highlight); }";
     if(dark) styles += " QDialog { background-color: #303B49; border: 1px solid #718096; } QLabel#statusLabel { color: #B8C4D2; }";
-    setStyleSheet(styles);
+    setStyleSheet(UiScale::instance().styleSheet(styles));
     // Draw the gear as vector strokes to avoid font-dependent missing glyphs.
-    QPixmap gear(32,32);gear.fill(Qt::transparent);QPainter p(&gear);p.setRenderHint(QPainter::Antialiasing);p.setPen(QPen(fg,2.5));
+    QPixmap gear(128,128);gear.fill(Qt::transparent);QPainter p(&gear);p.scale(4,4);p.setRenderHint(QPainter::Antialiasing);p.setPen(QPen(fg,2.5));
     p.drawEllipse(QPointF(16,16),9,9);p.drawEllipse(QPointF(16,16),3,3);
     for(int i=0;i<8;++i){p.save();p.translate(16,16);p.rotate(i*45);p.drawLine(QPointF(0,-9),QPointF(0,-14));p.restore();}
     if(auto* b=findChild<QPushButton*>("settingsButton"))b->setIcon(QIcon(gear));
@@ -128,7 +140,8 @@ void MainWindow::applyTheme(bool dark) {
 }
 
 void MainWindow::buildInterface() {
-    setWindowTitle("StringScale Tuner");setMinimumSize(800,760);resize(1000,850);
+    setWindowTitle("StringScale Tuner");resize(1000,850);
+    setWindowFlag(Qt::WindowMaximizeButtonHint,false);
     auto f=font();f.setPointSize(13);setFont(f);
     auto* page=new QWidget(this);auto* layout=new QVBoxLayout(page);
     layout->setContentsMargins(22,16,22,16);layout->setSpacing(12);
@@ -282,13 +295,14 @@ void MainWindow::retranslate() {
     for(auto* w:findChildren<QWidget*>())w->update();
 }
 QDialog* MainWindow::openAbout() {
-    if(!aboutDialog_) {aboutDialog_=new AboutDialog(this);aboutDialog_->setAttribute(Qt::WA_DeleteOnClose);}
+    if(!aboutDialog_) {aboutDialog_=new AboutDialog(this);aboutDialog_->setAttribute(Qt::WA_DeleteOnClose);UiScale::instance().prepare(aboutDialog_,QSize(500,660));}
     aboutDialog_->show();aboutDialog_->raise();return aboutDialog_;
 }
 QDialog* MainWindow::openSettings(bool audio) {
     auto& existing=audio?audioDialog_:settingsDialog_;
     if(existing){existing->show();existing->raise();return existing;}
     auto* dialog=new QDialog(this);existing=dialog;dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->setFont(qApp->font());
     dialog->setObjectName(audio?"audioDialog":"settingsDialog");
     auto* layout=new QVBoxLayout(dialog);layout->setContentsMargins(22,22,22,22);layout->setSpacing(18);
     auto* form=new QFormLayout;form->setSpacing(14);layout->addLayout(form);
@@ -298,13 +312,32 @@ QDialog* MainWindow::openSettings(bool audio) {
         auto* themeLabel=new QLabel;themeLabel->setBuddy(theme);form->addRow(themeLabel,theme);
         auto* language=makeComboBox();language->setObjectName("languageChoice");language->addItem("Magyar","hu");language->addItem("English","en");language->setCurrentIndex(UiLanguage::instance().code()=="hu"?0:1);
         auto* languageLabel=new QLabel("Nyelv / Language");languageLabel->setBuddy(language);form->addRow(languageLabel,language);
+        auto* sizeChoice=makeComboBox();sizeChoice->setObjectName("sizeChoice");
+        for(int preset : {75,100,125,150})sizeChoice->addItem(QString::number(preset)+"%",preset);
+        auto* sizeLabel=new QLabel;sizeLabel->setBuddy(sizeChoice);form->addRow(sizeLabel,sizeChoice);
+        const auto refreshSizes=[this,sizeChoice] {
+            const QSignalBlocker blocker(sizeChoice);
+            auto* model=qobject_cast<QStandardItemModel*>(sizeChoice->model());
+            for(int i=0;i<sizeChoice->count();++i) {
+                const int preset=sizeChoice->itemData(i).toInt();
+                const bool fits=preview_ || UiScale::fitPercent(preset,availableUiSize())==preset;
+                model->item(i)->setEnabled(fits);
+                model->item(i)->setToolTip(fits?QString():uiText("Ez a méret nem fér el ezen a kijelzőn.","This size does not fit on this display."));
+            }
+            sizeChoice->setCurrentIndex(sizeChoice->findData(UiScale::instance().percent()));
+        };
+        connect(&UiScale::instance(),&UiScale::changed,dialog,refreshSizes);
+        connect(this,&MainWindow::scaleAvailabilityChanged,dialog,refreshSizes);
+        connect(sizeChoice,QOverload<int>::of(&QComboBox::currentIndexChanged),dialog,[this,sizeChoice](int){applyUiPercent(sizeChoice->currentData().toInt(),!preview_);});
+        refreshSizes();
         auto* buttons=new QDialogButtonBox(QDialogButtonBox::Close);layout->addWidget(buttons);
         connect(buttons,&QDialogButtonBox::rejected,dialog,&QDialog::close);
-        const auto translate=[dialog,theme,themeLabel,language,hint,buttons] {
+        const auto translate=[dialog,theme,themeLabel,language,sizeLabel,refreshSizes,hint,buttons] {
             dialog->setWindowTitle(uiText("Beállítások","Settings"));themeLabel->setText(uiText("Megjelenés","Appearance"));
             {const QSignalBlocker block(theme);theme->setItemText(0,uiText("Világos","Light"));theme->setItemText(1,uiText("Sötét","Dark"));}
             {const QSignalBlocker block(language);language->setCurrentIndex(UiLanguage::instance().code()=="hu"?0:1);}
-            hint->setText(uiText("A megjelenés és a nyelv azonnal mentődik.","Appearance and language are saved immediately."));
+            sizeLabel->setText(uiText("Felület mérete","Interface size"));refreshSizes();
+            hint->setText(uiText("A megjelenés, nyelv és méret azonnal mentődik. A kijelzőn el nem férő méretek nem választhatók.","Appearance, language and size save immediately. Sizes that do not fit this display are unavailable."));
             buttons->button(QDialogButtonBox::Close)->setText(uiText("Bezárás","Close"));
         };
         connect(theme,QOverload<int>::of(&QComboBox::currentIndexChanged),dialog,[this](int i){applyTheme(i==1);if(!preview_)QSettings().setValue("appearance/dark",dark_);});
@@ -340,7 +373,7 @@ QDialog* MainWindow::openSettings(bool audio) {
             dialog->close();
         });
     }
-    dialog->resize(560,230);dialog->show();return dialog;
+    UiScale::instance().prepare(dialog,audio?QSize(620,360):QSize(560,320));dialog->show();return dialog;
 }
 
 void MainWindow::chooseInputChannel(int channel) {
@@ -352,5 +385,38 @@ void MainWindow::chooseInputChannel(int channel) {
             if(!id.isEmpty())QSettings().setValue("input/channels/"+QString::fromLatin1(id.toHex()),channel);
         }
         emit inputChannelsChanged();
+    }
+}
+
+QSize MainWindow::availableUiSize() const {
+    auto* display=screen();
+    if(!display)return QSize(1000,850);
+    const auto margins=windowHandle()?windowHandle()->frameMargins():QMargins(8,32,8,8);
+    return display->availableGeometry().size()-QSize(margins.left()+margins.right()+8,
+                                                    std::max(32,margins.top()+margins.bottom())+8);
+}
+void MainWindow::applyUiPercent(int percent, bool persist) {
+    const int effective=preview_?percent:UiScale::fitPercent(percent,availableUiSize());
+    preferredPercent_=persist?effective:percent;
+    UiScale::instance().setPercent(effective,persist);
+    emit scaleAvailabilityChanged();
+    if(!preview_ && isVisible() && screen()) {
+        const auto available=screen()->availableGeometry();
+        const auto frame=frameGeometry();
+        move(std::clamp(frame.x(),available.left(),std::max(available.left(),available.right()-frame.width()+1)),
+             std::clamp(frame.y(),available.top(),std::max(available.top(),available.bottom()-frame.height()+1)));
+    }
+}
+void MainWindow::watchScreen() {
+    disconnect(geometryConnection_);
+    if(screen())geometryConnection_=connect(screen(),&QScreen::availableGeometryChanged,this,[this]{applyUiPercent(preferredPercent_);});
+    applyUiPercent(preferredPercent_);
+}
+void MainWindow::showEvent(QShowEvent* event) {
+    QMainWindow::showEvent(event);
+    if(!preview_ && !watchingScreen_ && windowHandle()) {
+        watchingScreen_=true;
+        connect(windowHandle(),&QWindow::screenChanged,this,[this]{watchScreen();});
+        QTimer::singleShot(0,this,[this]{watchScreen();});
     }
 }

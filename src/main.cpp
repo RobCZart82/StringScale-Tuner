@@ -1,6 +1,7 @@
 #include <utility>
 #include "main_window.hpp"
 #include "ui_language.hpp"
+#include "ui_scale.hpp"
 #include "build_info.hpp"
 #include <QTemporaryDir>
 #include <QSettings>
@@ -10,6 +11,9 @@
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <QIcon>
+#include <QLabel>
+#include <QPushButton>
+#include <QStyleOptionComboBox>
 #include <QAction>
 #include <QDialog>
 #include <QFile>
@@ -43,6 +47,8 @@ int main(int argc, char* argv[]) {
             settingsArg>=0 ? app.arguments().value(settingsArg+1) : testSettings.path());
         QCoreApplication::setOrganizationName("RobCZartTests");
     }
+    const int scaleCheckArg=app.arguments().indexOf("--check-scale");
+    if(scaleCheckArg>=0)return UiScale::savedPercent()==app.arguments().value(scaleCheckArg+1).toInt()?0:20;
     const int checkArg=app.arguments().indexOf("--check-language");
     if(checkArg>=0)return UiLanguage::savedCode()==app.arguments().value(checkArg+1)?0:10;
     if(preview)UiLanguage::instance().setCode("hu",false);
@@ -122,6 +128,55 @@ int main(int argc, char* argv[]) {
                     if(!dialog->grab().save(folder+"/"+code+(dark?"-dark-":"-light-")+dialog->objectName()+".png"))return 4;
             }
         }
+        auto* sizeChoice=settings->findChild<QComboBox*>("sizeChoice");
+        if(!require(sizeChoice && sizeChoice->count()==4,"Missing interface size presets"))return 21;
+        const auto fits=[&](QWidget* root) {
+            if(root->minimumSize()!=root->maximumSize())return false;
+            for(auto* widget:root->findChildren<QWidget*>()) {
+                if(widget->isWindow() || widget->window()!=root->window() || !widget->isVisibleTo(root))continue;
+                const QRect bounds(widget->mapTo(root,QPoint(0,0)),widget->size());
+                if(!root->rect().adjusted(-1,-1,1,1).contains(bounds)) {
+                    qCritical()<<"Control outside fixed window"<<widget<<bounds<<root->size();return false;
+                }
+                if(auto* label=qobject_cast<QLabel*>(widget)) {
+                    if(label->text().contains('<'))continue;
+                    const int needed=label->hasHeightForWidth()?label->heightForWidth(label->width()):label->sizeHint().height();
+                    if(needed>label->height()+1 || (!label->wordWrap() &&
+                        label->fontMetrics().horizontalAdvance(label->text())>label->contentsRect().width()+1)) {
+                        qCritical()<<"Label clipped"<<label->text()<<label->size()<<needed;return false;
+                    }
+                }
+            }
+            return true;
+        };
+        for(const auto& code:{QString("hu"),QString("en")}) {
+            language->setCurrentIndex(code=="hu"?0:1);
+            for(bool dark:{false,true}) {
+                theme->setCurrentIndex(dark?1:0);
+                for(int percent:{75,100,125,150}) {
+                    sizeChoice->setCurrentIndex(sizeChoice->findData(percent));
+                    window.renderPreview(dark,110.0);app.processEvents();
+                    if(!require(window.size()==QSize(1000*percent/125,850*percent/125),"Incorrect fixed preset size"))return 22;
+                    for(auto* root:{static_cast<QWidget*>(&window),static_cast<QWidget*>(settings),static_cast<QWidget*>(audio),static_cast<QWidget*>(about)}) {
+                        if(!require(fits(root),"Clipping at fixed UI scale"))return 23;
+                        const auto name=root==&window?QString("main"):root->objectName();
+                        if(!root->grab().save(folder+"/"+code+(dark?"-dark-":"-light-")+QString::number(percent)+"-"+name+".png"))return 4;
+                    }
+                    const int previous=profile->currentIndex();
+                    for(int index=0;index<profile->count();++index) {
+                        profile->setCurrentIndex(index);app.processEvents();
+                        QStyleOptionComboBox option;option.initFrom(profile);option.currentText=profile->currentText();
+                        const auto edit=profile->style()->subControlRect(QStyle::CC_ComboBox,&option,QStyle::SC_ComboBoxEditField,profile);
+                        if(!require(profile->fontMetrics().horizontalAdvance(profile->currentText())<=edit.width(),"Tuning name clipped"))return 24;
+                    }
+                    profile->setCurrentIndex(previous);
+                }
+            }
+        }
+        UiScale::instance().setPercent(75,true);QSettings().sync();
+        QProcess scaleChild;scaleChild.start(app.applicationFilePath(),{"--test-settings",testSettings.path(),"--check-scale","75"});
+        if(!require(scaleChild.waitForFinished(10000) && scaleChild.exitCode()==0 && scaleChild.exitStatus()==QProcess::NormalExit,"UI scale did not persist"))return 25;
+        if(!require(UiScale::fitPercent(150,QSize(1000,850))==125 && UiScale::fitPercent(125,QSize(800,680))==100,"Display fit failed"))return 26;
         settings->close();audio->close();about->close();
         return 0;
     }

@@ -1,4 +1,5 @@
 #include "ui_language.hpp"
+#include "ui_scale.hpp"
 #include <utility>
 #include "tuner_widgets.hpp"
 #include <QPainter>
@@ -17,7 +18,7 @@ void text(QPainter& p, QRectF r, const QString& s, QColor color, int size, bool 
 void panel(QPainter& p, QWidget* w) {
     p.setPen(QPen(w->palette().color(QPalette::Mid), 1.5));
     p.setBrush(w->palette().color(QPalette::Base));
-    p.drawRoundedRect(w->rect().adjusted(2, 2, -2, -2), 16, 16);
+    p.drawRoundedRect(QRectF(0,0,w->width()/UiScale::instance().factor(),w->height()/UiScale::instance().factor()).adjusted(2,2,-2,-2),16,16);
 }
 QPointF point(QPointF o, double r, double c) {
     const auto a = c / 50 * pi / 2;
@@ -68,13 +69,15 @@ PitchScale::PitchScale(QWidget* parent):QWidget(parent) {setMinimumHeight(145);s
 void PitchScale::setPreset(const strings::TuningPreset* p,double c){preset_=p;calibration_=c;update();}
 void PitchScale::setFrequency(double f){frequencyHz_=f;update();}
 void PitchScale::paintEvent(QPaintEvent*) {
-    QPainter p(this);p.setRenderHint(QPainter::Antialiasing);panel(p,this);
+    QPainter p(this);p.setRenderHint(QPainter::Antialiasing);
+    const double scale=UiScale::instance().factor();p.scale(scale,scale);
+    const double logicalWidth=width()/scale;panel(p,this);
     text(p,{18,8,90,26},uiText("Húrok", "Strings"),ink(this),22,true);
     if(!preset_||preset_->targets.empty()) return;
     const double low=preset_->targets.front().hz*calibration_/440;
     const double high=preset_->targets.back().hz*calibration_/440;
     // Extra octaves keep out-of-register measurements visible.
-    const double min=low/2,max=high*2,left=35,right=width()-35,y=83;
+    const double min=low/2,max=high*2,left=35,right=logicalWidth-35,y=83;
     auto x=[&](double hz){return left+std::log2(hz/min)/std::log2(max/min)*(right-left);};
     p.setPen(QPen(ink(this),3,Qt::SolidLine,Qt::RoundCap));p.drawLine(QPointF(left,y),QPointF(right,y));
     for(const auto& t:preset_->targets){
@@ -91,12 +94,14 @@ InputLevelMeter::InputLevelMeter(QWidget* parent):QWidget(parent){setMinimumHeig
 void InputLevelMeter::setLevel(double r,double p,bool c){rmsDb_=r;peakDb_=p;clipped_=c;update();}
 void InputLevelMeter::setLimits(double m,double w){minDb_=m;warningDb_=w;update();}
 void InputLevelMeter::paintEvent(QPaintEvent*) {
-    QPainter p(this);p.setRenderHint(QPainter::Antialiasing);panel(p,this);
+    QPainter p(this);p.setRenderHint(QPainter::Antialiasing);
+    const double scale=UiScale::instance().factor();p.scale(scale,scale);
+    const double logicalWidth=width()/scale;panel(p,this);
     const bool low=rmsDb_<minDb_,high=clipped_||peakDb_>=warningDb_;
     const QString state=high?uiText("Túl erős jel", "Input too loud"):low?uiText("Pengess meg egy húrt", "Pluck a string"):uiText("Megfelelő jelszint", "Good input level");
     text(p,{18,10,145,30},uiText("Hangerő", "Input level"),ink(this),24,true);
-    text(p,{width()/2.0-160,10,320,30},state,ink(this),21,true);
-    const double left=38,right=width()-38,y=79;
+    text(p,{logicalWidth/2.0-160,10,320,30},state,ink(this),21,true);
+    const double left=38,right=logicalWidth-38,y=79;
     auto x=[&](double db){return left+std::clamp((db+70)/70,0.0,1.0)*(right-left);};
     QColor safe=accent(this);safe.setAlpha(35);p.setPen(Qt::NoPen);p.setBrush(safe);
     p.drawRoundedRect(QRectF(x(minDb_),y-9,x(warningDb_)-x(minDb_),30),7,7);
