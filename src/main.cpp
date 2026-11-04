@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
         UiLanguage::instance().setCode("en");QSettings().sync();
         QProcess child;child.start(app.applicationFilePath(),{"--test-settings",testSettings.path(),"--check-language","en"});
         if(!child.waitForFinished(10000)||child.exitCode()!=0||child.exitStatus()!=QProcess::NormalExit)return 14;
-        for(const auto& path:{":/branding/GYR-black.svg",":/branding/GYR-light.svg",":/branding/Alairas-Vektor.svg"}) {
+        for(const auto& path:{":/branding/GYR-black.svg",":/branding/GYR-light.svg",":/branding/Alairas-Vektor.svg",":/branding/Alairas-Vektor-light.svg"}) {
             QSvgRenderer svg{QString(path)};if(!require(svg.isValid()&&!svg.viewBoxF().isEmpty(),"Missing/invalid embedded SVG"))return 15;
         }
         for(const auto& code:{QString("hu"),QString("en")}) {

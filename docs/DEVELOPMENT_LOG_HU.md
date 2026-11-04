@@ -1,5 +1,15 @@
 # Fejlesztési és javítási napló
 
+## 2026-11-04 – Világos szignó sötét témához
+
+Az eredeti Alairas-Vektor.svg változatlanul megmarad. Új párja az
+Alairas-Vektor-light.svg: csak a kitöltőszín változott #211A19-ről #eee9dc-re,
+a világos GYR-logóhoz igazodva. A görbék, a méretek, a viewBox és az átlátszó
+háttér azonos. A Névjegy témaváltáskor automatikusan a megfelelő változatot
+rajzolja; a korábbi világos szignópanel kikerült a sötét témából.
+A világos SVG az alkalmazásba csomagolt erőforrás, érvényességét a meglévő
+GUI-teszt is ellenőrzi. Ez felülírja a korábbi naplóbejegyzés világos paneles megoldását.
+
 ## 2026-11-04 – Kétnyelvű felület, fogaskerék-menü és Névjegy
 
 - Magyar / English választó a Beállítások / Settings ablakban, a témaválasztó mellett.

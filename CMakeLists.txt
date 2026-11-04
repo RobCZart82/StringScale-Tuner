@@ -49,7 +49,7 @@ if(STRINGS_BUILD_GUI)
         PREFIX "/branding"
         BASE "resources/branding"
         FILES resources/branding/GYR-black.svg resources/branding/GYR-light.svg
-              resources/branding/Alairas-Vektor.svg
+              resources/branding/Alairas-Vektor.svg resources/branding/Alairas-Vektor-light.svg
     )
     set_target_properties(StringScaleTuner PROPERTIES
         WIN32_EXECUTABLE TRUE

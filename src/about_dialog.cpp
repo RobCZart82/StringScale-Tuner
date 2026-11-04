@@ -16,20 +16,15 @@ public:
         setMinimumHeight(signature ? 110 : 160);
         setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         setAccessibleName(signature ? "Gyuricza Róbert" : "GYR");
-        if (signature) renderer_.load(QString(":/branding/Alairas-Vektor.svg"));
     }
 protected:
     void paintEvent(QPaintEvent*) override {
-        if (!signature_) {
-            const bool dark = palette().color(QPalette::Window).lightness() < 128;
-            const QString path = dark ? ":/branding/GYR-light.svg" : ":/branding/GYR-black.svg";
-            if (path != source_) { renderer_.load(path); source_ = path; }
-        }
+        const bool dark = palette().color(QPalette::Window).lightness() < 128;
+        const QString path = signature_
+            ? (dark ? ":/branding/Alairas-Vektor-light.svg" : ":/branding/Alairas-Vektor.svg")
+            : (dark ? ":/branding/GYR-light.svg" : ":/branding/GYR-black.svg");
+        if (path != source_) { renderer_.load(path); source_ = path; }
         QPainter p(this); p.setRenderHint(QPainter::Antialiasing);
-        if (signature_) {
-            p.setPen(Qt::NoPen); p.setBrush(QColor("#fffaf0"));
-            p.drawRoundedRect(rect().adjusted(6,6,-6,-6), 12,12);
-        }
         const QRectF available = QRectF(rect()).adjusted(20,12,-20,-12);
         // The SVG renderer maps its original nonzero viewBox into this aspect-preserving rectangle.
         const QSizeF size = renderer_.viewBoxF().size().scaled(available.size(), Qt::KeepAspectRatio);
