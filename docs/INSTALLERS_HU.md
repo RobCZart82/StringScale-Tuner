@@ -20,8 +20,8 @@ Az EXE nincs kiadói tanúsítvánnyal aláírva; SmartScreen figyelmeztethet.
 
 A pkgbuild/productbuild által készített, aláíratlan PKG a rendszer Applications
 mappájába telepíti a StringScaleTuner.app alkalmazást és a „StringScale Tuner
-Documents” mappát. Utóbbiban találhatók a PDF-kézikönyvek, útmutatók, licencek és
-buildadatok. Rendszerszintű telepítéskor a macOS hitelesítést kérhet.
+Documents” mappát. Utóbbiban csak a két PDF-kézikönyv, rövid README és licencanyag
+található. A fejlesztői buildadatok nem kerülnek a telepített mappába. Rendszerszintű telepítéskor a macOS hitelesítést kérhet.
 
 A PKG nem relocatable: egy másik mappában maradt tesztpéldány helyett az
 Applications útvonalat használja. Telepítés előtt zárd be a régi alkalmazást.
@@ -56,3 +56,22 @@ Hivatkozások:
 - https://doc.qt.io/qt-6.8/supported-platforms.html
 - https://jrsoftware.org/ishelp/topic_setup_privilegesrequired.htm
 - https://developer.apple.com/documentation/xcode/packaging-mac-software-for-distribution
+
+## Felhasználói dokumentációs szabály
+
+Új telepítés dokumentációja: README.txt, LICENSE, THIRD_PARTY_NOTICES.md,
+manuals/StringScale-Tuner-User-Manual-HU.pdf és -EN.pdf; szükség esetén licenses/
+alatt a függőségek további jogi mellékletei. Az appban/binaryk mellett található,
+futásidőhöz tartozó licencanyagokat nem töröljük. A manuals fejlesztői README-je
+nem kerül a felhasználóhoz.
+
+A tesztlapok, hardveres jegyzőkönyv, kiadási munkajegyzet, SDK-SBOM és JSON
+build-/fájlleltár csak a repositoryban, a „developer” ZIP-ben vagy külön CI-audit
+artifactban maradnak. A telepített fájlok ellenőrzése külső, CI-beli leltárból
+megy, így nem kell ellenőrzési JSON-t telepíteni. A teljes licencaudit továbbra
+is kiadási feltétel, a szűrés nem helyettesíti azt.
+
+Korábban telepített próbaverzióból maradhatnak régi dokumentumok. Ezeket az új
+telepítő nem törli automatikusan, nehogy kitöltött személyes tesztlap vesszen el.
+A régi dokumentációs mappa mentés után kézzel eltávolítható; friss telepítéskor
+már csak a fenti felhasználói anyagok kerülnek bele.

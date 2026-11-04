@@ -63,6 +63,8 @@ jobs:
           @('stage/bin/StringScaleTuner.exe', 'stage/bin/Qt6Core.dll', 'stage/bin/msvcp140.dll', 'stage/bin/vcruntime140.dll', 'stage/bin/Qt6Multimedia.dll', 'stage/plugins/platforms/qwindows.dll') | ForEach-Object {
             if (!(Test-Path $_)) { throw "Missing runtime file: $_" }
           }
+      - name: Test user installer payload policy
+        run: python -m unittest discover -s tests -p installer_payload_test.py
       - name: Package identifiable test build
         id: package
         shell: pwsh
@@ -82,7 +84,7 @@ jobs:
           $setup = Start-Process -FilePath '${{ steps.installer.outputs.installer_path }}' -ArgumentList @('/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/SP-', "/DIR=`"$installPath`"") -PassThru
           if (!$setup.WaitForExit(60000)) { $setup.Kill(); throw 'Setup timed out' }
           if ($setup.ExitCode -ne 0) { throw "Setup failed: $($setup.ExitCode)" }
-          python scripts/smoke_installer.py --root "$installPath" --platform windows-x64 --expected-info build/build-info.json --preview-out "$env:RUNNER_TEMP/installer-previews"
+          python scripts/smoke_installer.py --root "$installPath" --platform windows-x64 --expected-info build/build-info.json --payload-inventory "${{ steps.installer.outputs.installer_inventory }}" --preview-out "$env:RUNNER_TEMP/installer-previews"
           if ($LASTEXITCODE -ne 0) { throw 'Installed application smoke test failed' }
           $uninstall = Start-Process -FilePath "$installPath/unins000.exe" -ArgumentList @('/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART') -PassThru
           if (!$uninstall.WaitForExit(60000)) { $uninstall.Kill(); throw 'Uninstall timed out' }
@@ -94,7 +96,14 @@ jobs:
         run: |
           # This install runs only on the disposable GitHub-hosted VM.
           sudo /usr/sbin/installer -pkg "${{ steps.installer.outputs.installer_path }}" -target /
-          python3 scripts/smoke_installer.py --root /Applications --platform macos-arm64 --expected-info build/build-info.json --preview-out "$RUNNER_TEMP/installer-previews"
+          python3 scripts/smoke_installer.py --root /Applications --platform macos-arm64 --expected-info build/build-info.json --payload-inventory "${{ steps.installer.outputs.installer_inventory }}" --preview-out "$RUNNER_TEMP/installer-previews"
+      - name: Upload installer audit data separately
+        uses: actions/upload-artifact@v4
+        with:
+          name: Installer-audit-${{ matrix.platform }}-${{ github.run_number }}
+          path: ${{ steps.installer.outputs.installer_inventory }}
+          if-no-files-found: error
+          retention-days: 30
       - name: Upload native test installer
         uses: actions/upload-artifact@v4
         with:
@@ -108,7 +117,7 @@ jobs:
       - name: Upload downloadable preview
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.package.outputs.artifact_name }}
+          name: ${{ steps.package.outputs.artifact_name }}-developer
           path: |
             ${{ steps.package.outputs.archive_path }}
             ${{ steps.package.outputs.checksum_path }}
