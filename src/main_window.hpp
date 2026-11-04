@@ -22,10 +22,13 @@ public:
     void renderPreview(bool dark, double hz);
     QDialog* openSettings(bool audio = false);
     QDialog* openAbout();
+signals:
+    void inputChannelsChanged();
 private:
     void applyTheme(bool dark);
     void retranslate();
     void refreshStatus();
+    void chooseInputChannel(int channel);
     void buildInterface();
     void refreshInputDevices();
     void selectInput();
@@ -40,6 +43,8 @@ private:
     double calibration_ = 440.0;
     bool dark_ = false;
     bool preview_ = false;
+    int inputChannel_ = 0;
+    int channelCount_ = 0;
 
     enum class Status { Listening, NoInput, Denied, Error, Preview };
     Status status_ = Status::Listening;

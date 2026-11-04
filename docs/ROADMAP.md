@@ -10,7 +10,8 @@
 - [ ] M2: Ground-truth pitch accuracy with guitar and bass at E2/E1/B0,
       detunings, transients, vibrato, noise and weak fundamentals.
 - [ ] M2: Improve latency: DSP thread, adaptive analysis window, resampler.
-- [ ] M2: Add user-selectable input channel for multichannel DI interfaces.
+- [x] M2: Add user-selectable input channel for multichannel DI interfaces
+      (implementation and synthetic tests; hardware validation still pending).
 - [ ] M2: Add optional manual target-string selection and clearer clip hold.
 - [ ] M3: Polish multi-resolution retina layouts and accessibility.
 - [ ] M3: Add instant, persistent Magyar / English language selection in Settings

@@ -3,7 +3,7 @@
 ## Signal pipeline
 
 1. `QMediaDevices` lists microphones and audio interfaces.
-2. `QAudioSource` captures an available normalized sample format (48k/mono
+2. `QAudioSource` captures an available normalized sample format (48k/multichannel
    preferred; device preferred format as fallback).
 3. The input read handler calculates block RMS and peak, and monitors clipping.
 4. A simple 1-pole low-pass and phase accumulator decimate to 12,000 sps.
@@ -43,3 +43,11 @@ The pitch-map is not merely a chromatic note indicator. Its primary role is
 to help novice guitarists understand whether their *absolute* pitch is below,
 near or above their intended string. A visual 'in tune' indication must not
 conceal an octave error. This is a key acceptance criterion.
+
+
+Input channel selection (2026-11-04): the capture adapter negotiates an available
+multichannel format and routes one selected channel to both level measurement
+and pitch analysis. Channel selection is saved per device. The Qt-independent
+input_frame.hpp helper rejects invalid/nonfinite selected samples; unrelated
+channels are not mixed or included in clip detection. Changing the channel
+clears analysis history while preserving partial PCM-frame alignment.

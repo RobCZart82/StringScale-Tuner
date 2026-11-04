@@ -18,7 +18,7 @@ finished or accuracy-certified tuner and there are no prebuilt installers yet.
 - **Top:** RMS level with minimum gate, peak warning and digital clipping.
 - **Tuning selection:** six-string E standard, Drop D, Eb, Open G, DADGAD,
   seven-string guitar, four- and five-string bass.
-- Input device selection, configurable level gates, persistent light/dark theme.
+- Input device and per-device channel selection, configurable level gates, persistent light/dark theme.
 - Child-readable Hungarian/English interface; measured note and octave, no Hz readouts.
 - Standard manufacturer numbering: highest string = 1, lowest = 6/7 or 4/5.
 - No AP Tuner proprietary code, trademark assets, or graphics are used.

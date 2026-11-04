@@ -1,5 +1,27 @@
 # Fejlesztési és javítási napló
 
+## 2026-11-04 – Választható bemeneti csatorna USB/DI hangkártyákhoz
+
+- A Hang / Audio ablakban választható a gitárhoz használt csatorna, magyar és angol
+  felirattal. A lista a ténylegesen megnyitott formátum csatornáit mutatja; egyetlen
+  csatornánál nem váltható, aktív bemenet nélkül le van tiltva.
+- A program a támogatott többcsatornás formátumot kéri a korábbi mono kérés helyett.
+  Elsőként a maximális hirdetett csatornaszámot próbálja 48k Float, majd Int16
+  formátumban; ha ezek nem támogatottak, az eszköz preferált formátumára vált vissza.
+- Csak a kiválasztott csatorna kerül a hangolóba és a jelszintmérőbe. A másik,
+  üres csatorna nem halkítja, az ellenfázisú csatorna nem oltja ki a gitár jelét.
+  A túlvezérlésjelzés is a választott csatornára vonatkozik.
+- A választás azonnal, eszközazonosítónként mentődik. Alapérték az 1. csatorna;
+  ha a mentett csatorna az új formátumban nem létezik, szintén az 1. lesz aktív.
+- Élő csatornaváltáskor a hangforrás nem indul újra, a korábbi hangmagasság- és
+  jelszintelőtörténet törlődik. A félbemaradt PCM-keret megmarad, hogy a csatornák
+  bájthatárai ne tolódjanak el.
+- Szintetikus tesztek: üres társcsatorna, ellenfázisú E2, másik csatorna clippingje,
+  hibás csatornaszám, üres keret és nem véges minták. A GUI-teszt a kiválasztott
+  csatorna nyelvváltás alatti megőrzését is ellenőrzi.
+- Helyi Apple Silicon build és CTest 3/3 sikeres; a magyar/világos és angol/sötét
+  Hang ablak képei vizuálisan ellenőrizve. Valódi USB/DI hardveres teszt még szükséges.
+
 ## 2026-11-04 – Világos szignó sötét témához
 
 Az eredeti Alairas-Vektor.svg változatlanul megmarad. Új párja az

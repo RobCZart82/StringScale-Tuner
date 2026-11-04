@@ -36,11 +36,12 @@ MainWindow::MainWindow(QWidget* parent, bool preview)
     applyTheme(settings.value("appearance/dark", false).toBool());
     connect(&UiLanguage::instance(), &UiLanguage::changed, this, &MainWindow::retranslate);
     retranslate();
+    if(preview_) { channelCount_=2; emit inputChannelsChanged(); }
     if (!preview_) {
     connect(&capture_, &AudioCapture::pitchReady, this, &MainWindow::handlePitch);
     connect(&capture_, &AudioCapture::levelReady, this, &MainWindow::handleLevel);
     connect(&capture_, &AudioCapture::errorOccurred, this, [this](const QString& message) {
-        handlePitch(0,0); errorKey_=message; status_=Status::Error; refreshStatus();
+        handlePitch(0,0); channelCount_=0; emit inputChannelsChanged(); errorKey_=message; status_=Status::Error; refreshStatus();
     });
     connect(&mediaDevices_, &QMediaDevices::audioInputsChanged, this, &MainWindow::refreshInputDevices);
     refreshInputDevices();
@@ -127,6 +128,7 @@ void MainWindow::refreshInputDevices() {
 
 void MainWindow::selectInput() {
     if (preview_) return;
+    channelCount_=0; emit inputChannelsChanged();
     if (!inputChoice_ || inputChoice_->currentIndex() < 0) {
         capture_.stop();
         status_=Status::NoInput; refreshStatus();
@@ -153,10 +155,17 @@ void MainWindow::selectInput() {
     for (const auto& device : devices) {
         if (device.id() == id) {
             QSettings().setValue("input/deviceId", id);
-            if(capture_.start(device)){status_=Status::Listening; refreshStatus();}
+            const QString channelKey="input/channels/"+QString::fromLatin1(id.toHex());
+            const int requested=QSettings().value(channelKey,0).toInt();
+            if(capture_.start(device,requested)){
+                channelCount_=capture_.channelCount();inputChannel_=capture_.inputChannel();
+                QSettings().setValue(channelKey,inputChannel_);
+                emit inputChannelsChanged();status_=Status::Listening;refreshStatus();
+            }
             return;
         }
     }
+    capture_.stop();status_=Status::NoInput;refreshStatus();
 }
 
 
@@ -213,7 +222,7 @@ void MainWindow::retranslate() {
     const QSignalBlocker blocker(profileChoice_);
     for(int i=0;i<profileChoice_->count();++i)profileChoice_->setItemText(i,UiLanguage::instance().code()=="hu"?hu.value(i):en.value(i));
     if(preview_)inputChoice_->setItemText(0,uiText("Tesztbemenet","Test input"));
-    handlePitch(detectedHz_,1);refreshStatus();
+    handlePitch(detectedHz_,1);refreshStatus();emit inputChannelsChanged();
     for(auto* w:findChildren<QWidget*>())w->update();
 }
 QDialog* MainWindow::openAbout() {
@@ -246,13 +255,25 @@ QDialog* MainWindow::openSettings(bool audio) {
         connect(language,QOverload<int>::of(&QComboBox::currentIndexChanged),dialog,[this,language](int){UiLanguage::instance().setCode(language->currentData().toString(),!preview_);});
         connect(&UiLanguage::instance(),&UiLanguage::changed,dialog,translate);translate();
     } else {
+        auto* channel=new QComboBox;channel->setObjectName("inputChannelChoice");
+        auto* channelLabel=new QLabel;channelLabel->setBuddy(channel);form->addRow(channelLabel,channel);
+        const auto refreshChannels=[this,channel] {
+            const QSignalBlocker blocker(channel);channel->clear();
+            if(channelCount_<=0)channel->addItem(uiText("Nincs aktív hangbemenet","No active audio input"),-1);
+            else for(int i=0;i<channelCount_;++i)channel->addItem(uiText("%1. csatorna","Channel %1").arg(i+1),i);
+            channel->setEnabled(channelCount_>1);
+            if(channelCount_>0)channel->setCurrentIndex(inputChannel_);
+        };
+        connect(this,&MainWindow::inputChannelsChanged,dialog,refreshChannels);
+        connect(channel,QOverload<int>::of(&QComboBox::currentIndexChanged),dialog,[this,channel](int){chooseInputChannel(channel->currentData().toInt());});
+        refreshChannels();
         auto* minSpin=new QDoubleSpinBox;minSpin->setRange(-65,-20);minSpin->setSuffix(" dBFS RMS");minSpin->setValue(minimumLevelDb_);
         auto* maxSpin=new QDoubleSpinBox;maxSpin->setRange(-12,-0.5);maxSpin->setSuffix(" dBFS peak");maxSpin->setValue(warningPeakDb_);
         auto* minLabel=new QLabel;minLabel->setBuddy(minSpin);auto* maxLabel=new QLabel;maxLabel->setBuddy(maxSpin);form->addRow(minLabel,minSpin);form->addRow(maxLabel,maxSpin);
         auto* buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);layout->addWidget(buttons);
-        const auto translate=[dialog,minLabel,maxLabel,hint,buttons] {
-            dialog->setWindowTitle(uiText("Hang","Audio"));minLabel->setText(uiText("Minimum jelszint","Minimum input level"));maxLabel->setText(uiText("Maximum jelszint jelzése","High-level warning"));
-            hint->setText(uiText("A jelszintküszöbök nem garantálják a hangmagasságmérés pontosságát.","Input level limits alone do not guarantee pitch accuracy."));
+        const auto translate=[dialog,channelLabel,refreshChannels,minLabel,maxLabel,hint,buttons] {
+            dialog->setWindowTitle(uiText("Hang","Audio"));channelLabel->setText(uiText("Bemeneti csatorna","Input channel"));refreshChannels();minLabel->setText(uiText("Minimum jelszint","Minimum input level"));maxLabel->setText(uiText("Maximum jelszint jelzése","High-level warning"));
+            hint->setText(uiText("A csatornaválasztás azonnal mentődik. Válaszd azt a csatornát, ahová a gitárt csatlakoztattad. A jelszintküszöbök önmagukban nem garantálják a mérés pontosságát.","The input channel is saved immediately. Choose the channel connected to your guitar. Input level limits alone do not guarantee pitch accuracy."));
             buttons->button(QDialogButtonBox::Ok)->setText(uiText("Mentés","Save"));buttons->button(QDialogButtonBox::Cancel)->setText(uiText("Mégse","Cancel"));
         };
         connect(&UiLanguage::instance(),&UiLanguage::changed,dialog,translate);translate();
@@ -264,4 +285,16 @@ QDialog* MainWindow::openSettings(bool audio) {
         });
     }
     dialog->resize(560,230);dialog->show();return dialog;
+}
+
+void MainWindow::chooseInputChannel(int channel) {
+    if(channel<0 || channel>=channelCount_)return;
+    if(preview_ || capture_.setInputChannel(channel)) {
+        inputChannel_=channel;
+        if(!preview_) {
+            const auto id=inputChoice_->currentData().toByteArray();
+            if(!id.isEmpty())QSettings().setValue("input/channels/"+QString::fromLatin1(id.toHex()),channel);
+        }
+        emit inputChannelsChanged();
+    }
 }
