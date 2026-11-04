@@ -65,7 +65,9 @@ def verify(archive, expected_info, platform):
             if not entry.is_dir() and entry.filename.startswith(root) and entry.filename not in allowed:
                 raise ValueError(f'File missing from inventory: {entry.filename}')
         required = ['LICENSE', 'START-HERE-HU.md', 'TEST-RESULTS-HU.md',
-                    'THIRD_PARTY_NOTICES.md', 'HARDWARE-TESTS-HU.md', 'RELEASE-NOTES-HU.md']
+                    'THIRD_PARTY_NOTICES.md', 'HARDWARE-TESTS-HU.md', 'RELEASE-NOTES-HU.md',
+                    'manuals/StringScale-Tuner-User-Manual-HU.pdf',
+                    'manuals/StringScale-Tuner-User-Manual-EN.pdf']
         if platform == 'windows-x64':
             required += ['bin/StringScaleTuner.exe', 'bin/Qt6Core.dll',
                          'bin/Qt6Multimedia.dll', 'plugins/platforms/qwindows.dll']

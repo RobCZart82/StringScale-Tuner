@@ -21,8 +21,9 @@ függőségeivel együtt csomagolja. A meglévő Core DSP tests változatlanul f
    köré csomagolt artifact ZIP-é. Windows: Get-FileHash <fájl.zip> -Algorithm SHA256;
    macOS: shasum -a 256 <fájl.zip>.
 
-Helyi Qt-, CMake- vagy Visual Studio-telepítés nem szükséges. A csomagok
-kísérleti, fejlesztői próbaverziók, nem telepítők. Nincs kiadói aláírás vagy
+Helyi Qt-, CMake- vagy Visual Studio-telepítés nem szükséges. A ZIP-csomagok
+kísérleti, kicsomagolható próbaverziók. Az új Actions-futások külön installer
+artifactban EXE/PKG próbatelepitőt is mellékelnek; részletek: INSTALLERS_HU.md. Nincs kiadói aláírás vagy
 Apple-notarizáció; az operációs rendszer figyelmeztethet. A Mac-próbacsomag
 technikai (ad-hoc) aláírást kap, amely a csomag épségét ellenőrzi, kiadói
 azonosságot és Apple-jóváhagyást nem igazol. macOS-en a

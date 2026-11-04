@@ -50,6 +50,7 @@ def main():
                            ("docs/HARDWARE_TEST_RESULTS_HU.md", "HARDWARE-TESTS-HU.md"),
                            ("docs/RELEASE_NOTES_HU.md", "RELEASE-NOTES-HU.md")]:
         shutil.copy2(root / source, stage / target)
+    shutil.copytree(root / "docs/manuals", stage / "manuals", dirs_exist_ok=True)
     run = os.environ.get("GITHUB_RUN_NUMBER", "local")
     if not run.isdigit() and run != "local":
         raise ValueError("Invalid build number")
