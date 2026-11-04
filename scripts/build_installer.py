@@ -13,6 +13,7 @@ import zipfile
 
 from package_preview import digest
 from verify_preview import verify
+from installer_payload import create_user_stage
 
 
 def build_mac(stage, destination, numeric_version):
@@ -134,10 +135,18 @@ def main():
     suffix = '-setup.exe' if args.platform == 'windows-x64' else '.pkg'
     destination = output / (args.archive.stem + suffix)
     numeric_version = info['version'].split('-')[0]
-    if args.platform == 'macos-arm64':
-        build_mac(stage, destination, numeric_version)
-    else:
-        build_windows(stage, destination, numeric_version, info['version'], args.iscc)
+    # Build from a separate filtered copy, preserving the verified developer ZIP.
+    with tempfile.TemporaryDirectory(prefix='stringscale-user-payload-') as temp:
+        user_stage = Path(temp)
+        user_inventory = create_user_stage(stage, user_stage, inventory, args.platform)
+        if args.platform == 'macos-arm64':
+            build_mac(user_stage, destination, numeric_version)
+        else:
+            build_windows(user_stage, destination, numeric_version, info['version'], args.iscc)
+    audit = output / 'audit'
+    audit.mkdir(exist_ok=True)
+    payload_manifest = audit / (destination.name + '.payload.json')
+    payload_manifest.write_text(json.dumps(dict(build_info=info, files=user_inventory), indent=2)+'\n', encoding='utf-8')
     checksum = destination.with_suffix(destination.suffix + '.sha256')
     checksum.write_text(f'{digest(destination)}  {destination.name}\n', encoding='utf-8')
     manifest = destination.with_suffix(destination.suffix + '.json')
@@ -148,7 +157,7 @@ def main():
     print(destination)
     if os.environ.get('GITHUB_OUTPUT'):
         with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as stream:
-            stream.write(f'installer_path={destination}\ninstaller_checksum={checksum}\ninstaller_manifest={manifest}\n')
+            stream.write(f'installer_path={destination}\ninstaller_checksum={checksum}\ninstaller_manifest={manifest}\ninstaller_inventory={payload_manifest}\n')
 
 
 if __name__ == '__main__':

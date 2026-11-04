@@ -1,5 +1,20 @@
 # Fejlesztési és javítási napló
 
+## 2026-11-04 – Letisztított telepített felhasználói dokumentáció
+
+Robert jóváhagyta, hogy a publikált felhasználói csomagban csak a HU/EN PDF,
+rövid README és szükséges licencanyag szerepeljen. A telepítő ezért a hitelesen
+ellenőrzött fejlesztői stage-ből külön, szűrt másolatot készít: a futásidejű
+komponensek változatlanok, a teszt- és hardveres dokumentumok, SDK-SBOM, valamint
+build-/leltár-JSON-ok kimaradnak. A manuals fejlesztői README-je sem települ.
+
+A CI külső leltárból vizsgálja a telepített fájlokat, és a dokumentációs
+könyvtár pontos tartalmát is ellenőrzi. A leltár külön audit artifact, a régi
+ellenőrzött ZIP külön developer artifact. Öt célzott Python-teszt ellenőrzi a
+Windows/Mac futásidő megtartását, jogi anyagokat, szűrést és a hibás/hiányos
+bemenetek elutasítását. Ismeretlen jövőbeli komponens nem tűnhet el csendben.
+A korábban telepített tesztlapokat nem töröljük automatikusan.
+
 ## 2026-11-04 – Hűvös világos téma és fix felületméretek
 
 Robert kérésére a világos fő háttér enyhén kékes törtfehér (#F2F6FB), a panelek
