@@ -1,6 +1,7 @@
 #include <utility>
 #include "main_window.hpp"
 #include "ui_language.hpp"
+#include "build_info.hpp"
 #include <QTemporaryDir>
 #include <QSettings>
 #include <QProcess>
@@ -22,7 +23,7 @@ int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
     QCoreApplication::setApplicationName("StringScale Tuner");
     QCoreApplication::setOrganizationName("RobCZart");
-    QCoreApplication::setApplicationVersion("0.1.0");
+    QCoreApplication::setApplicationVersion(strings::build::version);
     app.setStyle("Fusion");
     const int previewArg = app.arguments().indexOf("--render-preview");
     const bool preview = previewArg >= 0;

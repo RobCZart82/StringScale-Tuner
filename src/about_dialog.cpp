@@ -1,5 +1,6 @@
 #include "about_dialog.hpp"
 #include "ui_language.hpp"
+#include "build_info.hpp"
 #include <QCoreApplication>
 #include <QEvent>
 #include <QDialogButtonBox>
@@ -45,6 +46,9 @@ AboutDialog::AboutDialog(QWidget* parent) : QDialog(parent) {
     auto font=title->font();font.setPointSize(23);font.setBold(true);title->setFont(font);
     title->setAlignment(Qt::AlignCenter);layout->addWidget(title);
     auto* version=new QLabel;version->setAlignment(Qt::AlignCenter);layout->addWidget(version);
+    auto* build=new QLabel(QString("Build: %1").arg(QString::fromLatin1(strings::build::revision).left(12)
+        +(QString::fromLatin1(strings::build::revision).endsWith("-dirty")?" · local":"")));
+    build->setAlignment(Qt::AlignCenter);build->setTextInteractionFlags(Qt::TextSelectableByMouse);layout->addWidget(build);
     auto* description=new QLabel;description->setAlignment(Qt::AlignCenter);description->setWordWrap(true);layout->addWidget(description);
     layout->addWidget(new BrandImage(false,this),2);
     auto* author=new QLabel;author->setAlignment(Qt::AlignCenter);layout->addWidget(author);

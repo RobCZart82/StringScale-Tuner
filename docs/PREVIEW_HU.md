@@ -9,11 +9,17 @@ függőségeivel együtt csomagolja. A meglévő Core DSP tests változatlanul f
 1. A GitHub Actions alatt nyiss meg egy sikeres Desktop preview futást.
 2. Az Artifacts részből töltsd le a gépedhez tartozó csomagot
    (GitHub-bejelentkezés szükséges lehet).
-3. Bontsd ki az artifactot, majd a benne található preview ZIP-et is.
-4. Windows: a bin mappában indítsd a StringScaleTuner.exe fájlt.
+3. Bontsd ki az artifactot, majd a benne található verziózott ZIP-et is.
+   Az alpha csomag neve verziót, platformot és buildszámot tartalmaz.
+4. Windows: a csomag bin mappájában indítsd a StringScaleTuner.exe fájlt.
    A mellékelt DLL-eket és almappákat hagyd mellette.
-5. macOS: a stage mappában található StringScaleTuner.app alkalmazást
-   másold az Alkalmazások közé. A rendszer kérésére engedélyezd a mikrofont.
+5. macOS: a csomag StringScaleTuner.app alkalmazását másold az Alkalmazások közé.
+   A rendszer kérésére engedélyezd a mikrofont.
+6. A csomag TEST-RESULTS-HU.md tesztlapját töltsd ki. A Névjegy verziója és
+   Build sora, illetve a build-info.json pontos forrásazonosítója azonosítja a próbát.
+7. A .zip.sha256 a belső, verziózott ZIP ellenőrzőösszege, nem a GitHub által
+   köré csomagolt artifact ZIP-é. Windows: Get-FileHash <fájl.zip> -Algorithm SHA256;
+   macOS: shasum -a 256 <fájl.zip>.
 
 Helyi Qt-, CMake- vagy Visual Studio-telepítés nem szükséges. A csomagok
 kísérleti, fejlesztői próbaverziók, nem telepítők. Nincs kiadói aláírás vagy
