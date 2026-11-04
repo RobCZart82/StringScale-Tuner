@@ -1,5 +1,24 @@
 # Fejlesztési és javítási napló
 
+## 2026-11-04 – Sík, keret nélküli lenyílólista-jelölők
+
+Robert kérésére a lenyíló listák jobb szélén a natív, kidomborodó gomb helyett
+átlátszó hátterű, keret nélküli SVG-chevron látható. Világos témán sötét,
+sötét témán törtfehér vonalat használ. A 32 logikai pixeles kattintható terület
+megmarad, a szövegnek külön jobb oldali helyet tartunk fenn. A főablak és a
+Beállítások/Hang ablak összes QComboBox mezőjére egységesen érvényes.
+
+## 2026-11-04 – Jóváhagyott kékes antracit sötét téma
+
+Robert jóváhagyása alapján a fő háttér #252D38, a panelek és a párbeszédablakok
+háttere #303B49. A Beállítások, Hang és Névjegy tartalmát 1 logikai pixeles
+#718096 keret választja el a háttérben maradó főablaktól. Az operációs rendszer
+ablakmozgatása, címsora és átméretezése megmarad. A fő szöveg #EDF1F5, a
+másodlagos állapotszöveg #B8C4D2, a türkiz kiemelés #39DCC1. A világos téma
+megjelenése nem változik; a váltás a nyitott párbeszédablakokra is érvényes.
+A helyi GUI-előnézeteken a keret és a világos SVG-k vizuálisan ellenőrizve;
+a teljes helyi build és CTest 4/4 sikeres.
+
 ## 2026-11-04 – Mac-próbacsomag aláírásának javítása
 
 A teljes Qt-deploy után a helyi bundle `codesign --verify --deep --strict`
