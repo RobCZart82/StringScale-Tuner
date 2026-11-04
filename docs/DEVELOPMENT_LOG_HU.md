@@ -1,5 +1,76 @@
 # Fejlesztési és javítási napló
 
+## 2026-11-04 – Főág összevezetése és első kiadás előkészítése
+
+A #11/#12/#13 egymásra épülő PR-ok fordított sorrendű összevonása után a main
+csak a #11 állapotát tartalmazta. Az összevezető ág megőrzi a #12/#13 történetét
+és visszahozza a már elfogadott villogásjavítást, Mac-aláírást, antracit témát
+és sík listajelölőket a mainhez készülő PR-ba. Nincs új hangolási algoritmus.
+
+Robert sikeres hardveres visszajelzései külön tesztjegyzőkönyvbe kerültek,
+a konfigurációk és bizonyítékok hatókörének megadásával. A kiadási jegyzet
+elkészült tervezetként; a checklist a ténylegesen igazolt sorokat jelöli.
+A csomagoló a tesztjegyzőkönyvet és kiadási jegyzetet is mellékeli.
+
+A kész ZIP upload előtt külön ellenőrzést kap: SHA256 és fájlnév, manifest,
+platform, tiszta forrásazonosító, összes leltározott fájl tartalma és mérete,
+symlinkek, kötelező futtatható fájlok és dokumentáció. A licencmellékletek
+teljes auditja és a végleges kiadás publikálása továbbra is hátralévő feladat.
+
+## 2026-11-04 – Sík, keret nélküli lenyílólista-jelölők
+
+Robert kérésére a lenyíló listák jobb szélén a natív, kidomborodó gomb helyett
+átlátszó hátterű, keret nélküli SVG-chevron látható. Világos témán sötét,
+sötét témán törtfehér vonalat használ. A 32 logikai pixeles kattintható terület
+megmarad, a szövegnek külön jobb oldali helyet tartunk fenn. A főablak és a
+Beállítások/Hang ablak összes QComboBox mezőjére egységesen érvényes.
+
+## 2026-11-04 – Jóváhagyott kékes antracit sötét téma
+
+Robert jóváhagyása alapján a fő háttér #252D38, a panelek és a párbeszédablakok
+háttere #303B49. A Beállítások, Hang és Névjegy tartalmát 1 logikai pixeles
+#718096 keret választja el a háttérben maradó főablaktól. Az operációs rendszer
+ablakmozgatása, címsora és átméretezése megmarad. A fő szöveg #EDF1F5, a
+másodlagos állapotszöveg #B8C4D2, a türkiz kiemelés #39DCC1. A világos téma
+megjelenése nem változik; a váltás a nyitott párbeszédablakokra is érvényes.
+A helyi GUI-előnézeteken a keret és a világos SVG-k vizuálisan ellenőrizve;
+a teljes helyi build és CTest 4/4 sikeres.
+
+## 2026-11-04 – Mac-próbacsomag aláírásának javítása
+
+A teljes Qt-deploy után a helyi bundle `codesign --verify --deep --strict`
+ellenőrzése hibát adott: „code has no resources but signature indicates they must
+be present”. A korábbi sérült alkalmazás figyelmeztetésnek ez is lehetséges oka;
+a karanténjelölés eltávolítása önmagában nem javítja a hibás aláírást.
+
+A közös csomagoló most az összes függőség telepítése után ad-hoc aláírja a teljes
+Mac-bundle-t, majd szigorú ellenőrzést futtat. Hiba esetén a csomagolás leáll.
+Csak ezután készül a fájlleltár és a ZIP ellenőrzőösszege. A build-info külön
+jelöli az ad-hoc aláírást, a kiadói aláírás és notarizáció továbbra is hamis.
+Ez nem helyettesíti a nyilvános kiadás előtti Developer ID/notarizációs döntést.
+
+## 2026-11-04 – Villogó élő mérés: csomagszünet és csend szétválasztása
+
+Robert SSL 2+ interfészes videója alapján a mért hang és a mutató időnként eltűnik,
+majd visszatér. A kódban az üres 65 ms-os frissítés eddig azonnal csendet jelzett;
+az interfész rövid csomagszünete így hamis kijelzőtörlést okozhatott.
+
+- Új csomag hiányában a jelszint megmarad; 250 ms valódi adatkimaradáskor a
+  teljes elemzési előzmény és kijelzés törlődik. Az újraindulás friss ablakot vár.
+- Egy bizonytalan becslés vagy rövid halkulás legfeljebb 220 ms-ig tartja meg az
+  utolsó érvényes hangot. Sikertelen mérések nem hosszabbítják ezt a határidőt.
+- A minimum jelszint kapuja 3 dB hiszterézist kapott. Digitális túlvezérléskor,
+  eszközleállításkor és csatornaváltáskor nincs hangtartás.
+- A timer a sorban álló PCM-adatokat is kiolvassa; nem feltételezi a readyRead
+  és a felületfrissítés azonos ütemezését. A UI továbbra sem mutat Hz-értéket.
+- Új eszközfüggetlen regressziós teszt a valódi PCM-dekódolási és DSP-útvonalon:
+  100 ms-os csomagok / 65 ms-os frissítés, tartós és timer elől rejtett adatkimaradás,
+  másik hanggal visszatérés, zajos becslés, küszöbkörnyéki jel, csend, clipping, reset.
+- Helyi Apple Silicon Release build és CTest 4/4 sikeres, beleértve az új
+  hangbemeneti regressziós és a meglévő GUI-előnézeti tesztet.
+- A videó önmagában nem bizonyítja minden kihagyás okát. A javított csomagot
+  ugyanazzal az SSL 2+ bemenettel ismét tesztelni kell; hardveres javulás még nincs igazolva.
+
 ## 2026-11-04 – Azonosítható alpha tesztcsomag és kiadási ellenőrzőlista
 
 - Közös CMake-verzióforrás: 0.2.0-alpha.1; a Névjegy ezt és rövid buildazonosítót mutat.

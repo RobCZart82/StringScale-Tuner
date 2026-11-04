@@ -65,3 +65,16 @@ Ha van másik bevált hangolód, hasonlítsd össze a jelzéseket.
 - Mi történt:
 - Minden alkalommal ismételhető-e:
 - Kép / felvétel / további megjegyzés:
+
+### Villogás regressziós próba (SSL 2+)
+
+- Ugyanazon bemenet/csatorna mellett tarts ki egyetlen hangot: a hangnév, mutató
+  és alsó jelölő ne tűnjön el szabályosan ismétlődve.
+- Halkítsd le és némítsd el a húrt: az utolsó hang rövid, legfeljebb kb. 0,3 s
+  átmenet után tűnjön el. A jelszint valós csendnél csökkenjen.
+- Válts D3-ról B3-ra: az új hangra váltson, ne söpörjön végig a köztes hangokon.
+- Csatornaváltáskor vagy eszközleállításkor a régi hang ne maradjon kinn.
+- A piros túlvezérlésjelzésnél csökkentsd az interfész gainjét; a torz jelre
+  a program ne tartson fenn érvényesnek látszó hangmérést.
+
+Eredmény: NEM TESZTELT (valódi interfészen a tesztelő tölti ki).

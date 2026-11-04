@@ -8,6 +8,7 @@
 #include <QByteArray>
 #include <QObject>
 #include <QTimer>
+#include <QElapsedTimer>
 #include <memory>
 #include <vector>
 
@@ -42,6 +43,11 @@ private slots:
     void updateMeasurements();
 
 private:
+    friend class AudioCaptureTest;
+    void processBytes(const QByteArray& bytes, qint64 nowMs);
+    void updateMeasurementsAt(qint64 nowMs);
+    void clearPitch();
+    void rejectPitch(qint64 nowMs);
     void acceptSample(float sample);
     void resetAnalysis();
     std::unique_ptr<QAudioSource> source_;
@@ -51,6 +57,12 @@ private:
     int inputChannel_ = 0;
     std::vector<float> channelSamples_;
     QTimer measureTimer_;
+    QElapsedTimer clock_;
+    qint64 lastAudioMs_ = -1;
+    qint64 lastPitchMs_ = -1;
+    bool gateOpen_ = false;
+    static constexpr qint64 kInputTimeoutMs = 250;
+    static constexpr qint64 kPitchHoldMs = 220;
     strings::PitchDetector detector_;
     std::vector<float> pitchRing_;
     std::size_t ringWrite_ = 0;

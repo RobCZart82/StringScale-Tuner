@@ -2,11 +2,13 @@
 
 **Original, independent, open-source guitar and bass tuner.**
 
-Status: **source-code prototype**. The self-written DSP module has been tested
-on synthetic tones, including low E1 / B0 bass notes, multiple harmonics,
-silence and noise. **Desktop GUI builds and synthetic GUI previews are checked in CI;
-real-world capture and hardware behavior still require manual testing.** This is not a
-finished or accuracy-certified tuner and there are no prebuilt installers yet.
+Status: **pre-release testing**. Desktop GUI builds, DSP and capture regressions,
+and synthetic GUI previews are checked in CI. Robert has also reported successful
+six-string standard tuning and ±25–40 cent tests on Mac/SSL 2+ and Windows 10/UCG-102.
+See [hardware results and their scope](docs/HARDWARE_TEST_RESULTS_HU.md).
+Other instruments, operating-system versions and interfaces still need testing.
+This is not an accuracy-certified tuner; the public release and its dependency
+licence bundle are still being prepared. Preview ZIPs are not installers.
 
 ## Concept / Koncepció
 
@@ -56,7 +58,7 @@ The **Desktop preview** workflow additionally builds and packages the full Qt
 application for Windows x64 and macOS arm64. See [the preview guide](docs/PREVIEW_HU.md)
 for artifact download and manual testing. These are experimental archives, not installers.
 The first implementation of the accepted GUI redesign is documented in [the development log](docs/DEVELOPMENT_LOG_HU.md)
-with further real-instrument testing still required.
+with further real-instrument testing required beyond the documented configurations.
 
 ## Implementation
 

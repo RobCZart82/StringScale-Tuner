@@ -67,6 +67,9 @@ jobs:
         id: package
         shell: pwsh
         run: python scripts/package_preview.py --stage stage --build-info build/build-info.json --platform ${{ matrix.platform }} --output dist --qt-root "$env:QT_ROOT_DIR"
+      - name: Verify finished ZIP and file inventory
+        shell: pwsh
+        run: python scripts/verify_preview.py --archive "${{ steps.package.outputs.archive_path }}" --expected-info build/build-info.json --platform ${{ matrix.platform }}
       - name: Upload downloadable preview
         uses: actions/upload-artifact@v4
         with:

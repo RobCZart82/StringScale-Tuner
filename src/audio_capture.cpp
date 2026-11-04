@@ -9,6 +9,7 @@
 
 AudioCapture::AudioCapture(QObject* parent)
     : QObject(parent), pitchRing_(kWindowSamples, 0.0f) {
+    clock_.start();
     measureTimer_.setInterval(65);
     connect(&measureTimer_, &QTimer::timeout,
             this, &AudioCapture::updateMeasurements);
@@ -57,10 +58,15 @@ bool AudioCapture::start(const QAudioDevice& device, int channel) {
     connect(input_, &QIODevice::readyRead, this, &AudioCapture::consumeAudio);
     connect(source_.get(), &QAudioSource::stateChanged, this,
             [this](QtAudio::State state) {
-        if (state == QtAudio::StoppedState && source_ &&
-            source_->error() != QtAudio::NoError)
-            emit errorOccurred("Audio input stopped unexpectedly. Choose another device or check permissions.");
+        if (state == QtAudio::StoppedState && source_) {
+            input_ = nullptr;
+            partialFrame_.clear();
+            resetAnalysis();
+            if (source_->error() != QtAudio::NoError)
+                emit errorOccurred("Audio input stopped unexpectedly. Choose another device or check permissions.");
+        }
     });
+    consumeAudio(); // Drain any bytes queued before readyRead was connected.
     return true;
 }
 
@@ -87,6 +93,9 @@ void AudioCapture::resetAnalysis() {
     peak_ = 0.0;
     clipping_ = false;
     smoothedHz_ = 0.0;
+    lastAudioMs_ = -1;
+    lastPitchMs_ = -1;
+    gateOpen_ = false;
     framesSinceLastEstimate_ = 0;
     emit pitchReady(0, 0);
     emit levelReady(-120, -120, false);
@@ -110,11 +119,21 @@ void AudioCapture::acceptSample(float sample) {
 
 void AudioCapture::consumeAudio() {
     if (!input_ || format_.bytesPerFrame() <= 0) return;
-    partialFrame_.append(input_->readAll());
+    processBytes(input_->readAll(), clock_.elapsed());
+}
+
+void AudioCapture::processBytes(const QByteArray& bytes, qint64 nowMs) {
+    if (format_.bytesPerFrame() <= 0) return;
+    // A genuine transport gap invalidates the old analysis window, even when
+    // readyRead resumes before the next UI timer tick. Preserve byte alignment.
+    if (!bytes.isEmpty() && lastAudioMs_ >= 0 &&
+        nowMs - lastAudioMs_ >= kInputTimeoutMs) resetAnalysis();
+    partialFrame_.append(bytes);
     const qsizetype bytesPerFrame = format_.bytesPerFrame();
     const qsizetype bytesPerSample = format_.bytesPerSample();
     const qsizetype available = (partialFrame_.size() / bytesPerFrame) * bytesPerFrame;
     if (available <= 0) return;
+    lastAudioMs_ = nowMs;
 
     const char* data = partialFrame_.constData();
     for (qsizetype offset = 0; offset < available; offset += bytesPerFrame) {
@@ -131,10 +150,35 @@ void AudioCapture::consumeAudio() {
     partialFrame_.remove(0, available);
 }
 
+void AudioCapture::clearPitch() {
+    smoothedHz_ = 0.0;
+    lastPitchMs_ = -1;
+    gateOpen_ = false;
+    emit pitchReady(0, 0);
+}
+
+void AudioCapture::rejectPitch(qint64 nowMs) {
+    // One uncertain estimate or a short level dip must not blink the readout.
+    // This deadline is measured from the last valid estimate, never extended
+    // by further failures, so a dead signal cannot stay on screen indefinitely.
+    if (lastPitchMs_ < 0 || nowMs - lastPitchMs_ >= kPitchHoldMs) clearPitch();
+}
+
 void AudioCapture::updateMeasurements() {
-    if (!source_ || blockSamples_ == 0) {
-        emit levelReady(-120, -120, false);
-        emit pitchReady(0, 0);
+    if (!source_) return; // stop()/resetAnalysis() already clears the display.
+    consumeAudio(); // readyRead and the GUI timer need not arrive in lockstep.
+    updateMeasurementsAt(clock_.elapsed());
+}
+
+void AudioCapture::updateMeasurementsAt(qint64 nowMs) {
+    if (lastAudioMs_ >= 0 && nowMs - lastAudioMs_ >= kInputTimeoutMs) {
+        resetAnalysis();
+        return;
+    }
+    if (blockSamples_ == 0) {
+        // No new packet is different from a packet containing silence.
+        // Keep the last meter value until the transport timeout expires.
+        rejectPitch(nowMs);
         return;
     }
     const double rms = std::sqrt(sumSquares_ / blockSamples_);
@@ -147,11 +191,17 @@ void AudioCapture::updateMeasurements() {
     clipping_ = false;
     emit levelReady(rmsDb, peakDb, clipped);
 
-    if (clipped || rmsDb < minimumLevelDb_ || ringCount_ < pitchRing_.size()) {
-        smoothedHz_ = 0.0;
-        emit pitchReady(0, 0);
+    if (clipped) {
+        clearPitch(); // Never hold a trusted pitch through digital clipping.
         return;
     }
+    // Small hysteresis prevents repeated gate opening/closing near MIN.
+    const double gateThreshold = minimumLevelDb_ - (gateOpen_ ? 3.0 : 0.0);
+    if (rmsDb < gateThreshold || ringCount_ < pitchRing_.size()) {
+        rejectPitch(nowMs);
+        return;
+    }
+    gateOpen_ = true;
     // Avoid reanalyzing the same buffer when the capture source stalls.
     if (framesSinceLastEstimate_ < kAnalysisRate / 100) return;
     framesSinceLastEstimate_ = 0;
@@ -162,8 +212,7 @@ void AudioCapture::updateMeasurements() {
 
     const auto estimate = detector_.estimate(frame, kAnalysisRate, 25.0, 700.0);
     if (!estimate.valid) {
-        smoothedHz_ = 0.0;
-        emit pitchReady(0, 0);
+        rejectPitch(nowMs);
         return;
     }
     // Light smoothing only for nearby successive estimates; switching strings
@@ -173,6 +222,7 @@ void AudioCapture::updateMeasurements() {
         smoothedHz_ *= std::pow(estimate.hz / smoothedHz_, 0.45);
     else
         smoothedHz_ = estimate.hz;
+    lastPitchMs_ = nowMs;
     emit pitchReady(smoothedHz_, estimate.confidence);
 }
 
