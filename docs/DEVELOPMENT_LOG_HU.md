@@ -1,5 +1,22 @@
 # Fejlesztési és javítási napló
 
+## 2026-11-04 – Főág összevezetése és első kiadás előkészítése
+
+A #11/#12/#13 egymásra épülő PR-ok fordított sorrendű összevonása után a main
+csak a #11 állapotát tartalmazta. Az összevezető ág megőrzi a #12/#13 történetét
+és visszahozza a már elfogadott villogásjavítást, Mac-aláírást, antracit témát
+és sík listajelölőket a mainhez készülő PR-ba. Nincs új hangolási algoritmus.
+
+Robert sikeres hardveres visszajelzései külön tesztjegyzőkönyvbe kerültek,
+a konfigurációk és bizonyítékok hatókörének megadásával. A kiadási jegyzet
+elkészült tervezetként; a checklist a ténylegesen igazolt sorokat jelöli.
+A csomagoló a tesztjegyzőkönyvet és kiadási jegyzetet is mellékeli.
+
+A kész ZIP upload előtt külön ellenőrzést kap: SHA256 és fájlnév, manifest,
+platform, tiszta forrásazonosító, összes leltározott fájl tartalma és mérete,
+symlinkek, kötelező futtatható fájlok és dokumentáció. A licencmellékletek
+teljes auditja és a végleges kiadás publikálása továbbra is hátralévő feladat.
+
 ## 2026-11-04 – Sík, keret nélküli lenyílólista-jelölők
 
 Robert kérésére a lenyíló listák jobb szélén a natív, kidomborodó gomb helyett

@@ -46,7 +46,9 @@ def main():
     root = Path(__file__).resolve().parent.parent
     for source, target in [("docs/PREVIEW_HU.md", "START-HERE-HU.md"),
                            ("docs/TEST_CHECKLIST_HU.md", "TEST-RESULTS-HU.md"),
-                           ("docs/THIRD_PARTY_NOTICES.md", "THIRD_PARTY_NOTICES.md")]:
+                           ("docs/THIRD_PARTY_NOTICES.md", "THIRD_PARTY_NOTICES.md"),
+                           ("docs/HARDWARE_TEST_RESULTS_HU.md", "HARDWARE-TESTS-HU.md"),
+                           ("docs/RELEASE_NOTES_HU.md", "RELEASE-NOTES-HU.md")]:
         shutil.copy2(root / source, stage / target)
     run = os.environ.get("GITHUB_RUN_NUMBER", "local")
     if not run.isdigit() and run != "local":
