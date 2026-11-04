@@ -51,18 +51,27 @@ MainWindow::MainWindow(QWidget* parent, bool preview)
 void MainWindow::applyTheme(bool dark) {
     dark_=dark;
     QPalette pal;
-    const QColor bg(dark?"#171d25":"#fffaf0"), base(dark?"#202833":"#fffdf8");
-    const QColor fg(dark?"#f2f5fa":"#14263c"), mid(dark?"#556170":"#c9c8c1");
+    const QColor bg(dark?"#252D38":"#fffaf0"), base(dark?"#303B49":"#fffdf8");
+    const QColor fg(dark?"#EDF1F5":"#14263c"), mid(dark?"#718096":"#c9c8c1");
     const QColor active(dark?"#39dcc1":"#00846f");
     pal.setColor(QPalette::Window,bg);pal.setColor(QPalette::Base,base);
     pal.setColor(QPalette::AlternateBase,bg);pal.setColor(QPalette::WindowText,fg);
     pal.setColor(QPalette::Text,fg);pal.setColor(QPalette::Button,base);
     pal.setColor(QPalette::ButtonText,fg);pal.setColor(QPalette::Mid,mid);
     pal.setColor(QPalette::Highlight,active);pal.setColor(QPalette::HighlightedText,dark?QColor("#14263c"):QColor("#ffffff"));
+    if(dark) {
+        const QColor secondary("#B8C4D2");
+        pal.setColor(QPalette::PlaceholderText,secondary);
+        pal.setColor(QPalette::Disabled,QPalette::WindowText,secondary);
+        pal.setColor(QPalette::Disabled,QPalette::Text,secondary);
+        pal.setColor(QPalette::Disabled,QPalette::ButtonText,secondary);
+    }
     pal.setColor(QPalette::Link,active);pal.setColor(QPalette::LinkVisited,active);
     pal.setColor(QPalette::ToolTipBase,base);pal.setColor(QPalette::ToolTipText,fg);
     qApp->setPalette(pal);
-    setStyleSheet("QComboBox, QPushButton, QDoubleSpinBox { padding: 9px; border: 1px solid palette(mid); border-radius: 9px; background: palette(base); color: palette(text); } QComboBox:focus, QPushButton:focus { border: 2px solid palette(highlight); }");
+    QString styles("QComboBox, QPushButton, QDoubleSpinBox { padding: 9px; border: 1px solid palette(mid); border-radius: 9px; background: palette(base); color: palette(text); } QComboBox:focus, QPushButton:focus { border: 2px solid palette(highlight); }");
+    if(dark) styles += " QDialog { background-color: #303B49; border: 1px solid #718096; } QLabel#statusLabel { color: #B8C4D2; }";
+    setStyleSheet(styles);
     // Draw the gear as vector strokes to avoid font-dependent missing glyphs.
     QPixmap gear(32,32);gear.fill(Qt::transparent);QPainter p(&gear);p.setRenderHint(QPainter::Antialiasing);p.setPen(QPen(fg,2.5));
     p.drawEllipse(QPointF(16,16),9,9);p.drawEllipse(QPointF(16,16),3,3);
@@ -92,7 +101,7 @@ void MainWindow::buildInterface() {
     levelMeter_=new InputLevelMeter;levelMeter_->setLimits(minimumLevelDb_,warningPeakDb_);
     gauge_=new AnalogGauge;pitchScale_=new PitchScale;pitchScale_->setPreset(selected_,calibration_);
     layout->addWidget(levelMeter_);layout->addWidget(gauge_,1);layout->addWidget(pitchScale_);
-    statusLabel_=new QLabel(uiText("Figyelek…", "Listening…"));statusLabel_->setWordWrap(true);statusLabel_->setAccessibleName(uiText("Állapot", "Status"));layout->addWidget(statusLabel_);
+    statusLabel_=new QLabel(uiText("Figyelek…", "Listening…"));statusLabel_->setObjectName("statusLabel");statusLabel_->setWordWrap(true);statusLabel_->setAccessibleName(uiText("Állapot", "Status"));layout->addWidget(statusLabel_);
     setCentralWidget(page);
     auto* menu=new QMenu(settings);
     settingsAction_=menu->addAction(QString());settingsAction_->setObjectName("settingsAction");
