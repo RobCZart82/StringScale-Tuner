@@ -1,3 +1,4 @@
+#include "ui_language.hpp"
 #include <utility>
 #include "tuner_widgets.hpp"
 #include <QPainter>
@@ -25,7 +26,7 @@ QPointF point(QPointF o, double r, double c) {
 }
 AnalogGauge::AnalogGauge(QWidget* parent) : QWidget(parent) {
     setMinimumHeight(370); setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    setAccessibleName("Analóg hangoló, mínusz ötven és plusz ötven cent között");
+    setAccessibleName(uiText("Analóg hangoló, mínusz ötven és plusz ötven cent között", "Analog tuner, minus fifty to plus fifty cents"));
 }
 void AnalogGauge::setCents(double cents, bool valid) {
     cents_ = std::clamp(cents, -50.0, 50.0); valid_ = valid; update();
@@ -60,15 +61,15 @@ void AnalogGauge::paintEvent(QPaintEvent*) {
     text(p,{240,285,320,60},note_,ink(this),58,true);
     text(p,{220,347,360,28},target_,ink(this),23,true);
     text(p,{60,378,680,60},status_,ink(this),24,true);
-    text(p,{35,300,160,35},"Túl mély",ink(this),21);
-    text(p,{605,300,160,35},"Túl magas",ink(this),21);
+    text(p,{35,300,160,35},uiText("Túl mély", "Too low"),ink(this),21);
+    text(p,{605,300,160,35},uiText("Túl magas", "Too high"),ink(this),21);
 }
-PitchScale::PitchScale(QWidget* parent):QWidget(parent) {setMinimumHeight(145);setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);setAccessibleName("Húrok és mért hangmagasság");}
+PitchScale::PitchScale(QWidget* parent):QWidget(parent) {setMinimumHeight(145);setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);setAccessibleName(uiText("Húrok és mért hangmagasság", "Strings and measured pitch"));}
 void PitchScale::setPreset(const strings::TuningPreset* p,double c){preset_=p;calibration_=c;update();}
 void PitchScale::setFrequency(double f){frequencyHz_=f;update();}
 void PitchScale::paintEvent(QPaintEvent*) {
     QPainter p(this);p.setRenderHint(QPainter::Antialiasing);panel(p,this);
-    text(p,{18,8,90,26},"Húrok",ink(this),22,true);
+    text(p,{18,8,90,26},uiText("Húrok", "Strings"),ink(this),22,true);
     if(!preset_||preset_->targets.empty()) return;
     const double low=preset_->targets.front().hz*calibration_/440;
     const double high=preset_->targets.back().hz*calibration_/440;
@@ -86,14 +87,14 @@ void PitchScale::paintEvent(QPaintEvent*) {
     }
     if(frequencyHz_>0){double px=x(std::clamp(frequencyHz_,min,max));p.setBrush(accent(this));p.setPen(QPen(palette().color(QPalette::Base),2));p.drawEllipse(QPointF(px,y),8,8);}
 }
-InputLevelMeter::InputLevelMeter(QWidget* parent):QWidget(parent){setMinimumHeight(115);setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);setAccessibleName("Bemeneti jelszint");}
+InputLevelMeter::InputLevelMeter(QWidget* parent):QWidget(parent){setMinimumHeight(115);setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);setAccessibleName(uiText("Bemeneti jelszint", "Input signal level"));}
 void InputLevelMeter::setLevel(double r,double p,bool c){rmsDb_=r;peakDb_=p;clipped_=c;update();}
 void InputLevelMeter::setLimits(double m,double w){minDb_=m;warningDb_=w;update();}
 void InputLevelMeter::paintEvent(QPaintEvent*) {
     QPainter p(this);p.setRenderHint(QPainter::Antialiasing);panel(p,this);
     const bool low=rmsDb_<minDb_,high=clipped_||peakDb_>=warningDb_;
-    const QString state=high?"Túl erős jel":low?"Pengess meg egy húrt":"Megfelelő jelszint";
-    text(p,{18,10,145,30},"Hangerő",ink(this),24,true);
+    const QString state=high?uiText("Túl erős jel", "Input too loud"):low?uiText("Pengess meg egy húrt", "Pluck a string"):uiText("Megfelelő jelszint", "Good input level");
+    text(p,{18,10,145,30},uiText("Hangerő", "Input level"),ink(this),24,true);
     text(p,{width()/2.0-160,10,320,30},state,ink(this),21,true);
     const double left=38,right=width()-38,y=79;
     auto x=[&](double db){return left+std::clamp((db+70)/70,0.0,1.0)*(right-left);};

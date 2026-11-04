@@ -5,6 +5,9 @@
 
 #include <QMainWindow>
 #include <QMediaDevices>
+#include <QPointer>
+class QDialog;
+class QAction;
 
 class QComboBox;
 class QDoubleSpinBox;
@@ -17,13 +20,16 @@ public:
     explicit MainWindow(QWidget* parent = nullptr, bool preview = false);
 
     void renderPreview(bool dark, double hz);
+    QDialog* openSettings(bool audio = false);
+    QDialog* openAbout();
 private:
     void applyTheme(bool dark);
+    void retranslate();
+    void refreshStatus();
     void buildInterface();
     void refreshInputDevices();
     void selectInput();
     void updateTuning();
-    void showSettings();
     void handlePitch(double hz, double confidence);
     void handleLevel(double rmsDb, double peakDb, bool clipped);
 
@@ -35,6 +41,13 @@ private:
     bool dark_ = false;
     bool preview_ = false;
 
+    enum class Status { Listening, NoInput, Denied, Error, Preview };
+    Status status_ = Status::Listening;
+    QString errorKey_;
+    QPointer<QDialog> settingsDialog_, audioDialog_, aboutDialog_;
+    QAction* settingsAction_ = nullptr;
+    QAction* audioAction_ = nullptr;
+    QAction* aboutAction_ = nullptr;
     QLabel* statusLabel_ = nullptr;
     AnalogGauge* gauge_ = nullptr;
     PitchScale* pitchScale_ = nullptr;

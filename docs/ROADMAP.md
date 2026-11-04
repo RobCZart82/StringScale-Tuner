@@ -158,5 +158,7 @@ fejlesztési lépései közé tartozik; a későbbi VST3 felületre is érvénye
 - [ ] A hangnevek, oktávok, húrszámok és a mérési viselkedés változatlansága.
 - [ ] Hiányzó fordítások és kevert nyelvű saját feliratok ellenőrzése.
 
-Az első indítás nyelvének meghatározása (rendszernyelv vagy rögzített alapérték)
-még külön eldöntendő; ezt a jelenlegi követelmény nem rögzíti.
+2026-11-04-i megvalósítás: mentett választás hiányában magyar rendszernyelvhez
+magyar, más rendszernyelvhez angol induló felület tartozik. A felhasználó ezt
+bármikor felülírhatja. A nyelvváltás és a Névjegy első megvalósításának ellenőrzéseit
+a [fejlesztési napló](DEVELOPMENT_LOG_HU.md) rögzíti.

@@ -1,5 +1,27 @@
 # Fejlesztési és javítási napló
 
+## 2026-11-04 – Kétnyelvű felület, fogaskerék-menü és Névjegy
+
+- Magyar / English választó a Beállítások / Settings ablakban, a témaválasztó mellett.
+  Az összes saját felirat, műszerszöveg, hangolási profilnév, menü, hibaüzenet és
+  akadálymentes elnevezés követi a nyelvet; a hangnevek és húrszámok nem változnak.
+- Nyelvváltáskor a már nyitott Beállítások, Hang és Névjegy ablak is azonnal frissül.
+  A bemenet és a hangolási profil nem vált át és nem indul újra.
+- A választás mentődik. Első indításkor magyar rendszernyelvnél magyar,
+  minden más rendszernyelvnél angol az alapérték; ezt a felhasználó felülírhatja.
+- A fogaskerék menüje: Beállítások / Settings, Hang / Audio, Névjegy / About.
+  A nyelv és téma azonnal mentődik; az audio-küszöbökhöz külön Mentés / Mégse tartozik.
+- A Névjegyben verzió, szöveges szerzőnév, eredeti GYR SVG-logó és eredeti vektoros
+  szignó. Világos és sötét logó témához igazítva; a sötét szignó világos panelen.
+  Az SVG-k beágyazott erőforrások, nincs külső fájl- vagy hálózatfüggés.
+- Helyi Apple Silicon teljes build és CTest 2/2 sikeres. A GUI-teszt nyitott
+  ablakok nyelvváltását, változatlan profil/bemenet választást, külön folyamatból
+  visszaolvasott nyelvmentést és SVG-erőforrásokat ellenőriz; mindkét nyelv és téma
+  PNG-előnézeteit menti. A teszt elkülönített, ideiglenes beállításprofilt használ.
+- A CI a főág push eseményére és PR-módosításokra fut: ugyanazt a PR-commitot
+  nem fordítja kétszer push és pull_request eseményből. A kötelező tesztnevek változatlanok.
+- Valódi gitárjeles, kézi hangeszköz- és akadálymentességi ellenőrzés még szükséges.
+
 ## 2026-11-03 – Arculati SVG-k és a Névjegy / About terve
 
 Robert átadta a GYR-logó sötét és világos változatát, valamint a polgári
