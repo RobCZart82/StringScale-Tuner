@@ -1,5 +1,40 @@
 # Fejlesztési és javítási napló
 
+## 2026-11-04 – Mac-próbacsomag aláírásának javítása
+
+A teljes Qt-deploy után a helyi bundle `codesign --verify --deep --strict`
+ellenőrzése hibát adott: „code has no resources but signature indicates they must
+be present”. A korábbi sérült alkalmazás figyelmeztetésnek ez is lehetséges oka;
+a karanténjelölés eltávolítása önmagában nem javítja a hibás aláírást.
+
+A közös csomagoló most az összes függőség telepítése után ad-hoc aláírja a teljes
+Mac-bundle-t, majd szigorú ellenőrzést futtat. Hiba esetén a csomagolás leáll.
+Csak ezután készül a fájlleltár és a ZIP ellenőrzőösszege. A build-info külön
+jelöli az ad-hoc aláírást, a kiadói aláírás és notarizáció továbbra is hamis.
+Ez nem helyettesíti a nyilvános kiadás előtti Developer ID/notarizációs döntést.
+
+## 2026-11-04 – Villogó élő mérés: csomagszünet és csend szétválasztása
+
+Robert SSL 2+ interfészes videója alapján a mért hang és a mutató időnként eltűnik,
+majd visszatér. A kódban az üres 65 ms-os frissítés eddig azonnal csendet jelzett;
+az interfész rövid csomagszünete így hamis kijelzőtörlést okozhatott.
+
+- Új csomag hiányában a jelszint megmarad; 250 ms valódi adatkimaradáskor a
+  teljes elemzési előzmény és kijelzés törlődik. Az újraindulás friss ablakot vár.
+- Egy bizonytalan becslés vagy rövid halkulás legfeljebb 220 ms-ig tartja meg az
+  utolsó érvényes hangot. Sikertelen mérések nem hosszabbítják ezt a határidőt.
+- A minimum jelszint kapuja 3 dB hiszterézist kapott. Digitális túlvezérléskor,
+  eszközleállításkor és csatornaváltáskor nincs hangtartás.
+- A timer a sorban álló PCM-adatokat is kiolvassa; nem feltételezi a readyRead
+  és a felületfrissítés azonos ütemezését. A UI továbbra sem mutat Hz-értéket.
+- Új eszközfüggetlen regressziós teszt a valódi PCM-dekódolási és DSP-útvonalon:
+  100 ms-os csomagok / 65 ms-os frissítés, tartós és timer elől rejtett adatkimaradás,
+  másik hanggal visszatérés, zajos becslés, küszöbkörnyéki jel, csend, clipping, reset.
+- Helyi Apple Silicon Release build és CTest 4/4 sikeres, beleértve az új
+  hangbemeneti regressziós és a meglévő GUI-előnézeti tesztet.
+- A videó önmagában nem bizonyítja minden kihagyás okát. A javított csomagot
+  ugyanazzal az SSL 2+ bemenettel ismét tesztelni kell; hardveres javulás még nincs igazolva.
+
 ## 2026-11-04 – Azonosítható alpha tesztcsomag és kiadási ellenőrzőlista
 
 - Közös CMake-verzióforrás: 0.2.0-alpha.1; a Névjegy ezt és rövid buildazonosítót mutat.
