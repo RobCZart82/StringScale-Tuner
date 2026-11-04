@@ -1,5 +1,13 @@
 # Fejlesztési és javítási napló
 
+## 2026-11-04 – Sík, keret nélküli lenyílólista-jelölők
+
+Robert kérésére a lenyíló listák jobb szélén a natív, kidomborodó gomb helyett
+átlátszó hátterű, keret nélküli SVG-chevron látható. Világos témán sötét,
+sötét témán törtfehér vonalat használ. A 32 logikai pixeles kattintható terület
+megmarad, a szövegnek külön jobb oldali helyet tartunk fenn. A főablak és a
+Beállítások/Hang ablak összes QComboBox mezőjére egységesen érvényes.
+
 ## 2026-11-04 – Jóváhagyott kékes antracit sötét téma
 
 Robert jóváhagyása alapján a fő háttér #252D38, a panelek és a párbeszédablakok

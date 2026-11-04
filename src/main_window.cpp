@@ -70,6 +70,12 @@ void MainWindow::applyTheme(bool dark) {
     pal.setColor(QPalette::ToolTipBase,base);pal.setColor(QPalette::ToolTipText,fg);
     qApp->setPalette(pal);
     QString styles("QComboBox, QPushButton, QDoubleSpinBox { padding: 9px; border: 1px solid palette(mid); border-radius: 9px; background: palette(base); color: palette(text); } QComboBox:focus, QPushButton:focus { border: 2px solid palette(highlight); }");
+    // Replace the platform's raised arrow button with a transparent hit area
+    // and a bundled vector chevron. Reserve space so long labels cannot overlap.
+    styles += QString(" QComboBox { padding-right: 36px; }"
+                      " QComboBox::drop-down { subcontrol-origin: padding; subcontrol-position: top right; width: 32px; border: none; background: transparent; }"
+                      " QComboBox::down-arrow { image: url(:/icons/chevron-down-%1.svg); width: 16px; height: 16px; }")
+                  .arg(dark?"light":"dark");
     if(dark) styles += " QDialog { background-color: #303B49; border: 1px solid #718096; } QLabel#statusLabel { color: #B8C4D2; }";
     setStyleSheet(styles);
     // Draw the gear as vector strokes to avoid font-dependent missing glyphs.

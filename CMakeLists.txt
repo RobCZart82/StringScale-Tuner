@@ -74,6 +74,11 @@ if(STRINGS_BUILD_GUI)
         FILES resources/branding/GYR-black.svg resources/branding/GYR-light.svg
               resources/branding/Alairas-Vektor.svg resources/branding/Alairas-Vektor-light.svg
     )
+    qt_add_resources(StringScaleTuner interface_icons
+        PREFIX "/icons"
+        BASE "resources/icons"
+        FILES resources/icons/chevron-down-dark.svg resources/icons/chevron-down-light.svg
+    )
     set_target_properties(StringScaleTuner PROPERTIES
         WIN32_EXECUTABLE TRUE
         MACOSX_BUNDLE TRUE
