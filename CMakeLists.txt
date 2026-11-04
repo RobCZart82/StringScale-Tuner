@@ -84,6 +84,10 @@ if(STRINGS_BUILD_GUI)
         MACOSX_BUNDLE_BUNDLE_NAME "StringScale Tuner"
     )
     if(BUILD_TESTING)
+        qt_add_executable(audio_capture_tests tests/audio_capture_test.cpp
+            src/audio_capture.hpp src/audio_capture.cpp)
+        target_link_libraries(audio_capture_tests PRIVATE strings_core Qt6::Core Qt6::Multimedia)
+        add_test(NAME audio_capture_tests COMMAND audio_capture_tests)
         add_test(NAME gui_preview COMMAND StringScaleTuner --render-preview "${CMAKE_CURRENT_BINARY_DIR}/gui-previews")
         set_tests_properties(gui_preview PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen" TIMEOUT 30)
     endif()
