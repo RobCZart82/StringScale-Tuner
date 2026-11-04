@@ -70,6 +70,41 @@ jobs:
       - name: Verify finished ZIP and file inventory
         shell: pwsh
         run: python scripts/verify_preview.py --archive "${{ steps.package.outputs.archive_path }}" --expected-info build/build-info.json --platform ${{ matrix.platform }}
+      - name: Build native test installer
+        id: installer
+        shell: pwsh
+        run: python scripts/build_installer.py --stage stage --archive "${{ steps.package.outputs.archive_path }}" --build-info build/build-info.json --platform ${{ matrix.platform }} --output dist
+      - name: Install and test Windows setup, then uninstall
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $installPath = Join-Path $env:RUNNER_TEMP 'StringScaleTuner-install-smoke'
+          $setup = Start-Process -FilePath '${{ steps.installer.outputs.installer_path }}' -ArgumentList @('/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/SP-', "/DIR=`"$installPath`"") -PassThru
+          if (!$setup.WaitForExit(60000)) { $setup.Kill(); throw 'Setup timed out' }
+          if ($setup.ExitCode -ne 0) { throw "Setup failed: $($setup.ExitCode)" }
+          python scripts/smoke_installer.py --root "$installPath" --platform windows-x64 --expected-info build/build-info.json --preview-out "$env:RUNNER_TEMP/installer-previews"
+          if ($LASTEXITCODE -ne 0) { throw 'Installed application smoke test failed' }
+          $uninstall = Start-Process -FilePath "$installPath/unins000.exe" -ArgumentList @('/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART') -PassThru
+          if (!$uninstall.WaitForExit(60000)) { $uninstall.Kill(); throw 'Uninstall timed out' }
+          if ($uninstall.ExitCode -ne 0) { throw "Uninstall failed: $($uninstall.ExitCode)" }
+          for ($attempt = 0; $attempt -lt 20 -and (Test-Path "$installPath/bin/StringScaleTuner.exe"); $attempt++) { Start-Sleep -Milliseconds 250 }
+          if (Test-Path "$installPath/bin/StringScaleTuner.exe") { throw 'Uninstall left the application executable behind' }
+      - name: Install and test macOS package on hosted runner
+        if: runner.os == 'macOS'
+        run: |
+          # This install runs only on the disposable GitHub-hosted VM.
+          sudo /usr/sbin/installer -pkg "${{ steps.installer.outputs.installer_path }}" -target /
+          python3 scripts/smoke_installer.py --root /Applications --platform macos-arm64 --expected-info build/build-info.json --preview-out "$RUNNER_TEMP/installer-previews"
+      - name: Upload native test installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.package.outputs.artifact_name }}-installer
+          path: |
+            ${{ steps.installer.outputs.installer_path }}
+            ${{ steps.installer.outputs.installer_checksum }}
+            ${{ steps.installer.outputs.installer_manifest }}
+          if-no-files-found: error
+          retention-days: 30
       - name: Upload downloadable preview
         uses: actions/upload-artifact@v4
         with:

@@ -1,5 +1,22 @@
 # Fejlesztési és javítási napló
 
+## 2026-11-04 – Windows EXE és macOS PKG próbatelepitők
+
+A GitHub Actions a már ellenőrzött ZIP-stagingből natív telepítőt is készít.
+Windows: Inno Setup 6, felhasználónkénti telepítés, HU/EN varázsló, Start menü,
+opcionális asztali ikon és eltávolító. macOS: pkgbuild/productbuild, Applications
+app és külön dokumentációs mappa; nem relocatable bundle. A telepítők nem kapnak
+kiadói aláírást vagy notarizációt. Nincs automatikus GitHub Release-publikálás.
+
+A két színes, nyolcoldalas PDF-kézikönyv bekerült a repositoryba és a csomagokba.
+A ZIP-ellenőrző megköveteli jelenlétüket. A telepítő mellé SHA256 és forrásazonosítós
+JSON manifest kerül. A staging tartalmát újraellenőrizzük a ZIP leltárához képest.
+A Mac PKG kibontott payloadját is fájlonként és aláírás szerint ellenőrizzük.
+
+A Windows CI telepít, ellenőrzi és indítja az appot, majd eltávolít; a Mac CI
+a saját eldobható VM-jén telepít, ellenőrzi és mikrofon nélkül indít. A helyi
+csomagépítés nem telepít semmit Robert gépére. Részletek: INSTALLERS_HU.md.
+
 ## 2026-11-04 – Főág összevezetése és első kiadás előkészítése
 
 A #11/#12/#13 egymásra épülő PR-ok fordított sorrendű összevonása után a main

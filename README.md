@@ -56,7 +56,8 @@ ctest --test-dir build-core -C Release --output-on-failure
 The core tests run on Windows, macOS and Linux in GitHub Actions.
 The **Desktop preview** workflow additionally builds and packages the full Qt
 application for Windows x64 and macOS arm64. See [the preview guide](docs/PREVIEW_HU.md)
-for artifact download and manual testing. These are experimental archives, not installers.
+for artifact download and manual testing. The ZIPs are experimental archives; separate unsigned EXE/PKG installer artifacts
+are built and smoke-tested by the same workflow. See [installer details](docs/INSTALLERS_HU.md).
 The first implementation of the accepted GUI redesign is documented in [the development log](docs/DEVELOPMENT_LOG_HU.md)
 with further real-instrument testing required beyond the documented configurations.
 
