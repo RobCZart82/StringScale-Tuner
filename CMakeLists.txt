@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
-project(StringScaleTuner VERSION 0.1.0 LANGUAGES CXX)
+project(StringScaleTuner VERSION 0.2.0 LANGUAGES CXX)
+set(STRINGS_VERSION "${PROJECT_VERSION}-alpha.1")
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -36,6 +37,24 @@ if(STRINGS_BUILD_GUI)
             set_property(TARGET WrapOpenGL::WrapOpenGL PROPERTY INTERFACE_LINK_LIBRARIES "${opengl_links}")
         endif()
     endif()
+    set(STRINGS_REVISION "unknown")
+    find_package(Git QUIET)
+    if(GIT_FOUND)
+        execute_process(COMMAND "${GIT_EXECUTABLE}" rev-parse HEAD
+            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+            OUTPUT_VARIABLE revision OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
+        if(revision MATCHES "^[0-9a-f]+$")
+            set(STRINGS_REVISION "${revision}")
+            execute_process(COMMAND "${GIT_EXECUTABLE}" status --porcelain
+                WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+                OUTPUT_VARIABLE changed_files ERROR_QUIET)
+            if(changed_files)
+                string(APPEND STRINGS_REVISION "-dirty")
+            endif()
+        endif()
+    endif()
+    configure_file(cmake/build_info.hpp.in generated/build_info.hpp @ONLY)
+    configure_file(cmake/build-info.json.in build-info.json @ONLY)
     qt_standard_project_setup()
     qt_add_executable(StringScaleTuner
         MACOSX_BUNDLE
@@ -46,6 +65,7 @@ if(STRINGS_BUILD_GUI)
         src/audio_capture.hpp src/audio_capture.cpp
         src/tuner_widgets.hpp src/tuner_widgets.cpp
     )
+    target_include_directories(StringScaleTuner PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/generated")
     target_link_libraries(StringScaleTuner PRIVATE strings_core
         Qt6::Core Qt6::Gui Qt6::Widgets Qt6::Multimedia Qt6::Svg)
     qt_add_resources(StringScaleTuner branding

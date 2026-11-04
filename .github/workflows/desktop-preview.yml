@@ -63,20 +63,16 @@ jobs:
           @('stage/bin/StringScaleTuner.exe', 'stage/bin/Qt6Core.dll', 'stage/bin/msvcp140.dll', 'stage/bin/vcruntime140.dll', 'stage/bin/Qt6Multimedia.dll', 'stage/plugins/platforms/qwindows.dll') | ForEach-Object {
             if (!(Test-Path $_)) { throw "Missing runtime file: $_" }
           }
-      - name: Add testing guide
+      - name: Package identifiable test build
+        id: package
         shell: pwsh
-        run: Copy-Item docs/PREVIEW_HU.md stage/OLVASS-EL.md
-      - name: Archive macOS bundle preserving permissions
-        if: runner.os == 'macOS'
-        run: ditto -c -k --sequesterRsrc --keepParent stage preview-macos-arm64.zip
-      - name: Archive Windows package
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: Compress-Archive -Path stage/* -DestinationPath preview-windows-x64.zip
+        run: python scripts/package_preview.py --stage stage --build-info build/build-info.json --platform ${{ matrix.platform }} --output dist --qt-root "$env:QT_ROOT_DIR"
       - name: Upload downloadable preview
         uses: actions/upload-artifact@v4
         with:
-          name: StringScaleTuner-${{ matrix.platform }}-${{ github.run_number }}
-          path: preview-${{ matrix.platform }}.zip
+          name: ${{ steps.package.outputs.artifact_name }}
+          path: |
+            ${{ steps.package.outputs.archive_path }}
+            ${{ steps.package.outputs.checksum_path }}
           if-no-files-found: error
           retention-days: 30

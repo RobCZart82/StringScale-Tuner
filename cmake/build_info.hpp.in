@@ -1,0 +1,5 @@
+#pragma once
+namespace strings::build {
+inline constexpr const char* version = "@STRINGS_VERSION@";
+inline constexpr const char* revision = "@STRINGS_REVISION@";
+}

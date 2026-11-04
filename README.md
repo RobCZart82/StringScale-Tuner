@@ -1,4 +1,4 @@
-# StringScale Tuner — v0.1.0 (development prototype)
+# StringScale Tuner — v0.2.0-alpha.1 (test preview)
 
 **Original, independent, open-source guitar and bass tuner.**
 
@@ -92,3 +92,5 @@ for publicly distributed binaries. Do not incorporate AP Tuner source code,
 logos, UI artwork or protected names without permission.
 
 No warranty. Do not rely on this unvalidated prototype to avoid string breakage.
+
+Release preparation: [checklist](docs/RELEASE_CHECKLIST_HU.md) · [hardware test sheet](docs/TEST_CHECKLIST_HU.md).

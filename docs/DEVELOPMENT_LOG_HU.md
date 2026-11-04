@@ -1,5 +1,16 @@
 # Fejlesztési és javítási napló
 
+## 2026-11-04 – Azonosítható alpha tesztcsomag és kiadási ellenőrzőlista
+
+- Közös CMake-verzióforrás: 0.2.0-alpha.1; a Névjegy ezt és rövid buildazonosítót mutat.
+  A macOS belső numerikus bundle-verziója 0.2.0. Helyi módosított forrás dirty jelölést kap.
+- Verziózott platform/build ZIP, mellette SHA256; a csomagban build-info.json,
+  tényleges fájlleltár, indulási útmutató és kitölthető, kezdetben NEM TESZTELT tesztlap.
+- A Qt SDK beszállítói SBOM-jai auditsegédletként bekerülnek, ha elérhetők.
+  Ez nem helyettesíti a végleges licenc- és forráselérhetőségi ellenőrzést.
+- Új RELEASE_CHECKLIST_HU.md rögzíti az első publikálás előfeltételeit.
+  A workflow továbbra is tesztartifactokat készít; nem publikál Release-t.
+
 ## 2026-11-04 – Polgári név szöveges kiírásának eltávolítása a Névjegyből
 
 Robert kérésére a Névjegyben a polgári nevet kizárólag az eredeti SVG-szignó

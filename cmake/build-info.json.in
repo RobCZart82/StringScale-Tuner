@@ -1,0 +1,8 @@
+{
+  "application": "StringScale Tuner",
+  "version": "@STRINGS_VERSION@",
+  "revision": "@STRINGS_REVISION@",
+  "qt_version": "@Qt6_VERSION@",
+  "system": "@CMAKE_SYSTEM_NAME@",
+  "preview": true
+}
