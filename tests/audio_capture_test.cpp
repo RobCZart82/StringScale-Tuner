@@ -125,6 +125,24 @@ public:
             require(pitch > 0 && std::abs(strings::centsBetween(pitch, hz)) < 5.0,
                     "capture path mistook dominant second harmonic for fundamental");
         }
+        // Review regression through the actual capture path. This genuine
+        // 648.5 Hz tone used to be incorrectly lowered to about 324.37 Hz.
+        for (double phase : {0.0, 0.7}) {
+            capture.resetAnalysis();
+            QByteArray pcm(18000 * 2 * sizeof(float), '\0');
+            for (int i = 0; i < 18000; ++i) {
+                const double angle = 2.0 * 3.141592653589793 * 648.5 * i / 48000.0 + phase;
+                double sample = 0.0;
+                for (int harmonic = 1; harmonic <= 11; harmonic += 2)
+                    sample += 0.2 * std::sin(harmonic * angle) / harmonic;
+                const float value = static_cast<float>(sample);
+                std::memcpy(pcm.data() + i * 2 * sizeof(float), &value, sizeof(value));
+            }
+            capture.processBytes(pcm, 6000);
+            capture.updateMeasurementsAt(6000);
+            require(pitch > 0 && std::abs(strings::centsBetween(pitch, 648.5)) < 5.0,
+                    "capture path incorrectly lowered a rich single-period tone");
+        }
         std::cout << "Capture packet jitter, stall, recovery, uncertainty, gate, silence, clipping and octaves passed\n";
     }
 };

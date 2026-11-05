@@ -44,6 +44,21 @@ std::vector<float> weakFundamental(double hz, double fundamental, double phase,
     }
     return samples;
 }
+
+std::vector<float> filteredOddHarmonics(double hz, double phase) {
+    std::vector<float> samples;
+    double lowpass = 0.0;
+    constexpr double alpha = 2 * pi * 1200 / 48000;
+    for (int i = 0; i < 18000; ++i) {
+        const double angle = 2 * pi * hz * i / 48000 + phase;
+        double sample = 0.0;
+        for (int harmonic = 1; harmonic <= 11; harmonic += 2)
+            sample += 0.2 * std::sin(harmonic * angle) / harmonic;
+        lowpass += alpha * (static_cast<float>(sample) - lowpass);
+        if (i % 4 == 3) samples.push_back(static_cast<float>(lowpass));
+    }
+    return {samples.end() - 4096, samples.end()};
+}
 }
 
 int main() {
@@ -60,6 +75,19 @@ int main() {
                       << "; error(cents)=" << cents << '\n';
             expect(result.valid && std::abs(cents) < 5.0,
                    "Known guitar/bass test tone pitch error >= 5 cents");
+        }
+    }
+
+    // Review regression: sample-grid error in a rich but genuine single-period
+    // tone must not trigger octave lowering after the capture prefilter.
+    for (double hz : {82.406889, 329.627557, 600.0, 645.0, 648.0, 648.5, 649.0, 652.0, 680.0}) {
+        for (double phase : {0.0, 0.7}) {
+            const auto result = detector.estimate(filteredOddHarmonics(hz, phase),
+                                                   12000, 25.0, 700.0);
+            if (!result.valid || std::abs(strings::centsBetween(result.hz, hz)) >= 5.0) {
+                std::cerr << "Odd harmonics: " << hz << " Hz, detected=" << result.hz << '\n';
+                expect(false, "Harmonic-rich single-period tone was incorrectly lowered");
+            }
         }
     }
 

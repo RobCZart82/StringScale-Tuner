@@ -16,7 +16,10 @@ not the original source-package snapshot.
    estimator with parabolic refinement. A dominant second harmonic is checked
    against a nearby doubled period. Correction requires an interpolated CMND
    mismatch reduction of at least 0.005 and at least 50 percent; interpolation
-   avoids favoring a longer period merely because it is closer to a whole sample.
+   reduces sample-grid bias. A Hann-windowed spectral check additionally requires
+   a component at the proposed lower fundamental with at least 3 percent of its
+   second harmonic's amplitude. This prevents rich, genuinely upper-octave tones
+   from being lowered solely because their doubled-period mismatch is smaller.
    This reduces weak-fundamental octave errors without guaranteeing detection
    of arbitrarily weak or absent fundamentals. The adapter searches 25-700 Hz internally.
 5. The 65 ms GUI timer drains pending PCM and measures newly received samples.

@@ -76,6 +76,14 @@ PitchEstimate PitchDetector::estimate(const std::vector<float>& data,
     // half the fundamental period. Prefer a nearby doubled period only when
     // its mismatch is substantially smaller. The absolute improvement floor
     // prevents tiny interpolation/noise differences from halving a clean tone.
+    const auto refinedLag = [&](int index) {
+        double lag = static_cast<double>(index);
+        if (index <= 1 || index >= maxLag) return lag;
+        const double curvature = cmnd[index - 1] - 2.0 * cmnd[index] + cmnd[index + 1];
+        if (std::abs(curvature) > 1e-12)
+            lag += std::clamp(0.5 * (cmnd[index - 1] - cmnd[index + 1]) / curvature, -1.0, 1.0);
+        return lag;
+    };
     const auto minimumMismatch = [&](int index) {
         if (index <= 1 || index >= maxLag) return cmnd[index];
         const double left = cmnd[index - 1];
@@ -83,9 +91,30 @@ PitchEstimate PitchDetector::estimate(const std::vector<float>& data,
         const double right = cmnd[index + 1];
         const double curvature = left - 2.0 * middle + right;
         if (curvature <= 1e-12) return middle;
-        const double offset = std::clamp(0.5 * (left - right) / curvature, -1.0, 1.0);
+        const double offset = refinedLag(index) - index;
         return std::max(0.0, middle + 0.5 * (right - left) * offset
                                       + 0.5 * curvature * offset * offset);
+    };
+    const auto hasFundamental = [&](double hz) {
+        double lowerReal = 0.0, lowerImaginary = 0.0;
+        double upperReal = 0.0, upperImaginary = 0.0;
+        constexpr double pi = 3.14159265358979323846;
+        for (std::size_t i = 0; i < x.size(); ++i) {
+            const double angle = 2.0 * pi * hz * i / sampleRate;
+            const double cosine = std::cos(angle), sine = std::sin(angle);
+            const double window = 0.5 - 0.5 * std::cos(2.0 * pi * i / (x.size() - 1));
+            const double sample = window * x[i];
+            lowerReal += sample * cosine;
+            lowerImaginary += sample * sine;
+            upperReal += sample * (2.0 * cosine * cosine - 1.0);
+            upperImaginary += sample * (2.0 * sine * cosine);
+        }
+        const double lowerPower = lowerReal * lowerReal + lowerImaginary * lowerImaginary;
+        const double upperPower = upperReal * upperReal + upperImaginary * upperImaginary;
+        // Require a measurable component at the proposed fundamental, at least
+        // 3% of its second harmonic's amplitude. Hann tapering limits leakage
+        // from the strong upper tone into a nonexistent lower component.
+        return lowerPower > upperPower * 0.03 * 0.03;
     };
     while (2 * bestLag - 2 <= maxLag) {
         const int first = std::max(bestLag + 1, 2 * bestLag - 2);
@@ -99,20 +128,13 @@ PitchEstimate PitchDetector::estimate(const std::vector<float>& data,
         const double candidateMismatch = minimumMismatch(candidateLag);
         if (currentMismatch - candidateMismatch < 0.005 ||
             candidateMismatch > currentMismatch * 0.5) break;
+        // Rich harmonic spectra can defeat parabolic mismatch interpolation.
+        // A better doubled-period score alone is insufficient evidence.
+        if (!hasFundamental(static_cast<double>(sampleRate) / refinedLag(candidateLag))) break;
         bestLag = candidateLag;
     }
 
-    double lag = static_cast<double>(bestLag);
-    if (bestLag > 1 && bestLag < maxLag) {
-        const double a = cmnd[bestLag - 1];
-        const double b = cmnd[bestLag];
-        const double c = cmnd[bestLag + 1];
-        const double denominator = a - 2.0 * b + c;
-        if (std::abs(denominator) > 1e-12)
-            lag += std::clamp(0.5 * (a - c) / denominator, -1.0, 1.0);
-    }
-
-    const double hz = static_cast<double>(sampleRate) / lag;
+    const double hz = static_cast<double>(sampleRate) / refinedLag(bestLag);
     if (!std::isfinite(hz) || hz < minHz || hz > maxHz) return result;
     result.hz = hz;
     result.confidence = std::clamp(1.0 - cmnd[bestLag], 0.0, 1.0);
