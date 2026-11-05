@@ -32,7 +32,9 @@ not the original source-package snapshot.
    a 250 ms data timeout, which clears analysis history.
 6. A minimum-level gate uses 3 dB hysteresis. An uncertain estimate or short level
    dip retains the last valid pitch for at most 220 ms; failures cannot renew it.
-   Digital clipping, stopping or changing channels clears pitch immediately.
+   When a meter update reports digital clipping, it clears the pitch and
+   discards the analysis window. Pitch resumes once a fresh window of clean
+   samples is available. Stopping or changing channels also clears pitch.
 7. Nearby valid estimates are smoothed; a larger pitch change jumps to the new
    absolute pitch. Channel changes preserve partial PCM-frame alignment.
 

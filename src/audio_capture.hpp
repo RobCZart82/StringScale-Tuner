@@ -49,6 +49,7 @@ private:
     void clearPitch();
     void rejectPitch(qint64 nowMs);
     void acceptSample(float sample);
+    void resetPitchWindow();
     void resetAnalysis();
     std::unique_ptr<QAudioSource> source_;
     QIODevice* input_ = nullptr; // Owned by QAudioSource.

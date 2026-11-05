@@ -86,12 +86,16 @@ void AudioCapture::stop() {
     resetAnalysis();
 }
 
-void AudioCapture::resetAnalysis() {
-    std::fill(pitchRing_.begin(), pitchRing_.end(), 0.0f);
+void AudioCapture::resetPitchWindow() {
     ringWrite_ = 0;
     ringCount_ = 0;
     lowpass_ = 0.0;
     resamplePhase_ = 0.0;
+    framesSinceLastEstimate_ = 0;
+}
+
+void AudioCapture::resetAnalysis() {
+    resetPitchWindow();
     sumSquares_ = 0.0;
     blockSamples_ = 0;
     peak_ = 0.0;
@@ -100,7 +104,6 @@ void AudioCapture::resetAnalysis() {
     lastAudioMs_ = -1;
     lastPitchMs_ = -1;
     gateOpen_ = false;
-    framesSinceLastEstimate_ = 0;
     emit pitchReady(0, 0);
     emit levelReady(-120, -120, false);
 }
@@ -196,7 +199,10 @@ void AudioCapture::updateMeasurementsAt(qint64 nowMs) {
     emit levelReady(rmsDb, peakDb, clipped);
 
     if (clipped) {
-        clearPitch(); // Never hold a trusted pitch through digital clipping.
+        // Require a fresh window so the next clean packet cannot revive
+        // an estimate from samples collected before or during clipping.
+        resetPitchWindow();
+        clearPitch();
         return;
     }
     // Small hysteresis prevents repeated gate opening/closing near MIN.

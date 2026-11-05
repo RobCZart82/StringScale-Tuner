@@ -99,6 +99,12 @@ public:
         capture.processBytes(tone(4800, 146.8324, 1.2), validAt + 780);
         capture.updateMeasurementsAt(validAt + 780);
         require(pitch == 0, "clipped pitch was held as valid");
+        capture.processBytes(tone(3120), validAt + 845);
+        capture.updateMeasurementsAt(validAt + 845);
+        require(pitch == 0, "short clean packet revived pitch from the clipped window");
+        capture.processBytes(tone(14000), validAt + 910);
+        capture.updateMeasurementsAt(validAt + 910);
+        require(std::abs(pitch - 146.8324) < 0.5, "clean window did not recover after clipping");
         capture.resetAnalysis();
         require(level == -120 && capture.ringCount_ == 0 && capture.lastPitchMs_ == -1,
                 "device/channel reset retained state");
