@@ -1,5 +1,13 @@
 # Fejlesztési és javítási napló
 
+## 2026-11-05 – Windows licenc-hash ellenőrzés sorvégjavítása
+
+A #22 Windows CI-je a licencszöveg SHA256-tesztjén hibázott. A naplóban
+szereplő hash pontosan megegyezett az upstream LF szöveg CRLF-re alakított
+változatának hash-ével. A .gitattributes a licenses szövegekre explicit LF
+sorvéget ír elő, így a Windows core.autocrlf nem változtatja meg a forrásadatot.
+Az ellenőrzőösszeg-teszt szigorú marad, nem normalizáljuk vagy gyengítjük.
+
 ## 2026-11-05 – Licencmellékletek és tényleges runtime-audit előkészítése
 
 A csomagok licenses/ mappája teljes LGPL v3, GPL v3 kísérő és LGPL v2.1
