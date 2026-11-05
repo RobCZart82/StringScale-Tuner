@@ -72,6 +72,36 @@ PitchEstimate PitchDetector::estimate(const std::vector<float>& data,
         bestLag = static_cast<int>(std::distance(cmnd.begin(), it));
     }
 
+    // A dominant second harmonic can create an early, convincing minimum at
+    // half the fundamental period. Prefer a nearby doubled period only when
+    // its mismatch is substantially smaller. The absolute improvement floor
+    // prevents tiny interpolation/noise differences from halving a clean tone.
+    const auto minimumMismatch = [&](int index) {
+        if (index <= 1 || index >= maxLag) return cmnd[index];
+        const double left = cmnd[index - 1];
+        const double middle = cmnd[index];
+        const double right = cmnd[index + 1];
+        const double curvature = left - 2.0 * middle + right;
+        if (curvature <= 1e-12) return middle;
+        const double offset = std::clamp(0.5 * (left - right) / curvature, -1.0, 1.0);
+        return std::max(0.0, middle + 0.5 * (right - left) * offset
+                                      + 0.5 * curvature * offset * offset);
+    };
+    while (2 * bestLag - 2 <= maxLag) {
+        const int first = std::max(bestLag + 1, 2 * bestLag - 2);
+        const int last = std::min(maxLag, 2 * bestLag + 2);
+        const auto candidate = std::min_element(cmnd.begin() + first,
+                                                cmnd.begin() + last + 1);
+        const int candidateLag = static_cast<int>(std::distance(cmnd.begin(), candidate));
+        // Compare interpolated minima: rounding a short period to a whole
+        // sample must not make its doubled period appear intrinsically better.
+        const double currentMismatch = minimumMismatch(bestLag);
+        const double candidateMismatch = minimumMismatch(candidateLag);
+        if (currentMismatch - candidateMismatch < 0.005 ||
+            candidateMismatch > currentMismatch * 0.5) break;
+        bestLag = candidateLag;
+    }
+
     double lag = static_cast<double>(bestLag);
     if (bestLag > 1 && bestLag < maxLag) {
         const double a = cmnd[bestLag - 1];
@@ -91,3 +121,4 @@ PitchEstimate PitchDetector::estimate(const std::vector<float>& data,
 }
 
 } // namespace strings
+
