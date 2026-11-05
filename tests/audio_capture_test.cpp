@@ -1,4 +1,5 @@
 #include "audio_capture.hpp"
+#include "tuning.hpp"
 #include <QCoreApplication>
 #include <cmath>
 #include <cstring>
