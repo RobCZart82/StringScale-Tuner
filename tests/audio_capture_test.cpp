@@ -1,4 +1,5 @@
 #include "audio_capture.hpp"
+#include "tuning.hpp"
 #include <QCoreApplication>
 #include <cmath>
 #include <cstring>
@@ -108,7 +109,41 @@ public:
         capture.processBytes(tone(4800, 329.6276), 5300);
         capture.updateMeasurementsAt(5300);
         require(pitch == 0 && capture.ringCount_ < capture.pitchRing_.size(), "hidden transport gap retained old window");
-        std::cout << "Capture packet jitter, stall, recovery, uncertainty, gate, silence and clipping passed\n";
+        // Exercise octave correction after the real 48 kHz PCM decoder,
+        // channel selection, low-pass and 12 kHz decimation path.
+        for (double hz : {30.867706, 82.406889, 329.627557}) {
+            capture.resetAnalysis();
+            QByteArray pcm(18000 * 2 * sizeof(float), '\0');
+            for (int i = 0; i < 18000; ++i) {
+                const double angle = 2.0 * 3.141592653589793 * hz * i / 48000.0;
+                const float value = 0.05 * std::sin(angle) + 0.65 * std::sin(2 * angle)
+                                  + 0.02 * std::sin(3 * angle);
+                std::memcpy(pcm.data() + i * 2 * sizeof(float), &value, sizeof(value));
+            }
+            capture.processBytes(pcm, 6000);
+            capture.updateMeasurementsAt(6000);
+            require(pitch > 0 && std::abs(strings::centsBetween(pitch, hz)) < 5.0,
+                    "capture path mistook dominant second harmonic for fundamental");
+        }
+        // Review regression through the actual capture path. This genuine
+        // 648.5 Hz tone used to be incorrectly lowered to about 324.37 Hz.
+        for (double phase : {0.0, 0.7}) {
+            capture.resetAnalysis();
+            QByteArray pcm(18000 * 2 * sizeof(float), '\0');
+            for (int i = 0; i < 18000; ++i) {
+                const double angle = 2.0 * 3.141592653589793 * 648.5 * i / 48000.0 + phase;
+                double sample = 0.0;
+                for (int harmonic = 1; harmonic <= 11; harmonic += 2)
+                    sample += 0.2 * std::sin(harmonic * angle) / harmonic;
+                const float value = static_cast<float>(sample);
+                std::memcpy(pcm.data() + i * 2 * sizeof(float), &value, sizeof(value));
+            }
+            capture.processBytes(pcm, 6000);
+            capture.updateMeasurementsAt(6000);
+            require(pitch > 0 && std::abs(strings::centsBetween(pitch, 648.5)) < 5.0,
+                    "capture path incorrectly lowered a rich single-period tone");
+        }
+        std::cout << "Capture packet jitter, stall, recovery, uncertainty, gate, silence, clipping and octaves passed\n";
     }
 };
 
@@ -116,3 +151,4 @@ int main(int argc, char** argv) {
     QCoreApplication app(argc, argv);
     AudioCaptureTest::run();
 }
+

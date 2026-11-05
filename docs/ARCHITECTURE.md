@@ -13,7 +13,15 @@ not the original source-package snapshot.
    unrelated channels are not mixed into the measurement.
 3. A one-pole low-pass and phase accumulator decimate to 12,000 samples/second.
 4. A 4096-sample rolling window (~341 ms) feeds the YIN-family difference/CMND
-   estimator with parabolic refinement. The adapter searches 25-700 Hz internally.
+   estimator with parabolic refinement. A dominant second harmonic is checked
+   against a nearby doubled period. Correction requires an interpolated CMND
+   mismatch reduction of at least 0.005 and at least 50 percent; interpolation
+   reduces sample-grid bias. A Hann-windowed spectral check additionally requires
+   a component at the proposed lower fundamental with at least 3 percent of its
+   second harmonic's amplitude. This prevents rich, genuinely upper-octave tones
+   from being lowered solely because their doubled-period mismatch is smaller.
+   This reduces weak-fundamental octave errors without guaranteeing detection
+   of arbitrarily weak or absent fundamentals. The adapter searches 25-700 Hz internally.
 5. The 65 ms GUI timer drains pending PCM and measures newly received samples.
    A packet-free tick does not mean digital silence: level is retained until
    a 250 ms data timeout, which clears analysis history.
@@ -70,3 +78,4 @@ separate release work. No workflow automatically publishes a GitHub Release.
 
 The original application code is MIT-licensed. Third-party components have their
 own terms; see THIRD_PARTY_NOTICES.md and the release checklist.
+
