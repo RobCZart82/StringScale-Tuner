@@ -12,7 +12,8 @@ import zipfile
 
 def relative_path(value):
     path = PurePosixPath(value)
-    if not value or path.is_absolute() or '..' in path.parts or '\\' in value:
+    if (not value or value == '.' or path.is_absolute() or '..' in path.parts or '\\' in value
+            or ':' in value or str(path) != value):
         raise ValueError(f'Invalid package path: {value}')
     return value
 

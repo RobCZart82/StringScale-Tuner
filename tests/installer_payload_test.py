@@ -7,6 +7,7 @@ import unittest
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'scripts'))
 from installer_payload import create_user_stage, MANUALS
+from verify_preview import relative_path
 
 
 class InstallerPayloadTest(unittest.TestCase):
@@ -42,6 +43,16 @@ class InstallerPayloadTest(unittest.TestCase):
             'START-HERE-HU.md', 'RELEASE-NOTES-HU.md'} for name in paths))
         self.assertEqual(paths, {p.relative_to(self.user).as_posix() for p in self.user.rglob('*') if p.is_file()})
         return paths
+
+    def test_package_paths_are_portable_and_canonical(self):
+        # POSIX parsing alone accepts drive paths and NTFS alternate streams.
+        # Both are unsafe when the same inventory is used on Windows.
+        for name in ['', '.', '/tmp/file', '../file', 'bin/../file',
+                     'C:/outside', 'C:outside', 'bin/runtime.dll:stream',
+                     'bin\\runtime.dll', './bin/file', 'bin//file']:
+            with self.subTest(name=name), self.assertRaises(ValueError):
+                relative_path(name)
+        self.assertEqual(relative_path('bin/Qt6Core.dll'), 'bin/Qt6Core.dll')
 
     def test_windows_runtime_kept_and_documents_filtered(self):
         for name in ['bin/StringScaleTuner.exe', 'plugins/platforms/qwindows.dll', 'translations/qtbase_hu.qm']:

@@ -74,3 +74,10 @@ A workflow az aktuális csomagolási parancsok forrása:
 
 A már elvégzett hardveres próbákat és korlátaikat a
 [tesztjegyzőkönyv](HARDWARE_TEST_RESULTS_HU.md) rögzíti.
+
+## Újabb Qt és macOS minimum
+
+A 12.0 alapérték a CI Qt 6.8 futtatókörnyezetéhez tartozik. Újabb SDK-nál
+a `-DCMAKE_OSX_DEPLOYMENT_TARGET` értéke legalább az SDK minimuma legyen
+(a helyben próbált Qt 6.11.2 esetén 13.0). Az újabb Qt-val sikeres fordítás
+nem igazolja a macOS 12 kompatibilitást.
