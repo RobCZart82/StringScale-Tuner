@@ -93,5 +93,6 @@ own terms; see THIRD_PARTY_NOTICES.md and the release checklist.
 
 Qt 6.5 remains the minimum supported API. Audio state/error enum types are
 derived from QAudioSource so the QAudio-to-QtAudio namespace change does not
-break this baseline. A dedicated Qt 6.5.3 CI job builds the application and runs
+break this baseline. The microphone permission API is compiled only when the
+Qt build enables its permissions feature. A dedicated Qt 6.5.3 CI job builds the application and runs
 the regression tests alongside the packaged Qt 6.8.3 platform builds.

@@ -8,7 +8,9 @@
 #include <QAction>
 #include <QSignalBlocker>
 #include <QApplication>
+#if QT_CONFIG(permissions)
 #include <QPermissions>
+#endif
 #include <QComboBox>
 #include <QListView>
 #include <QScreen>
@@ -217,6 +219,7 @@ void MainWindow::selectInput(bool persistDevice) {
     const QByteArray id = inputChoice_->currentData().toByteArray();
     // macOS (and other protected platforms) must grant microphone access.
     // Qt 6.5+ exposes this cross-platform permission API.
+#if QT_CONFIG(permissions)
     const QMicrophonePermission microphonePermission;
     switch (qApp->checkPermission(microphonePermission)) {
     case Qt::PermissionStatus::Undetermined:
@@ -230,6 +233,8 @@ void MainWindow::selectInput(bool persistDevice) {
     case Qt::PermissionStatus::Granted:
         break;
     }
+
+#endif
 
     const auto devices = QMediaDevices::audioInputs();
     for (const auto& device : devices) {
