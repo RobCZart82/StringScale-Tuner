@@ -99,12 +99,13 @@ Források:
 
 ## Névjegy / About ablak – elfogadott arculati irány (2026-11-03)
 
-Állapot: tervezett funkció; az SVG-források a resources/branding mappában
-rendelkezésre állnak, az ablak megvalósítása külön feladat.
+Állapot: a standalone Névjegy ablak elkészült. Az alábbi elfogadott arculati
+követelmények megvalósítását a GUI-integrációs tesztek ellenőrzik. A további
+kijelző- és akadálymentességi hardverpróbák az M3 mérföldkő részei.
 
 - A jobb felső fogaskerék lenyíló menüt nyisson. A Beállítások / Settings és
   Hang / Audio elemek alatt legyen elérhető a Névjegy / About.
-  Ez a jelenlegi, közvetlenül beállításablakot nyitó működés tervezett bővítése.
+  A jelenlegi felület ezt a menüs elrendezést használja.
 - A Névjegy használja Robert GYR-logóját és a polgári nevéhez tartozó szignót.
   A megadott logó SVG-címe: „GYR — Gyuricza Róbert”.
 - Az eredeti vektorgrafikák maradjanak meg SVG-ként; a megjelenítés méretarányosan,
@@ -121,22 +122,22 @@ rendelkezésre állnak, az ablak megvalósítása külön feladat.
 
 ### Megvalósítás és ellenőrzés
 
-- [ ] Fogaskerék-menü és Névjegy / About menüpont.
-- [ ] SVG-k csomagolása az alkalmazás erőforrásai közé, a felhasználó gépén
+- [x] Fogaskerék-menü és Névjegy / About menüpont.
+- [x] SVG-k csomagolása az alkalmazás erőforrásai közé, a felhasználó gépén
       külső SVG-fájlok vagy hálózati letöltés nélkül.
-- [ ] Méretarányos, éles megjelenítés kis és nagy ablakban, nagy DPI mellett is.
-- [ ] Kontraszt és vágás ellenőrzése mindkét témában.
-- [ ] A polgári név kizárólag a szignó vektorgrafikájában jelenjen meg, külön
+- [x] Méretarányos, éles megjelenítés kis és nagy ablakban, nagy DPI mellett is.
+- [x] Kontraszt és vágás ellenőrzése mindkét témában.
+- [x] A polgári név kizárólag a szignó vektorgrafikájában jelenjen meg, külön
       szöveges kiírás nélkül. A RobCZart82 név megmaradhat; a szignó akadálymentes
       leírása „A szerző szignója” / „Author signature”.
-- [ ] Magyar és angol Névjegy-feliratok ellenőrzése.
+- [x] Magyar és angol Névjegy-feliratok ellenőrzése.
 
 Forrásfájlok és használati megjegyzések: [branding README](../resources/branding/README.md).
 
 ## Magyar–angol nyelvváltás – elfogadott terv (2026-11-03)
 
-Állapot: jóváhagyott követelmény, megvalósításra vár. A standalone GUI következő
-fejlesztési lépései közé tartozik; a későbbi VST3 felületre is érvényes.
+Állapot: a standalone magyar–angol nyelvváltás elkészült. Az alábbi követelmények
+és ellenőrzések a működő megvalósítást írják le; a későbbi VST3 felületre is érvényesek.
 
 - A fogaskerékből megnyitható Beállítások / Settings ablakban a megjelenés
   választója mellett, azzal azonos jellegű legördülő legyen a nyelvválasztó.
@@ -158,13 +159,13 @@ fejlesztési lépései közé tartozik; a későbbi VST3 felületre is érvénye
 
 ### Ellenőrzési feltételek
 
-- [ ] Magyar → English → Magyar váltás újraindítás nélkül, a nyitott
+- [x] Magyar → English → Magyar váltás újraindítás nélkül, a nyitott
       beállításablakban is.
-- [ ] A mentett nyelv visszaállítása az alkalmazás újraindításakor.
-- [ ] Mindkét nyelv ellenőrzése világos és sötét témában.
-- [ ] A hosszabb feliratok, az ékezetek és a figyelmeztetések nem vágódnak le.
-- [ ] A hangnevek, oktávok, húrszámok és a mérési viselkedés változatlansága.
-- [ ] Hiányzó fordítások és kevert nyelvű saját feliratok ellenőrzése.
+- [x] A mentett nyelv visszaállítása az alkalmazás újraindításakor.
+- [x] Mindkét nyelv ellenőrzése világos és sötét témában.
+- [x] A hosszabb feliratok, az ékezetek és a figyelmeztetések nem vágódnak le.
+- [x] A hangnevek, oktávok, húrszámok és a mérési viselkedés változatlansága.
+- [x] Hiányzó fordítások és kevert nyelvű saját feliratok ellenőrzése.
 
 2026-11-04-i megvalósítás: mentett választás hiányában magyar rendszernyelvhez
 magyar, más rendszernyelvhez angol induló felület tartozik. A felhasználó ezt

@@ -16,7 +16,9 @@ not the original source-package snapshot.
    unrelated channels are not mixed into the measurement.
 3. A one-pole low-pass and phase accumulator decimate to 12,000 samples/second.
 4. A 4096-sample rolling window (~341 ms) feeds the YIN-family difference/CMND
-   estimator with parabolic refinement. A dominant second harmonic is checked
+   estimator with parabolic refinement. Nonfinite bounds/samples and invalid
+   ranges are rejected; lag limits are bounded by the input window before integer
+   conversion. A dominant second harmonic is checked
    against a nearby doubled period. Correction requires an interpolated CMND
    mismatch reduction of at least 0.005 and at least 50 percent; interpolation
    reduces sample-grid bias. A Hann-windowed spectral check additionally requires
@@ -64,6 +66,9 @@ future work. Hardware results are recorded separately in HARDWARE_TEST_RESULTS_H
   1000x850 logical-pixel main window. Oversized presets are disabled for the screen.
   If even 75 percent does not fit, the outer window is bounded to the available
   screen and scrollbars expose the complete minimum-size instrument canvas.
+  About and settings dialogs also retain a scaled content canvas inside a
+  scrollable, screen-bounded window. Screen and work-area changes reapply their
+  size limits; GUI previews exercise button reachability in a 260x180 work area.
 - The app supports light/dark palettes, thin outlined popup selections and native
   ICO/ICNS application icons generated from the same original vector artwork.
 
@@ -85,3 +90,8 @@ The original application code is MIT-licensed. Third-party components have their
 own terms; see THIRD_PARTY_NOTICES.md and the release checklist.
 
 
+
+Qt 6.5 remains the minimum supported API. Audio state/error enum types are
+derived from QAudioSource so the QAudio-to-QtAudio namespace change does not
+break this baseline. A dedicated Qt 6.5.3 CI job builds the application and runs
+the regression tests alongside the packaged Qt 6.8.3 platform builds.

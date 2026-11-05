@@ -305,7 +305,7 @@ void MainWindow::retranslate() {
     for(auto* w:findChildren<QWidget*>())w->update();
 }
 QDialog* MainWindow::openAbout() {
-    if(!aboutDialog_) {aboutDialog_=new AboutDialog(this);aboutDialog_->setAttribute(Qt::WA_DeleteOnClose);UiScale::instance().prepare(aboutDialog_,QSize(500,660));}
+    if(!aboutDialog_) {aboutDialog_=new AboutDialog(this);aboutDialog_->setAttribute(Qt::WA_DeleteOnClose);UiScale::instance().prepare(aboutDialog_,QSize(500,660),!preview_);}
     aboutDialog_->show();aboutDialog_->raise();return aboutDialog_;
 }
 QDialog* MainWindow::openSettings(bool audio) {
@@ -383,7 +383,7 @@ QDialog* MainWindow::openSettings(bool audio) {
             dialog->close();
         });
     }
-    UiScale::instance().prepare(dialog,audio?QSize(620,360):QSize(560,320));dialog->show();return dialog;
+    UiScale::instance().prepare(dialog,audio?QSize(620,360):QSize(560,320),!preview_);dialog->show();return dialog;
 }
 
 void MainWindow::chooseInputChannel(int channel) {

@@ -8,6 +8,11 @@
 #include <QSettings>
 #include <QVariant>
 #include <QWidget>
+#include <QScrollArea>
+#include <QVBoxLayout>
+#include <QGuiApplication>
+#include <QScreen>
+#include <QWindow>
 #include <algorithm>
 
 namespace {
@@ -33,8 +38,13 @@ int UiScale::fitPercent(int requested, QSize available) {
     return 75;
 }
 QSize UiScale::fitWindowSize(int percent, QSize available) {
+    return fitWindowSize(QSize(1000,850),percent,available);
+}
+QSize UiScale::fitWindowSize(QSize preferred, int percent, QSize available) {
     percent=validPercent(percent);
-    return QSize(1000*percent/125,850*percent/125).boundedTo(available.expandedTo(QSize(1,1)));
+    const double scale=percent/125.0;
+    return QSize(qRound(preferred.width()*scale),qRound(preferred.height()*scale))
+        .boundedTo(available.expandedTo(QSize(1,1)));
 }
 int UiScale::px(int value) const { return value>0 ? std::max(1,qRound(value*factor())) : value; }
 QString UiScale::styleSheet(const QString& base) const {
@@ -54,8 +64,33 @@ void UiScale::setPercent(int percent, bool persist) {
     if(percent_==percent)return;
     percent_=percent;emit changed(percent);
 }
-void UiScale::prepare(QWidget* root, QSize preferred) {
+void UiScale::prepare(QWidget* root, QSize preferred, bool fitToScreen) {
     root->setProperty("ssPreferredSize",preferred);
+    const bool dialog=qobject_cast<QDialog*>(root)!=nullptr;
+    root->setProperty("ssFitToScreen",dialog && fitToScreen);
+    if(dialog) {
+        auto* content=new QWidget;
+        content->setFixedSize(preferred);
+        // QWidget transfers an existing layout and its children to this canvas.
+        content->setLayout(root->layout());
+        auto* scroll=new QScrollArea(root);
+        scroll->setObjectName("dialogScrollArea");
+        scroll->setFrameShape(QFrame::NoFrame);
+        scroll->setWidget(content);
+        auto* outer=new QVBoxLayout(root);
+        outer->setContentsMargins(0,0,0,0);outer->setSpacing(0);
+        outer->addWidget(scroll);
+        if(fitToScreen) {
+            // Create the native handle before subscribing to screen changes.
+            root->winId();
+            connect(root->windowHandle(),&QWindow::screenChanged,root,[this,root]{apply(root);});
+            const auto watchScreen=[this,root](QScreen* screen) {
+                connect(screen,&QScreen::availableGeometryChanged,root,[this,root]{apply(root);});
+            };
+            for(auto* screen:QGuiApplication::screens())watchScreen(screen);
+            connect(qGuiApp,&QGuiApplication::screenAdded,root,watchScreen);
+        }
+    }
     connect(this,&UiScale::changed,root,[this,root]{apply(root);});
     apply(root);
 }
@@ -94,7 +129,14 @@ void UiScale::apply(QWidget* root) {
         layout->setContentsMargins(px(base[0].toInt()),px(base[1].toInt()),px(base[2].toInt()),px(base[3].toInt()));
         layout->setSpacing(px(layout->property("ssBaseSpacing").toInt()));
     }
-    root->setFixedSize(scaled(root->property("ssPreferredSize").toSize()));
+    QSize size=scaled(root->property("ssPreferredSize").toSize());
+    if(root->property("ssFitToScreen").toBool() && root->screen()) {
+        const auto margins=root->windowHandle()?root->windowHandle()->frameMargins():QMargins(8,32,8,8);
+        const QSize available=root->screen()->availableGeometry().size()-QSize(
+            margins.left()+margins.right()+8,std::max(32,margins.top()+margins.bottom())+8);
+        size=fitWindowSize(root->property("ssPreferredSize").toSize(),percent_,available);
+    }
+    root->setFixedSize(size);
     if(root->layout())root->layout()->activate();
     for(auto* widget:widgets)widget->update();
 }

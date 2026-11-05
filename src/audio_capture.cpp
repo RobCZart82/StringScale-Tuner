@@ -56,13 +56,17 @@ bool AudioCapture::start(const QAudioDevice& device, int channel) {
         return false;
     }
     connect(input_, &QIODevice::readyRead, this, &AudioCapture::consumeAudio);
+    // Derive enum types from the API to support both Qt 6.5's QAudio and
+    // Qt 6.7+'s QtAudio namespace.
+    using AudioState = decltype(source_->state());
+    using AudioError = decltype(source_->error());
     connect(source_.get(), &QAudioSource::stateChanged, this,
-            [this](QtAudio::State state) {
-        if (state == QtAudio::StoppedState && source_) {
+            [this](AudioState state) {
+        if (state == AudioState::StoppedState && source_) {
             input_ = nullptr;
             partialFrame_.clear();
             resetAnalysis();
-            if (source_->error() != QtAudio::NoError)
+            if (source_->error() != AudioError::NoError)
                 emit errorOccurred("Audio input stopped unexpectedly. Choose another device or check permissions.");
         }
     });

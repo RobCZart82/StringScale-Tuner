@@ -4,6 +4,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
+#include <limits>
 #include <random>
 #include <vector>
 
@@ -63,6 +64,34 @@ std::vector<float> filteredOddHarmonics(double hz, double phase) {
 
 int main() {
     strings::PitchDetector detector;
+    const auto knownTone = signal(110.0, 12000);
+    const double nan = std::numeric_limits<double>::quiet_NaN();
+    const double infinity = std::numeric_limits<double>::infinity();
+    for (double invalid : {nan, infinity, -infinity, 0.0, -1.0}) {
+        expect(!detector.estimate(knownTone, 12000, invalid, 700.0).valid,
+               "Invalid minimum frequency must be rejected");
+        expect(!detector.estimate(knownTone, 12000, 25.0, invalid).valid,
+               "Invalid maximum frequency must be rejected");
+    }
+    expect(!detector.estimate(knownTone, 12000, 1e-300, 2e-300).valid,
+           "Unrepresentable minimum lag must be rejected before integer conversion");
+    const auto wideRange = detector.estimate(knownTone, 12000, 1e-300, 700.0);
+    expect(wideRange.valid && std::abs(strings::centsBetween(wideRange.hz, 110.0)) < 5.0,
+           "Tiny lower bound must be safely limited to the available input window");
+    expect(!detector.estimate(knownTone, 0).valid &&
+           !detector.estimate(knownTone, -1).valid &&
+           !detector.estimate(knownTone, 12000, 700.0, 25.0).valid,
+           "Invalid sample rate or reversed frequency range must be rejected");
+    for (float invalid : {std::numeric_limits<float>::quiet_NaN(),
+                          std::numeric_limits<float>::infinity(),
+                          -std::numeric_limits<float>::infinity()}) {
+        for (std::size_t index : {std::size_t(0), knownTone.size()/2, knownTone.size()-1}) {
+            auto samples = knownTone;
+            samples[index] = invalid;
+            expect(!detector.estimate(samples, 12000).valid,
+                   "Nonfinite PCM must be rejected");
+        }
+    }
     for (const double hz : {30.867706, 41.203445, 73.416192, 82.406889,
                             110.0, 146.832384, 164.813778, 196.0, 246.941651, 329.627557}) {
         for (const bool harmonics : {false, true}) {
