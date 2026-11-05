@@ -9,7 +9,10 @@ not the original source-package snapshot.
 1. QMediaDevices lists audio inputs. QAudioSource negotiates a multichannel
    format (48k Float/Int16 preferred, device preferred format as fallback).
 2. Only the selected input channel feeds RMS, peak, clipping and pitch analysis.
-   The channel is saved per device. Nonfinite selected samples are rejected;
+   The channel is saved per device. Automatic fallback does not overwrite the
+   preferred input device, which is restored when it reconnects. Explicit device
+   changes update that preference, including before a permission prompt completes.
+   Nonfinite selected samples are rejected;
    unrelated channels are not mixed into the measurement.
 3. A one-pole low-pass and phase accumulator decimate to 12,000 samples/second.
 4. A 4096-sample rolling window (~341 ms) feeds the YIN-family difference/CMND
@@ -59,6 +62,8 @@ future work. Hardware results are recorded separately in HARDWARE_TEST_RESULTS_H
 - UiScale stores baseline fonts/layout metrics. Presets 75/100/125/150 percent
   scale widgets and painted meters together; 125 percent is the original
   1000x850 logical-pixel main window. Oversized presets are disabled for the screen.
+  If even 75 percent does not fit, the outer window is bounded to the available
+  screen and scrollbars expose the complete minimum-size instrument canvas.
 - The app supports light/dark palettes, thin outlined popup selections and native
   ICO/ICNS application icons generated from the same original vector artwork.
 
@@ -78,4 +83,5 @@ separate release work. No workflow automatically publishes a GitHub Release.
 
 The original application code is MIT-licensed. Third-party components have their
 own terms; see THIRD_PARTY_NOTICES.md and the release checklist.
+
 

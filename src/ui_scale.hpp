@@ -11,6 +11,7 @@ public:
     static UiScale& instance();
     static int savedPercent();
     static int fitPercent(int requested, QSize available);
+    static QSize fitWindowSize(int percent, QSize available);
     int percent() const { return percent_; }
     double factor() const { return percent_ / 125.0; }
     int px(int value) const;
@@ -23,3 +24,4 @@ private:
     void apply(QWidget* root);
     int percent_ = 125;
 };
+

@@ -41,7 +41,7 @@ private:
     void chooseInputChannel(int channel);
     void buildInterface();
     void refreshInputDevices();
-    void selectInput();
+    void selectInput(bool persistDevice = true);
     void updateTuning();
     void handlePitch(double hz, double confidence);
     void handleLevel(double rmsDb, double peakDb, bool clipped);
@@ -72,3 +72,4 @@ private:
     double minimumLevelDb_ = -45.0;
     double warningPeakDb_ = -3.0;
 };
+

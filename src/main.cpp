@@ -2,6 +2,7 @@
 #include "main_window.hpp"
 #include "ui_language.hpp"
 #include "ui_scale.hpp"
+#include "input_device_selection.hpp"
 #include "build_info.hpp"
 #include <QTemporaryDir>
 #include <QSettings>
@@ -15,6 +16,8 @@
 #include <QPushButton>
 #include <QStyleOptionComboBox>
 #include <QAction>
+#include <QScrollArea>
+#include <QScrollBar>
 #include <QDialog>
 #include <QFile>
 #include <QSvgRenderer>
@@ -74,6 +77,21 @@ int main(int argc, char* argv[]) {
         const QString folder = app.arguments().at(previewArg + 1);
         if (!QDir().mkpath(folder)) return 3;
         const auto require=[](bool ok,const char* message){if(!ok)qCritical()<<message;return ok;};
+        // Reconnection policy without opening a microphone or needing hardware.
+        QComboBox devices;
+        const QByteArray preferred("ssl2"), fallback("built-in"), replacement("ucg102");
+        devices.addItem("Built-in",fallback);
+        if(!require(restoredInputDeviceIndex(devices,preferred,preferred,fallback)==0,
+                    "Disconnected preferred input has no fallback"))return 27;
+        devices.addItem("SSL 2+",preferred);
+        if(!require(restoredInputDeviceIndex(devices,preferred,fallback,fallback)==1,
+                    "Reconnected preferred input was not restored"))return 27;
+        devices.addItem("UCG-102",replacement);
+        if(!require(restoredInputDeviceIndex(devices,replacement,preferred,fallback)==2,
+                    "Explicit new device preference was ignored"))return 27;
+        devices.clear();
+        if(!require(restoredInputDeviceIndex(devices,preferred,fallback,fallback)==-1,
+                    "Empty device list selected an input"))return 27;
         auto* settings=window.openSettings();auto* audio=window.openSettings(true);auto* about=window.openAbout();
         auto* language=settings->findChild<QComboBox*>("languageChoice");
         auto* theme=settings->findChild<QComboBox*>("themeChoice");
@@ -177,8 +195,25 @@ int main(int argc, char* argv[]) {
         QProcess scaleChild;scaleChild.start(app.applicationFilePath(),{"--test-settings",testSettings.path(),"--check-scale","75"});
         if(!require(scaleChild.waitForFinished(10000) && scaleChild.exitCode()==0 && scaleChild.exitStatus()==QProcess::NormalExit,"UI scale did not persist"))return 25;
         if(!require(UiScale::fitPercent(150,QSize(1000,850))==125 && UiScale::fitPercent(125,QSize(800,680))==100,"Display fit failed"))return 26;
+        // Even the smallest preset can exceed a screen at high system scaling.
+        // Limit the outer window and keep the complete canvas reachable by scrolling.
+        const QSize smallScreen(500,450);
+        window.setFixedSize(UiScale::fitWindowSize(75,smallScreen));
+        app.processEvents();
+        auto* scroll=window.findChild<QScrollArea*>("instrumentScrollArea");
+        if(!require(window.size()==smallScreen && scroll && scroll->widget()->size()==QSize(600,510)
+            && scroll->horizontalScrollBar()->maximum()>0 && scroll->verticalScrollBar()->maximum()>0,
+            "Minimum interface preset cannot scroll on a small screen"))return 28;
+        scroll->horizontalScrollBar()->setValue(scroll->horizontalScrollBar()->maximum());
+        scroll->verticalScrollBar()->setValue(scroll->verticalScrollBar()->maximum());
+        app.processEvents();
+        const auto* status=window.findChild<QLabel*>("statusLabel");
+        const QRect statusBounds(status->mapTo(scroll->viewport(),QPoint(0,0)),status->size());
+        if(!require(scroll->viewport()->rect().intersects(statusBounds),
+                    "Bottom of tuner cannot be reached by scrolling"))return 28;
         settings->close();audio->close();about->close();
         return 0;
     }
     return app.exec();
 }
+
