@@ -32,6 +32,10 @@ int UiScale::fitPercent(int requested, QSize available) {
            850*preset/125<=available.height()) return preset;
     return 75;
 }
+QSize UiScale::fitWindowSize(int percent, QSize available) {
+    percent=validPercent(percent);
+    return QSize(1000*percent/125,850*percent/125).boundedTo(available.expandedTo(QSize(1,1)));
+}
 int UiScale::px(int value) const { return value>0 ? std::max(1,qRound(value*factor())) : value; }
 QString UiScale::styleSheet(const QString& base) const {
     static const QRegularExpression pixels("(\\d+)px");
@@ -94,3 +98,4 @@ void UiScale::apply(QWidget* root) {
     if(root->layout())root->layout()->activate();
     for(auto* widget:widgets)widget->update();
 }
+

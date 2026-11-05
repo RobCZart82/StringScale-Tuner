@@ -3,6 +3,7 @@
 #include "main_window.hpp"
 #include "tuning.hpp"
 #include "about_dialog.hpp"
+#include "input_device_selection.hpp"
 #include <QMenu>
 #include <QAction>
 #include <QSignalBlocker>
@@ -29,6 +30,7 @@
 #include <QPainter>
 #include <QIcon>
 #include <QPixmap>
+#include <QScrollArea>
 #include <algorithm>
 #include <cmath>
 
@@ -162,7 +164,14 @@ void MainWindow::buildInterface() {
     gauge_=new AnalogGauge;pitchScale_=new PitchScale;pitchScale_->setPreset(selected_,calibration_);
     layout->addWidget(levelMeter_);layout->addWidget(gauge_,1);layout->addWidget(pitchScale_);
     statusLabel_=new QLabel(uiText("Figyelek…", "Listening…"));statusLabel_->setObjectName("statusLabel");statusLabel_->setWordWrap(true);statusLabel_->setAccessibleName(uiText("Állapot", "Status"));layout->addWidget(statusLabel_);
-    setCentralWidget(page);
+    // Keep the instrument's readable canvas intact when the available screen
+    // is smaller than the minimum preset. Scrollbars expose the whole canvas.
+    page->setFixedSize(1000,850);
+    auto* scrollArea=new QScrollArea(this);
+    scrollArea->setObjectName("instrumentScrollArea");
+    scrollArea->setFrameShape(QFrame::NoFrame);
+    scrollArea->setWidget(page);
+    setCentralWidget(scrollArea);
     auto* menu=new QMenu(settings);
     settingsAction_=menu->addAction(QString());settingsAction_->setObjectName("settingsAction");
     audioAction_=menu->addAction(QString());audioAction_->setObjectName("audioAction");
@@ -173,7 +182,7 @@ void MainWindow::buildInterface() {
     connect(audioAction_,&QAction::triggered,this,[this]{openSettings(true);});
     connect(aboutAction_,&QAction::triggered,this,[this]{openAbout();});
     connect(profileChoice_,QOverload<int>::of(&QComboBox::currentIndexChanged),this,[this]{updateTuning();});
-    connect(inputChoice_,QOverload<int>::of(&QComboBox::currentIndexChanged),this,[this]{selectInput();});
+    connect(inputChoice_,QOverload<int>::of(&QComboBox::activated),this,[this]{selectInput();});
 }
 void MainWindow::refreshInputDevices() {
     if (preview_) return;
@@ -182,20 +191,22 @@ void MainWindow::refreshInputDevices() {
     const QByteArray defaultId = QMediaDevices::defaultAudioInput().id();
     const QSettings settings;
     const QByteArray storedId = settings.value("input/deviceId").toByteArray();
-    const QByteArray preferredId = !previousId.isEmpty() ? previousId :
-                                   !storedId.isEmpty() ? storedId : defaultId;
     inputChoice_->blockSignals(true);
     inputChoice_->clear();
     for (const auto& device : devices)
         inputChoice_->addItem(device.description(), device.id());
-    int index = inputChoice_->findData(preferredId);
-    if (index < 0) index = inputChoice_->findData(defaultId);
-    if (index >= 0) inputChoice_->setCurrentIndex(index);
+    inputChoice_->setCurrentIndex(restoredInputDeviceIndex(*inputChoice_, storedId, previousId, defaultId));
     inputChoice_->blockSignals(false);
-    selectInput();
+    selectInput(false);
 }
 
-void MainWindow::selectInput() {
+void MainWindow::selectInput(bool persistDevice) {
+    // User activation also fires when the current fallback is reselected.
+    // Preview mode uses the same preference path with isolated test settings.
+    if (persistDevice && inputChoice_ && inputChoice_->currentIndex() >= 0) {
+        const auto id = inputChoice_->currentData().toByteArray();
+        if (!id.isEmpty()) QSettings().setValue("input/deviceId", id);
+    }
     if (preview_) return;
     channelCount_=0; emit inputChannelsChanged();
     if (!inputChoice_ || inputChoice_->currentIndex() < 0) {
@@ -203,13 +214,14 @@ void MainWindow::selectInput() {
         status_=Status::NoInput; refreshStatus();
         return;
     }
+    const QByteArray id = inputChoice_->currentData().toByteArray();
     // macOS (and other protected platforms) must grant microphone access.
     // Qt 6.5+ exposes this cross-platform permission API.
     const QMicrophonePermission microphonePermission;
     switch (qApp->checkPermission(microphonePermission)) {
     case Qt::PermissionStatus::Undetermined:
         qApp->requestPermission(microphonePermission, this,
-            [this](const QPermission&) { selectInput(); });
+            [this](const QPermission&) { selectInput(false); });
         return;
     case Qt::PermissionStatus::Denied:
         capture_.stop();
@@ -219,11 +231,9 @@ void MainWindow::selectInput() {
         break;
     }
 
-    const QByteArray id = inputChoice_->currentData().toByteArray();
     const auto devices = QMediaDevices::audioInputs();
     for (const auto& device : devices) {
         if (device.id() == id) {
-            QSettings().setValue("input/deviceId", id);
             const QString channelKey="input/channels/"+QString::fromLatin1(id.toHex());
             const int requested=QSettings().value(channelKey,0).toInt();
             if(capture_.start(device,requested)){
@@ -399,6 +409,7 @@ void MainWindow::applyUiPercent(int percent, bool persist) {
     const int effective=preview_?percent:UiScale::fitPercent(percent,availableUiSize());
     preferredPercent_=persist?effective:percent;
     UiScale::instance().setPercent(effective,persist);
+    if(!preview_) setFixedSize(UiScale::fitWindowSize(effective,availableUiSize()));
     emit scaleAvailabilityChanged();
     if(!preview_ && isVisible() && screen()) {
         const auto available=screen()->availableGeometry();
@@ -420,3 +431,4 @@ void MainWindow::showEvent(QShowEvent* event) {
         QTimer::singleShot(0,this,[this]{watchScreen();});
     }
 }
+
