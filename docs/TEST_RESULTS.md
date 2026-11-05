@@ -25,4 +25,4 @@ The synthetic signals are stationary, clean, and generated at the same nominal
 sample rate used by the detector. **These results do not establish equivalent
 real-world accuracy** under plucks, noise, resampling, latency, harmonics with
 missing fundamentals, or platform device variation. GUI and audio capture
-were not compiled in the current environment because Qt SDK was unavailable.
+were not compiled in the original 2026-11-03 validation environment because Qt SDK was unavailable.

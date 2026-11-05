@@ -1,4 +1,4 @@
-# User manuals / Felhasználói kézikönyvek
+# User manuals
 
 Two 8-page colour PDF manuals for 0.2.0-alpha.1, in Hungarian and English.
 They cover Windows EXE/macOS PKG installation, current ZIP previews, input/channel
@@ -11,4 +11,4 @@ are reproduced. The original logo/signature are the project owner's supplied ass
 
 Manuals are copied to every preview stage under manuals/. Installers retain them.
 On macOS they are in Applications/StringScale Tuner Documents/manuals; Windows
-adds Start menu links. Native installer scope and testing are in INSTALLERS_HU.md.
+adds Start menu links. Native installer scope and testing are in [the installer guide](../INSTALLERS.md).

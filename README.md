@@ -1,5 +1,7 @@
 # StringScale Tuner — v0.2.0-alpha.1 (test preview)
 
+English | [Magyar](README_HU.md)
+
 ![StringScale Tuner on macOS — dark theme, SSL 2+ input, E2 guitar string in tune](docs/images/tuner-screenshot.png)
 
 **Original, independent, open-source guitar and bass tuner.**
@@ -12,7 +14,7 @@ Other instruments, operating-system versions and interfaces still need testing.
 This is not an accuracy-certified tuner; the public release and its dependency
 licence bundle are still being prepared. Preview ZIPs are not installers.
 
-## Concept / Koncepció
+## Concept
 
 - **Middle:** classic semicircular analog needle for **−50 to +50 cents**, with
   a clamped needle and text warning for deviations beyond the visible range.
@@ -58,9 +60,9 @@ ctest --test-dir build-core -C Release --output-on-failure
 
 The core tests run on Windows, macOS and Linux in GitHub Actions.
 The **Desktop preview** workflow additionally builds and packages the full Qt
-application for Windows x64 and macOS arm64. See [the preview guide](docs/PREVIEW_HU.md)
+application for Windows x64 and macOS arm64. See [the preview guide](docs/PREVIEW.md)
 for artifact download and manual testing. The ZIPs are experimental archives; separate unsigned EXE/PKG installer artifacts
-are built and smoke-tested by the same workflow. See [installer details](docs/INSTALLERS_HU.md).
+are built and smoke-tested by the same workflow. See [installer details](docs/INSTALLERS.md).
 The first implementation of the accepted GUI redesign is documented in [the development log](docs/DEVELOPMENT_LOG_HU.md)
 with further real-instrument testing required beyond the documented configurations.
 
@@ -85,13 +87,19 @@ nearest chromatic note. Measured note/octave and target number remain visible
 separately. The app cannot identify the intended physical string: an unintended
 octave can coincide with another valid string reference.
 
-**Mérés:** a 0 cent target is based on the selected tuning preset and A4
+**Measurement:** a 0 cent target is based on the selected tuning preset and A4
 calibration. The audio amplitude gate is not the same as a pitch-confidence
 gate. A valid estimate must pass both; brief uncertainty is bridged by a bounded
 220 ms hold. Clipping clears pitch immediately.
 
 See `docs/ARCHITECTURE.md` and `docs/ROADMAP.md` for technical details and the
 planned release-quality work.
+
+## Documentation
+
+See the [documentation index](docs/README.md) for English guides, Hungarian
+translations, manuals and historical validation records. English is the default
+repository documentation language; the application supports both English and Hungarian.
 
 ## Rights
 
@@ -103,4 +111,4 @@ logos, UI artwork or protected names without permission.
 No warranty; not an accuracy-certified instrument. The documented successful
 hardware trials do not establish performance on all instruments or interfaces.
 
-Release preparation: [checklist](docs/RELEASE_CHECKLIST_HU.md) · [hardware test sheet](docs/TEST_CHECKLIST_HU.md).
+Release preparation: [checklist](docs/RELEASE_CHECKLIST.md) · [hardware test sheet](docs/TEST_CHECKLIST_HU.md).
