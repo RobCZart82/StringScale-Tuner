@@ -182,7 +182,7 @@ void MainWindow::buildInterface() {
     connect(audioAction_,&QAction::triggered,this,[this]{openSettings(true);});
     connect(aboutAction_,&QAction::triggered,this,[this]{openAbout();});
     connect(profileChoice_,QOverload<int>::of(&QComboBox::currentIndexChanged),this,[this]{updateTuning();});
-    connect(inputChoice_,QOverload<int>::of(&QComboBox::currentIndexChanged),this,[this]{selectInput();});
+    connect(inputChoice_,QOverload<int>::of(&QComboBox::activated),this,[this]{selectInput();});
 }
 void MainWindow::refreshInputDevices() {
     if (preview_) return;
@@ -201,6 +201,12 @@ void MainWindow::refreshInputDevices() {
 }
 
 void MainWindow::selectInput(bool persistDevice) {
+    // User activation also fires when the current fallback is reselected.
+    // Preview mode uses the same preference path with isolated test settings.
+    if (persistDevice && inputChoice_ && inputChoice_->currentIndex() >= 0) {
+        const auto id = inputChoice_->currentData().toByteArray();
+        if (!id.isEmpty()) QSettings().setValue("input/deviceId", id);
+    }
     if (preview_) return;
     channelCount_=0; emit inputChannelsChanged();
     if (!inputChoice_ || inputChoice_->currentIndex() < 0) {
@@ -209,9 +215,6 @@ void MainWindow::selectInput(bool persistDevice) {
         return;
     }
     const QByteArray id = inputChoice_->currentData().toByteArray();
-    // Save explicit choices before asynchronous permission handling, while
-    // preserving the preferred device during automatic fallback/reconnection.
-    if (persistDevice) QSettings().setValue("input/deviceId", id);
     // macOS (and other protected platforms) must grant microphone access.
     // Qt 6.5+ exposes this cross-platform permission API.
     const QMicrophonePermission microphonePermission;

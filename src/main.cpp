@@ -97,6 +97,20 @@ int main(int argc, char* argv[]) {
         auto* theme=settings->findChild<QComboBox*>("themeChoice");
         auto* profile=window.findChild<QComboBox*>("profileChoice");
         auto* input=window.findChild<QComboBox*>("inputChoice");
+        // Programmatic fallback must preserve the old preference, but explicit
+        // activation of the same selected item makes it the new preference.
+        QSettings().setValue("input/deviceId",preferred);
+        const int previewInputIndex=input->currentIndex();
+        input->addItem("Built-in",fallback);
+        const int fallbackIndex=input->count()-1;
+        input->setCurrentIndex(fallbackIndex);
+        if(!require(QSettings().value("input/deviceId").toByteArray()==preferred,
+                    "Automatic fallback overwrote the input preference"))return 29;
+        QMetaObject::invokeMethod(input,"activated",Qt::DirectConnection,Q_ARG(int,fallbackIndex));
+        if(!require(QSettings().value("input/deviceId").toByteArray()==fallback,
+                    "Reselecting the active fallback did not save the new preference"))return 29;
+        input->setCurrentIndex(previewInputIndex);input->removeItem(fallbackIndex);
+        QSettings().remove("input/deviceId");
         auto* channel=audio->findChild<QComboBox*>("inputChannelChoice");
         if(!require(channel && channel->count()==2 && channel->isEnabled(),"Missing multichannel selector"))return 16;
         channel->setCurrentIndex(1);

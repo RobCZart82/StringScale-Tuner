@@ -2,6 +2,7 @@
 
 #include <QByteArray>
 #include <QComboBox>
+#include <initializer_list>
 
 // An automatic fallback must not take precedence over the saved interface
 // when that interface becomes available again.
