@@ -24,11 +24,14 @@ def verify(archive, expected_info, platform):
         raise ValueError('Archive SHA256 or checksum filename mismatch')
     root = archive.stem + '/'
     with zipfile.ZipFile(archive) as payload:
-        names = payload.namelist()
-        if len(names) != len(set(names)):
+        entries = payload.infolist()
+        names = {entry.filename for entry in entries}
+        if len(names) != len(entries):
             raise ValueError('Duplicate archive paths')
-        for name in names:
-            relative_path(name)
+        for entry in entries:
+            name = entry.filename
+            # ZIP directories end in a slash; inventory paths never do.
+            relative_path(name[:-1] if entry.is_dir() else name)
             if not name.startswith(root) and not name.startswith('__MACOSX/'):
                 raise ValueError(f'Unexpected archive root: {name}')
         info = json.loads(payload.read(root + 'build-info.json'))
@@ -62,7 +65,7 @@ def verify(archive, expected_info, platform):
                 if value.hexdigest() != item['sha256']:
                     raise ValueError(f'File content changed: {name}')
         allowed = listed | {root + 'build-info.json', root + 'file-inventory.json'}
-        for entry in payload.infolist():
+        for entry in entries:
             if not entry.is_dir() and entry.filename.startswith(root) and entry.filename not in allowed:
                 raise ValueError(f'File missing from inventory: {entry.filename}')
         required = ['licenses/LGPL-3.0-only.txt', 'licenses/GPL-3.0-only.txt',
