@@ -1,5 +1,23 @@
 # Fejlesztési és javítási napló
 
+## 2026-11-05 – Licencmellékletek és tényleges runtime-audit előkészítése
+
+A csomagok licenses/ mappája teljes LGPL v3, GPL v3 kísérő és LGPL v2.1
+szövegeket kapott, az upstream forrás URL-jével és SHA256 azonosítóval. A
+felhasználói telepítő a jogi mellékleteket megtartja. Az upstream FFmpeg-tag
+a licencszöveg eredetét jelöli, nem állítja a telepített bináris pontos verzióját.
+
+Új runtime-licence-audit.json készül a ténylegesen stage-be került binárisok
+útvonalaival, hash-eivel és előzetes kategóriáival. Az ismeretlen komponens
+unclassified marad; a release_cleared mindig false, a hiányzó auditlépések
+külön szerepelnek. A fájl csak a developer ZIP-ben van, nem települ az app mellé.
+
+A teljes Qt harmadik fél közleménylista, pontos FFmpeg-konfiguráció és
+megfelelő forrás, illetve Windows runtime-terjesztési feltételek ellenőrzése
+továbbra is nyitott kiadási feltétel. Ez részfeladat, nem lezárt jogi audit.
+Hét Python-teszt ellenőrzi a csomagszűrést, binárisleltárt és a licencszövegek
+eredetellenőrző összegeit.
+
 ## 2026-11-04 – Külső audit ellenőrzése és elavult leírások javítása
 
 A StringScale-Tuner_audit_report.txt jelentést a 7554198 főági állapottal

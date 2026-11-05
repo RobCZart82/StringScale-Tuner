@@ -12,7 +12,7 @@ MANUALS = {
 USER_DOCUMENTS = MANUALS | {'LICENSE', 'THIRD_PARTY_NOTICES.md'}
 DEVELOPER_FILES = {
     'START-HERE-HU.md', 'TEST-RESULTS-HU.md', 'HARDWARE-TESTS-HU.md',
-    'RELEASE-NOTES-HU.md', 'manuals/README.md',
+    'RELEASE-NOTES-HU.md', 'manuals/README.md', 'runtime-licence-audit.json',
 }
 
 

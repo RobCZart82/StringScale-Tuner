@@ -8,6 +8,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import tempfile
+from runtime_licence_audit import create_audit
 
 
 def digest(path):
@@ -51,6 +52,8 @@ def main():
                            ("docs/RELEASE_NOTES_HU.md", "RELEASE-NOTES-HU.md")]:
         shutil.copy2(root / source, stage / target)
     shutil.copytree(root / "docs/manuals", stage / "manuals", dirs_exist_ok=True)
+    shutil.copytree(root / "resources/licenses", stage / "licenses", dirs_exist_ok=True)
+    create_audit(stage, stage / "runtime-licence-audit.json")
     run = os.environ.get("GITHUB_RUN_NUMBER", "local")
     if not run.isdigit() and run != "local":
         raise ValueError("Invalid build number")
