@@ -1,5 +1,7 @@
 # StringScale Tuner — v0.2.0-alpha.1 (test preview)
 
+![StringScale Tuner on macOS — dark theme, SSL 2+ input, E2 guitar string in tune](docs/images/tuner-screenshot.png)
+
 **Original, independent, open-source guitar and bass tuner.**
 
 Status: **pre-release testing**. Desktop GUI builds, DSP and capture regressions,
