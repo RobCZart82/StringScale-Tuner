@@ -36,7 +36,7 @@ jobs:
           - os: windows-2022
             platform: windows-x64
             qt_arch: win64_msvc2022_64
-          - os: macos-14
+          - os: macos-15
             platform: macos-arm64
             qt_arch: clang_64
     runs-on: ${{ matrix.os }}
