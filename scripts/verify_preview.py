@@ -64,7 +64,9 @@ def verify(archive, expected_info, platform):
         for entry in payload.infolist():
             if not entry.is_dir() and entry.filename.startswith(root) and entry.filename not in allowed:
                 raise ValueError(f'File missing from inventory: {entry.filename}')
-        required = ['LICENSE', 'START-HERE-HU.md', 'TEST-RESULTS-HU.md',
+        required = ['licenses/LGPL-3.0-only.txt', 'licenses/GPL-3.0-only.txt',
+                    'licenses/LGPL-2.1-FFmpeg.txt', 'licenses/SOURCES.json',
+                    'runtime-licence-audit.json', 'LICENSE', 'START-HERE-HU.md', 'TEST-RESULTS-HU.md',
                     'THIRD_PARTY_NOTICES.md', 'HARDWARE-TESTS-HU.md', 'RELEASE-NOTES-HU.md',
                     'manuals/StringScale-Tuner-User-Manual-HU.pdf',
                     'manuals/StringScale-Tuner-User-Manual-EN.pdf']

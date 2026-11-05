@@ -2,6 +2,10 @@
 
 StringScale Tuner's original source code is covered by the included MIT LICENSE.
 The bundled frameworks, plugins and runtime libraries have separate licences.
+The licenses directory includes the full LGPL v3, GPL v3 companion and LGPL v2.1
+texts, with upstream provenance and SHA256 records. Their presence alone does not
+complete the component-specific review.
+
 This file is an inventory guide for the test build, not a completed public-release
 licence bundle or a statement that all third-party obligations have been cleared.
 
@@ -23,3 +27,9 @@ the applicable licence texts, copyright notices or source-availability review.
 Before the first public release, finish the audit of the actual binaries,
 include the required notices/licence texts and confirm any source-distribution
 requirements. Public release publication is a separate step from these test builds.
+
+The developer ZIP also includes runtime-licence-audit.json: actual deployed binary
+paths, hashes, provisional component categories and explicit pending checks.
+This audit data is intentionally not installed with the user documents. In
+particular, an FFmpeg library filename does not establish its exact source version
+or build options. Unknown components stay marked unclassified rather than cleared.
