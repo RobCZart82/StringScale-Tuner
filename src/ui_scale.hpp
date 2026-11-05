@@ -12,12 +12,13 @@ public:
     static int savedPercent();
     static int fitPercent(int requested, QSize available);
     static QSize fitWindowSize(int percent, QSize available);
+    static QSize fitWindowSize(QSize preferred, int percent, QSize available);
     int percent() const { return percent_; }
     double factor() const { return percent_ / 125.0; }
     int px(int value) const;
     QString styleSheet(const QString& base) const;
     void setPercent(int percent, bool persist = false);
-    void prepare(QWidget* root, QSize preferred);
+    void prepare(QWidget* root, QSize preferred, bool fitToScreen = true);
 signals:
     void changed(int percent);
 private:

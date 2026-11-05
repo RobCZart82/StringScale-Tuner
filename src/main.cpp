@@ -19,6 +19,7 @@
 #include <QScrollArea>
 #include <QScrollBar>
 #include <QDialog>
+#include <QDialogButtonBox>
 #include <QFile>
 #include <QSvgRenderer>
 #include <QDebug>
@@ -225,6 +226,26 @@ int main(int argc, char* argv[]) {
         const QRect statusBounds(status->mapTo(scroll->viewport(),QPoint(0,0)),status->size());
         if(!require(scroll->viewport()->rect().intersects(statusBounds),
                     "Bottom of tuner cannot be reached by scrolling"))return 28;
+        // Dialogs keep their readable canvases while the outer window fits a
+        // small work area. The action buttons must remain reachable by scrolling.
+        for(auto* dialog:{settings,audio,about}) {
+            const auto preferred=dialog->property("ssPreferredSize").toSize();
+            const QSize available(260,180);
+            dialog->setFixedSize(UiScale::fitWindowSize(preferred,75,available));
+            app.processEvents();
+            auto* viewport=dialog->findChild<QScrollArea*>("dialogScrollArea");
+            if(!require(viewport && available.width()>=dialog->width() && available.height()>=dialog->height()
+                && viewport->horizontalScrollBar()->maximum()>0 && viewport->verticalScrollBar()->maximum()>0,
+                "Dialog cannot scroll within a small work area"))return 30;
+            auto* buttons=dialog->findChild<QDialogButtonBox*>();
+            auto* action=buttons->button(QDialogButtonBox::Close);
+            if(!action)action=buttons->button(QDialogButtonBox::Ok);
+            viewport->ensureWidgetVisible(action);
+            app.processEvents();
+            const QRect buttonBounds(action->mapTo(viewport->viewport(),QPoint(0,0)),action->size());
+            if(!require(viewport->viewport()->rect().contains(buttonBounds),
+                        "Dialog action button is not reachable"))return 30;
+        }
         settings->close();audio->close();about->close();
         return 0;
     }

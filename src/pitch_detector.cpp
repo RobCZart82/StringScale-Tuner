@@ -11,18 +11,27 @@ PitchEstimate PitchDetector::estimate(const std::vector<float>& data,
                                        double minHz,
                                        double maxHz) const {
     PitchEstimate result;
-    if (sampleRate <= 0 || minHz <= 0 || minHz >= maxHz || data.size() < 512)
+    if (sampleRate <= 0 || !std::isfinite(minHz) || !std::isfinite(maxHz) ||
+        minHz <= 0 || minHz >= maxHz || data.size() < 512 ||
+        data.size() > static_cast<std::size_t>(std::numeric_limits<int>::max()))
         return result;
 
-    const int maxLag = std::min(static_cast<int>(std::floor(sampleRate / minHz)),
-                                static_cast<int>(data.size() / 2));
-    const int minLag = std::max(2, static_cast<int>(std::floor(sampleRate / maxHz)));
-    if (maxLag <= minLag + 2) return result;
+    // Clamp in floating point before converting to int. Tiny positive bounds
+    // can otherwise overflow the conversion, even with an ordinary 4096-frame input.
+    const double maximumLag = std::min(std::floor(sampleRate / minHz),
+                                       static_cast<double>(data.size() / 2));
+    const double minimumLag = std::max(2.0, std::floor(sampleRate / maxHz));
+    if (!std::isfinite(minimumLag) || maximumLag <= minimumLag + 2) return result;
+    const int maxLag = static_cast<int>(maximumLag);
+    const int minLag = static_cast<int>(minimumLag);
 
     // Remove DC and reject digital silence. A clean signal gate is also applied
     // by AudioCapture, so this is a second defensive check for direct callers.
     double mean = 0.0;
-    for (float s : data) mean += s;
+    for (float s : data) {
+        if (!std::isfinite(s)) return result;
+        mean += s;
+    }
     mean /= static_cast<double>(data.size());
 
     double energy = 0.0;

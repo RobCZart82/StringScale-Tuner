@@ -10,6 +10,23 @@ permissions:
   contents: read
 
 jobs:
+  qt-baseline:
+    name: Qt 6.5 compatibility
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install baseline Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.5.3'
+          modules: qtmultimedia
+          cache: true
+      - name: Configure full application with baseline Qt
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DSTRINGS_BUILD_GUI=ON
+      - name: Build baseline application and tests
+        run: cmake --build build --parallel 2
+      - name: Run baseline tests
+        run: ctest --test-dir build --output-on-failure
   desktop:
     name: Desktop (${{ matrix.platform }})
     strategy:
