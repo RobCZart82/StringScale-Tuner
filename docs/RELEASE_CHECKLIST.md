@@ -39,8 +39,20 @@ milestones. Detailed historical checkmarks: [Hungarian checklist](RELEASE_CHECKL
 4. Review the actual shipped runtime and finish the dependency notices and
    source-availability work. Track the remaining items in
    [Third-party notices](THIRD_PARTY_NOTICES.md). Prepare the verified source
-   archives and licence materials alongside the installer attachments.
+   archives and licence materials alongside the installer attachments. Download
+   the five archives listed in `resources/licenses/RUNTIME_SOURCES.json` into
+   a single directory and prepare the source bundle.
+
+   ```sh
+   python3 scripts/prepare_release_sources.py /path/to/source-archives \
+     /path/to/StringScaleTuner-Qt-6.8.3-FFmpeg-7.1-sources.zip
+   ```
+
+   Confirm that the new Windows package passed the redistributable check,
+   the actual payload versions match the source bundle, and the modified
+   library instructions work on the supported platforms.
 5. Once the gates above are satisfied, prepare a GitHub pre-release for the
    exact verified commit, using the [English release notes](RELEASE_NOTES.md)
    and linking the [Hungarian notes](RELEASE_NOTES_HU.md). Attach the six
-   verified files, check the draft, then publish the pre-release.
+   verified installer files, the source ZIP and its checksum. Check the draft
+   before publishing the pre-release.

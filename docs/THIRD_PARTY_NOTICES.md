@@ -87,25 +87,43 @@ The macOS arm64 slice also reports
 --enable-cross-compile --arch=arm64 --cc='clang -arch arm64'`.
 The macOS library also has an x86_64 slice with corresponding x86_64 flags.
 
-### Remaining work for public distribution
+## Release source and notice materials
 
-- Collect copyright notices and licence texts for the Qt modules and embedded
-  third-party components present in the final payload. Review the versioned Qt
-  source and SDK SBOM together. Arrange project-controlled corresponding-source
-  access and verify that the packaged shared libraries can be replaced.
-  See [Qt licensing](https://doc.qt.io/qt-6.8/licensing.html) and
-  [LGPL obligations](https://www.qt.io/development/open-source-lgpl-obligations).
-- Attach the verified FFmpeg source material for the final payload and collect its
-  component notices. Repeat the binary-to-source check after a Qt or FFmpeg update.
-  See [FFmpeg's distribution checklist](https://ffmpeg.org/legal.html).
-- Review the shipped MSVC DLLs and `D3Dcompiler_47.dll` under the applicable
-  Microsoft redistribution terms. The [Visual Studio redistribution list](https://learn.microsoft.com/en-us/visualstudio/releases/2022/redistribution)
-  is a starting reference for files from that product.
-- Treat `opengl32sw.dll` separately. The inspected DLL identifies Mesa 11.2.2,
-  consistent with the [Qt software renderer build notes](https://wiki.qt.io/MesaLlvmpipe).
-  Match the binary to its supplier distribution and collect the Mesa/LLVM
-  notices, or verify and document a candidate that omits the optional renderer.
+The installer includes `licenses/QT-THIRD-PARTY-NOTICES.txt` with the upstream
+attributions and referenced texts from Qt Base, Multimedia, SVG and Translations
+6.8.3. This covers the source modules as a whole, including entries associated
+with optional features. The same directory contains Qt's LGPL/GPL texts and
+instructions for using modified runtime libraries.
 
-The current repository licence remains MIT for the project's original code.
-Keep the dependency review open until the final packages and accompanying
-source and notice materials have been checked together.
+The installer also includes `licenses/FFmpeg-LICENSE.md` from FFmpeg 7.1 and its
+LGPL v2.1 text. FFmpeg's JPEG-derived code includes work of the Independent JPEG
+Group. StringScale Tuner applies no changes to the FFmpeg source files identified
+in the upstream licence document.
+
+Use `licenses/RUNTIME_SOURCES.json` to obtain the pinned Qt 6.8.3 and FFmpeg 7.1
+archives. Run `scripts/prepare_release_sources.py` to verify their hashes and
+prepare a source ZIP plus checksum. Attach both files next to the installers on
+the GitHub Release and retain them for download. Regenerate the records and
+notices if the runtime versions change. See [Qt LGPL obligations](https://www.qt.io/development/open-source-lgpl-obligations)
+and [FFmpeg's distribution checklist](https://ffmpeg.org/legal.html).
+
+## Windows redistributables
+
+The Windows build uses Visual Studio C++ x64 runtime DLLs under Microsoft's
+applicable redistribution terms. The packaging workflow verifies the names and
+SHA256 of the deployed `concrt`, `msvcp` and `vcruntime` files against the
+Visual Studio x64 redistribution directory on the build machine. The relevant
+terms and distribution conditions are described by
+[Microsoft's Visual C++ deployment guide](https://learn.microsoft.com/en-us/cpp/windows/redistributing-visual-cpp-files)
+and [Visual Studio 2022 redistribution list](https://learn.microsoft.com/en-us/visualstudio/releases/2022/redistribution).
+
+Starting with the release packaging change, Windows deployment with Qt 6.7+
+skips the optional Mesa software OpenGL and Direct3D compiler DLLs using
+[windeployqt options](https://doc.qt.io/qt-6.8/windows-deployment.html).
+The Windows CI job checks that neither is in the package. Build 78 predates
+this change. Its `opengl32sw.dll` identifies Mesa 11.2.2, consistent with the
+[Qt software renderer build notes](https://wiki.qt.io/MesaLlvmpipe).
+
+For the final public candidate, confirm the installer payloads match this
+runtime set and source bundle. Verify library replacement on each platform
+and confirm that the redistribution terms apply to the publisher's toolchain.

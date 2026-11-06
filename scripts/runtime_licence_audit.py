@@ -15,8 +15,10 @@ def category(name):
         return 'ffmpeg'
     if leaf.startswith(('msvcp', 'vcruntime', 'concrt')):
         return 'msvc-runtime'
-    if leaf in {'d3dcompiler_47.dll', 'opengl32sw.dll'}:
-        return 'graphics-runtime'
+    if leaf == 'd3dcompiler_47.dll':
+        return 'microsoft-d3d-compiler'
+    if leaf == 'opengl32sw.dll':
+        return 'mesa-llvmpipe'
     return 'unclassified'
 
 
@@ -28,7 +30,9 @@ def create_audit(stage, destination):
         name=path.relative_to(stage).as_posix()
         # Framework executables have no extension, but must not include Headers,
         # plist files, signatures or resource data as executable components.
-        framework_binary = '.framework/Versions/' in name and '/Resources/' not in name and '/Headers/' not in name and path.suffix == ''
+        framework, separator, version_path = name.partition('.framework/Versions/')
+        framework_binary = (separator and len(version_path.split('/')) == 2
+                            and path.name == Path(framework).name)
         if path.suffix.lower() not in {'.dll', '.dylib', '.exe'} and not framework_binary and name != 'StringScaleTuner.app/Contents/MacOS/StringScaleTuner':
             continue
         binaries.append(dict(path=name, category=category(name),
