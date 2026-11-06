@@ -7,9 +7,10 @@ SOURCES.json records the exact upstream text URLs and SHA256 checksums.
 It identifies the text's provenance, not the exact FFmpeg binary version.
 
 These texts are a starting licence bundle, NOT a completed redistribution audit.
-Qt may contain additional third-party code with separate notices. The FFmpeg
-binary configuration and matching corresponding source must still be verified.
-Windows runtime redistribution terms also require a separate check.
+Qt contains components with separate notices. See the build 78 FFmpeg version,
+configuration and matching upstream archive evidence in THIRD_PARTY_NOTICES.md.
+Repeat the check for the final binaries and make the matching source available
+with the release. Windows runtime and graphics terms require separate review.
 See THIRD_PARTY_NOTICES.md in the parent directory.
 
 Application source: https://github.com/RobCZart82/StringScale-Tuner

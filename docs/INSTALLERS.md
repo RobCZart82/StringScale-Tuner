@@ -21,3 +21,11 @@ The user documents contain both PDF manuals, a short README and licence notices;
 SDK SBOMs, inventories and developer test sheets stay outside the installed documents.
 The complete third-party licence/source audit remains a release requirement.
 See the [Hungarian installer guide](INSTALLERS_HU.md) and [release checklist](RELEASE_CHECKLIST.md).
+
+## System requirements
+
+CI packages Qt 6.8.3. The Windows installer sets a floor of Windows 10 1809
+(build 17763), and the macOS installer targets macOS 12.0 on Apple Silicon.
+These are installer thresholds. See the [hardware report](HARDWARE_TEST_RESULTS_HU.md)
+for configurations that were actually tried and the [build guide](BUILD.md)
+for choosing a deployment target with a different Qt SDK.

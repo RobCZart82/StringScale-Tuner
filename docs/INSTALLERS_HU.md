@@ -48,7 +48,8 @@ A Mac-fordításhoz az Xcode Command Line Tools pkgbuild/productbuild/pkgutil ke
 
 A csomagok Qt 6.8.3-at használnak. A telepítő küszöbe Windows 10 1809 (17763)
 és macOS 12.0 / Apple Silicon. A Mac deployment target és az Info.plist is 12.0;
-a helyi új SDK ezért nem emeli automatikusan a szükséges macOS-verziót.
+újabb Qt SDK használatakor a [fordítási útmutató](BUILD_HU.md#újabb-qt-és-macos-minimum)
+szerint állítsd be a helyi fordítás célverzióját. A PKG külön minimumot állít be.
 Ezek a Qt-alapú technikai minimumok, nem minden OS-verzió hardveres tanúsítása.
 Robert konkrét próbái a HARDWARE_TEST_RESULTS_HU.md dokumentumban vannak.
 
