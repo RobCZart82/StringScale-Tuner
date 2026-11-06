@@ -1,4 +1,5 @@
 # Preserve upstream licence bytes: SOURCES.json records their exact SHA256.
 # In particular, Windows core.autocrlf must not rewrite LF to CRLF here.
 /resources/licenses/*.txt text eol=lf
-/resources/licenses/SOURCES.json text eol=lf
+/resources/licenses/*.json text eol=lf
+/resources/licenses/*.md text eol=lf

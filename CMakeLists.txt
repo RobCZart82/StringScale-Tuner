@@ -130,9 +130,17 @@ if(STRINGS_BUILD_GUI)
         include(InstallRequiredSystemLibraries)
     endif()
     if(WIN32 OR APPLE)
+        set(strings_deploy_options)
+        if(WIN32 AND Qt6_VERSION VERSION_GREATER_EQUAL 6.7)
+            # The tuner draws with Qt Widgets and does not use video or OpenGL.
+            # Keep the optional Mesa and Direct3D compiler redistributables out.
+            set(strings_deploy_options DEPLOY_TOOL_OPTIONS
+                --no-opengl-sw --no-system-d3d-compiler)
+        endif()
         qt_generate_deploy_app_script(
             TARGET StringScaleTuner
             OUTPUT_SCRIPT deploy_script
+            ${strings_deploy_options}
         )
         install(SCRIPT ${deploy_script})
     endif()

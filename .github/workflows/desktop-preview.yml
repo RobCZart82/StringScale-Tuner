@@ -80,6 +80,26 @@ jobs:
           @('stage/bin/StringScaleTuner.exe', 'stage/bin/Qt6Core.dll', 'stage/bin/msvcp140.dll', 'stage/bin/vcruntime140.dll', 'stage/bin/Qt6Multimedia.dll', 'stage/plugins/platforms/qwindows.dll') | ForEach-Object {
             if (!(Test-Path $_)) { throw "Missing runtime file: $_" }
           }
+      - name: Verify Windows redistributable provenance
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $optionalGraphics = Get-ChildItem stage -Recurse -File -Include opengl32sw.dll,D3Dcompiler_47.dll
+          if ($optionalGraphics) { throw "Unexpected graphics redistributable: $($optionalGraphics.Name)" }
+          $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio/Installer/vswhere.exe'
+          $vs = & $vswhere -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+          if (!$vs) { throw 'Visual Studio C++ toolchain not found' }
+          $redist = Get-ChildItem "$vs/VC/Redist/MSVC/*/x64/Microsoft.VC*.CRT/*.dll" -File
+          $shipped = Get-ChildItem stage/bin -File -Include *.dll -Recurse |
+            Where-Object Name -Match '^(msvcp|vcruntime|concrt)'
+          foreach ($dll in $shipped) {
+            $hash = (Get-FileHash $dll.FullName -Algorithm SHA256).Hash
+            $match = $redist | Where-Object {
+              $_.Name -eq $dll.Name -and (Get-FileHash $_.FullName -Algorithm SHA256).Hash -eq $hash
+            } | Select-Object -First 1
+            if (!$match) { throw "$($dll.Name) did not match a Visual Studio x64 redistributable" }
+            Write-Host "$($dll.Name) $hash matches $($match.FullName)"
+          }
       - name: Test user installer payload policy
         run: python -m unittest discover -s tests -p "*_test.py"
       - name: Package identifiable test build

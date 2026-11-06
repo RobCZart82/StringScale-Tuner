@@ -70,6 +70,8 @@ def verify(archive, expected_info, platform):
                 raise ValueError(f'File missing from inventory: {entry.filename}')
         required = ['licenses/LGPL-3.0-only.txt', 'licenses/GPL-3.0-only.txt',
                     'licenses/LGPL-2.1-FFmpeg.txt', 'licenses/SOURCES.json',
+                    'licenses/QT-THIRD-PARTY-NOTICES.txt', 'licenses/RUNTIME_SOURCES.json',
+                    'licenses/RUNTIME_LIBRARY_REPLACEMENT.md', 'licenses/FFmpeg-LICENSE.md',
                     'runtime-licence-audit.json', 'LICENSE', 'START-HERE-HU.md', 'TEST-RESULTS-HU.md',
                     'THIRD_PARTY_NOTICES.md', 'HARDWARE-TESTS-HU.md', 'RELEASE-NOTES-HU.md',
                     'manuals/StringScale-Tuner-User-Manual-HU.pdf',

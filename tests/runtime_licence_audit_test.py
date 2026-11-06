@@ -27,11 +27,14 @@ class LicenceAuditTest(unittest.TestCase):
                 'bin/Qt6Core.dll':'qt',
                 'bin/avcodec-61.dll':'ffmpeg',
                 'bin/vcruntime140.dll':'msvc-runtime',
-                'bin/opengl32sw.dll':'graphics-runtime',
+                'bin/opengl32sw.dll':'mesa-llvmpipe',
+                'bin/D3Dcompiler_47.dll':'microsoft-d3d-compiler',
                 'bin/new-vendor.dll':'unclassified',
                 'StringScaleTuner.app/Contents/Frameworks/QtCore.framework/Versions/A/QtCore':'qt',
             }
-            for name in [*paths,'notes.txt','StringScaleTuner.app/Contents/Frameworks/QtCore.framework/Versions/A/Resources/Info.plist']:
+            for name in [*paths, 'notes.txt',
+                         'StringScaleTuner.app/Contents/Frameworks/QtCore.framework/Versions/A/Resources/Info.plist',
+                         'StringScaleTuner.app/Contents/Frameworks/QtCore.framework/Versions/A/_CodeSignature/CodeResources']:
                 p=root/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b'fixture')
             report=create_audit(root,root/'audit.json')
             self.assertFalse(report['release_cleared'])
