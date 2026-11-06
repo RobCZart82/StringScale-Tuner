@@ -36,3 +36,9 @@ operációsrendszer-minimumok és hosszú távú terhelés nincsenek ezzel igazo
 A mikrofonengedély kifejezett megtagadásának kezelése, szélsőséges jelszintek,
 minden felharmonikusviszony és kijelzőnagyítás sem kapott külön visszaigazolást.
 Az automatizált DSP-tesztek ezeket a hardveres próbákat nem helyettesítik.
+
+## 2026-11-06 – visszajelzés a túlvezérlési javítás után
+
+Robert macOS-en és Windowson is sikeres működésről számolt be. Ehhez a
+próbához nem közölt buildazonosítót, rendszerverziót vagy eszközlistát.
+A fenti, november 4-i táblázat az akkori, külön azonosított próbákat rögzíti.

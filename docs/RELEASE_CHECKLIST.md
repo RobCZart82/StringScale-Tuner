@@ -38,7 +38,8 @@ milestones. Detailed historical checkmarks: [Hungarian checklist](RELEASE_CHECKL
    developer artifacts separately for the dependency review.
 4. Review the actual shipped runtime and finish the dependency notices and
    source-availability work. Track the remaining items in
-   [Third-party notices](THIRD_PARTY_NOTICES.md).
+   [Third-party notices](THIRD_PARTY_NOTICES.md). Prepare the verified source
+   archives and licence materials alongside the installer attachments.
 5. Once the gates above are satisfied, prepare a GitHub pre-release for the
    exact verified commit, using the [English release notes](RELEASE_NOTES.md)
    and linking the [Hungarian notes](RELEASE_NOTES_HU.md). Attach the six

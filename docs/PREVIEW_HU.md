@@ -23,7 +23,7 @@ függőségeivel együtt csomagolja. A meglévő Core DSP tests változatlanul f
 
 Helyi Qt-, CMake- vagy Visual Studio-telepítés nem szükséges. A ZIP-csomagok
 kísérleti, kicsomagolható próbaverziók. Az új Actions-futások külön installer
-artifactban EXE/PKG próbatelepitőt is mellékelnek; részletek: INSTALLERS_HU.md. Nincs kiadói aláírás vagy
+artifactban EXE/PKG próbatelepitőt is mellékelnek; részletek a [telepítési útmutatóban](https://github.com/RobCZart82/StringScale-Tuner/blob/main/docs/INSTALLERS_HU.md). Nincs kiadói aláírás vagy
 Apple-notarizáció; az operációs rendszer figyelmeztethet. A Mac-próbacsomag
 technikai (ad-hoc) aláírást kap, amely a csomag épségét ellenőrzi, kiadói
 azonosságot és Apple-jóváhagyást nem igazol. macOS-en a

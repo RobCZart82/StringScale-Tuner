@@ -90,7 +90,8 @@ octave can coincide with another valid string reference.
 **Measurement:** a 0 cent target is based on the selected tuning preset and A4
 calibration. The audio amplitude gate is not the same as a pitch-confidence
 gate. A valid estimate must pass both; brief uncertainty is bridged by a bounded
-220 ms hold. Clipping clears pitch immediately.
+220 ms hold. When the meter reports clipping, pitch clears and resumes after
+a fresh window of clean audio.
 
 See `docs/ARCHITECTURE.md` and `docs/ROADMAP.md` for technical details and the
 planned release-quality work.

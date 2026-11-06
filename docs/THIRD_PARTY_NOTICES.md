@@ -48,3 +48,64 @@ Both inventories contain FFmpeg codec and format libraries with major version
 actual binaries to their supplier versions, notices and source records where
 applicable, alongside the Qt components. Repeat the inventory review for the
 final release candidate if its payload differs.
+
+### FFmpeg source evidence for build 78
+
+The `av_version_info` and `avutil_license` exports identify FFmpeg **7.1**
+and **LGPL-2.1-or-later** on both platforms. The macOS values were read from
+the library expanded from the PKG. The Windows values were read from the
+export targets in the DLL from the developer ZIP and matched to the installer
+payload inventory by SHA256. The recorded `avutil_configuration` strings
+select shared libraries and contain neither `--enable-gpl` nor
+`--enable-nonfree`.
+
+| Inspected binary | SHA256 |
+| --- | --- |
+| macOS `libavutil.59.dylib` | `99083a3015af89d7e155a7365cb6a63d2e603cd5cded30eece7429d34ec4c140` |
+| Windows `avutil-59.dll` | `2ec506ddd253d3366dfc223d5bb62a30488700b966541287c499764c0a8df782` |
+
+The Qt 6.8.3 provisioning scripts select the same FFmpeg `n7.1` source
+archive for [macOS](https://github.com/qt/qt5/blob/v6.8.3/coin/provisioning/common/unix/install-ffmpeg.sh)
+and [Windows](https://github.com/qt/qt5/blob/v6.8.3/coin/provisioning/common/windows/install-ffmpeg.ps1).
+The downloaded [source archive](https://github.com/FFmpeg/FFmpeg/archive/refs/tags/n7.1.tar.gz)
+matched the scripts' SHA-1 `f008a93710a7577e3f85a90f4b632cc615164712`.
+Its SHA256 is `7ddad2d992bd250a6c56053c26029f7e728bebf0f37f80cf3f8a0e6ec706431a`.
+Retain the matching source archive, configuration and supplier build instructions
+with the final release materials.
+
+Common observed configuration:
+
+```text
+--disable-programs --disable-doc --disable-debug --enable-network
+--disable-lzma --enable-pic --disable-vulkan --disable-v4l2-m2m
+--disable-decoder=truemotion1 --enable-shared --disable-static
+```
+
+The Windows DLL also reports `--prefix=installed --toolchain=msvc`.
+The macOS arm64 slice also reports
+`--extra-ldflags='-Wl,-ld_classic' --prefix=/usr/local/FFmpeg-n7.1
+--enable-cross-compile --arch=arm64 --cc='clang -arch arm64'`.
+The macOS library also has an x86_64 slice with corresponding x86_64 flags.
+
+### Remaining work for public distribution
+
+- Collect copyright notices and licence texts for the Qt modules and embedded
+  third-party components present in the final payload. Review the versioned Qt
+  source and SDK SBOM together. Arrange project-controlled corresponding-source
+  access and verify that the packaged shared libraries can be replaced.
+  See [Qt licensing](https://doc.qt.io/qt-6.8/licensing.html) and
+  [LGPL obligations](https://www.qt.io/development/open-source-lgpl-obligations).
+- Attach the verified FFmpeg source material for the final payload and collect its
+  component notices. Repeat the binary-to-source check after a Qt or FFmpeg update.
+  See [FFmpeg's distribution checklist](https://ffmpeg.org/legal.html).
+- Review the shipped MSVC DLLs and `D3Dcompiler_47.dll` under the applicable
+  Microsoft redistribution terms. The [Visual Studio redistribution list](https://learn.microsoft.com/en-us/visualstudio/releases/2022/redistribution)
+  is a starting reference for files from that product.
+- Treat `opengl32sw.dll` separately. The inspected DLL identifies Mesa 11.2.2,
+  consistent with the [Qt software renderer build notes](https://wiki.qt.io/MesaLlvmpipe).
+  Match the binary to its supplier distribution and collect the Mesa/LLVM
+  notices, or verify and document a candidate that omits the optional renderer.
+
+The current repository licence remains MIT for the project's original code.
+Keep the dependency review open until the final packages and accompanying
+source and notice materials have been checked together.

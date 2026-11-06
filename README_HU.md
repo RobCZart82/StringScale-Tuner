@@ -80,7 +80,7 @@ hangolni; egy téves oktáv másik érvényes húrreferenciával is egyezhet.
 A 0 cent a profil és az A4-kalibráció függvénye; utóbbihoz jelenleg nincs
 nyilvános vezérlő. A jelszintküszöb és a becslés megbízhatósági küszöbe külön
 feltétel. Rövid bizonytalanságot legfeljebb 220 ms tartás hidal át;
-a digitális túlvezérlés azonnal törli a hangmagasság kijelzését.
+túlvezérléskor eltűnik a mért hang, és friss, tiszta mérési ablak után tér vissza.
 
 Részletek: [architektúra](docs/ARCHITECTURE.md), [ütemterv](docs/ROADMAP_HU.md),
 [dokumentációs tartalomjegyzék](docs/README.md).
