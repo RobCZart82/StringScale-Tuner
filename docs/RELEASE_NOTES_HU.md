@@ -37,3 +37,13 @@ A teljes függőségi licencmelléklet és a végleges forrásállapot ellenőrz
 kiadási feltétel; ez a jegyzet nem jelenti ezek teljesítését.
 
 A kiadáshoz a végleges forráscommitot, ZIP-eket és SHA256-összegeket kell csatolni.
+
+## Újabb ellenőrzés
+
+A túlvezérlés javítása után a program friss, tiszta hangmintákra vár, mielőtt
+újra hangmagasságot jelez. 2026. november 6-án Robert macOS-en és Windowson
+is sikeres működésről számolt be. A pontos build és rendszerkonfiguráció
+ehhez a próbához nincs megadva. A közzététel előtt a két telepítőt a végleges
+forráscommithoz kell ellenőrizni a [kiadási eljárás](RELEASE_CHECKLIST.md) szerint.
+
+[English release notes](RELEASE_NOTES.md)

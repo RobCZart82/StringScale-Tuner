@@ -33,3 +33,18 @@ paths, hashes, provisional component categories and explicit pending checks.
 This audit data is intentionally not installed with the user documents. In
 particular, an FFmpeg library filename does not establish its exact source version
 or build options. Unknown components stay marked unclassified rather than cleared.
+
+## Runtime inventory checkpoint
+
+The [Desktop preview build 78](https://github.com/RobCZart82/StringScale-Tuner/actions/runs/42161042805)
+for revision `6b0b61a997c78ed0b387dc39541ceb980b6f1a03` passed both
+installer smoke jobs. Both downloaded installers matched their SHA256 files
+and manifests. The installer audit inventories for this run contain 82
+macOS arm64 and 77 Windows x64 payload entries, including documents and links.
+
+Both inventories contain FFmpeg codec and format libraries with major version
+61 in their filenames. The Windows inventory also lists MSVC runtime DLLs,
+`D3Dcompiler_47.dll` and `opengl32sw.dll`. The next audit step is to match those
+actual binaries to their supplier versions, notices and source records where
+applicable, alongside the Qt components. Repeat the inventory review for the
+final release candidate if its payload differs.
