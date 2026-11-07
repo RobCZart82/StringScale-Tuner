@@ -6,13 +6,21 @@
 
 **Önálló, eredeti, nyílt forráskódú gitár- és basszushangoló.**
 
-Állapot: kiadás előtti tesztelés. A CI az asztali alkalmazást, a DSP- és
-hangbemeneti regressziókat, valamint a szintetikus GUI-előnézeteket ellenőrzi.
-Robert Mac/SSL 2+ és Windows 10/UCG-102 konfiguráción sikeresen próbálta a hat
-standard húrt és a ±25–40 centes eltéréseket. A [hardveres eredmények](docs/HARDWARE_TEST_RESULTS_HU.md)
-nem igazolják az összes hangszer, rendszer vagy interfész működését.
-Nem hitelesített mérőműszer. A nyilvános kiadás és a függőségek teljes
-licencmelléklete még előkészítés alatt áll. Az előnézeti ZIP nem telepítő.
+Állapot: **nyilvános alpha próbaverzió**. A Windows x64 EXE és a macOS
+Apple Silicon PKG a [v0.2.0-alpha.1 kiadásból](https://github.com/RobCZart82/StringScale-Tuner/releases/tag/v0.2.0-alpha.1)
+tölthető le. A kiadás a függőségek licencértesítéseit és a Qt/FFmpeg
+forráscsomagot is tartalmazza.
+
+Robert a publikált telepítőt és az alkalmazást Windows 10-es Intel gépen,
+valamint macOS Tahoe alatt M1-en is sikeresen kipróbálta. Telepítéskor az
+aláírás nélküli szoftverhez kapcsolódó jóváhagyási lépések megjelentek.
+A korábbi Mac/SSL 2+ és Windows 10/UCG-102 próbák a hat standard húrt és a
+±25–40 centes eltéréseket is érintették.
+Részletek a [hardveres visszajelzésekben](docs/HARDWARE_TEST_RESULTS_HU.md).
+
+A CI az asztali buildet, a DSP- és hangbemeneti regressziókat, a GUI-előnézeteket
+és a telepítőpróbákat ellenőrzi. További hangszerek, interfészek és
+rendszerkonfigurációk még szélesebb hardveres tesztelést igényelnek.
 
 ## Működés
 

@@ -6,13 +6,19 @@ English | [Magyar](README_HU.md)
 
 **Original, independent, open-source guitar and bass tuner.**
 
-Status: **pre-release testing**. Desktop GUI builds, DSP and capture regressions,
-and synthetic GUI previews are checked in CI. Robert has also reported successful
-six-string standard tuning and ±25–40 cent tests on Mac/SSL 2+ and Windows 10/UCG-102.
+Status: **public alpha preview**. Download the Windows x64 EXE or macOS Apple
+Silicon PKG from the [v0.2.0-alpha.1 release](https://github.com/RobCZart82/StringScale-Tuner/releases/tag/v0.2.0-alpha.1).
+The release includes dependency notices and the Qt/FFmpeg source bundle.
+
+Robert reports that both the installer and app work on Windows 10 (Intel) and
+macOS Tahoe (M1). Installation requires the approval steps associated with
+unsigned software. Earlier real-instrument trials cover six-string standard
+tuning and ±25–40 cent offsets on Mac/SSL 2+ and Windows 10/UCG-102.
 See [hardware results and their scope](docs/HARDWARE_TEST_RESULTS_HU.md).
-Other instruments, operating-system versions and interfaces still need testing.
-This is not an accuracy-certified tuner; the public release and its dependency
-licence bundle are still being prepared. Preview ZIPs are not installers.
+
+Desktop builds, DSP/capture regressions, GUI previews and installer smoke tests
+are checked in CI. Other instruments, interfaces and OS configurations need
+broader hardware testing.
 
 ## Concept
 
