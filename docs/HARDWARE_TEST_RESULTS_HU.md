@@ -1,9 +1,9 @@
-# Hardveres visszajelzések – 2026-11-04
+# Hardveres visszajelzések
 
 Forrás: Robert saját, ebben a fejlesztési beszélgetésben közölt próbái.
 Ezek felhasználói teszteredmények, nem laboratóriumi pontosságmérés.
 
-## Konfigurációk
+## 2026-11-04 – konfigurációk
 
 | Rendszer | Bemenet | Azonosított próba |
 | --- | --- | --- |
@@ -42,3 +42,22 @@ Az automatizált DSP-tesztek ezeket a hardveres próbákat nem helyettesítik.
 Robert macOS-en és Windowson is sikeres működésről számolt be. Ehhez a
 próbához nem közölt buildazonosítót, rendszerverziót vagy eszközlistát.
 A fenti, november 4-i táblázat az akkori, külön azonosított próbákat rögzíti.
+
+
+## 2026-11-07 – a publikált build telepítési és működési próbája
+
+Robert a közzétett v0.2.0-alpha.1 kiadást próbálta ki. A release a 84-es
+Desktop preview build EXE/PKG telepítőit tartalmazza, forráscommitja
+`4932abdd12c11545d92dd12ba3ab7b02e087cfca`.
+
+| Rendszer | Telepítő | Alkalmazás |
+| --- | --- | --- |
+| Windows 10 / Intel | Robert visszajelzése szerint jól működik | Jól működik |
+| macOS Tahoe / Apple M1 | Robert visszajelzése szerint jól működik | Jól működik |
+
+Telepítéskor mindkét platformon felmerültek az aláírás nélküli szoftverhez
+kapcsolódó jóváhagyási lépések. A visszajelzés a telepítést és az alkalmazás
+általános működését erősíti meg. A pontos OS-build, hangbemeneti eszköz,
+kipróbált profilok és külön pontosságmérés ehhez a próbához nincsenek megadva.
+
+[Publikált kiadás](https://github.com/RobCZart82/StringScale-Tuner/releases/tag/v0.2.0-alpha.1)
