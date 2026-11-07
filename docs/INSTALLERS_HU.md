@@ -76,3 +76,50 @@ Korábban telepített próbaverzióból maradhatnak régi dokumentumok. Ezeket a
 telepítő nem törli automatikusan, nehogy kitöltött személyes tesztlap vesszen el.
 A régi dokumentációs mappa mentés után kézzel eltávolítható; friss telepítéskor
 már csak a fenti felhasználói anyagok kerülnek bele.
+
+## Az aláíratlan próbaverzió telepítése
+
+Az EXE vagy PKG fájlt a [hivatalos kiadásból](https://github.com/RobCZart82/StringScale-Tuner/releases/tag/v0.2.0-alpha.1)
+töltsd le. Ez az alpha nem rendelkezik kiadói tanúsítvánnyal. Az alábbi
+lépések a szándékosan letöltött fájl ismeretlen kiadójára vonatkozó
+figyelmeztetésnél használhatók.
+
+### Windows 10 / Windows 11
+
+1. Nyisd meg a letöltött Windows x64 EXE-t.
+2. Ha megjelenik a kék **A Windows megvédte a számítógépét** SmartScreen-ablak,
+   válaszd a **További információ**, majd a **Futtatás mindenképpen** lehetőséget,
+   ha elérhető. Angol rendszeren ezek **More info → Run anyway**.
+3. Kövesd a telepítő lépéseit, válaszd ki a kívánt parancsikonokat, és fejezd be a telepítést.
+4. Indítsd a **StringScale Tuner** alkalmazást a Start menüből vagy a létrehozott ikonról.
+
+A telepítő alaphelyzetben az aktuális felhasználónak telepít. Ha a gép szabályzata
+tiltja a futtatást, vagy a folytatási lehetőség hiányzik, kérd a rendszergazda segítségét.
+
+### macOS Apple Silicon gépen
+
+1. Nyisd meg a letöltött PKG-t. Ha a macOS az ismeretlen fejlesztő vagy
+   az Apple-ellenőrzés hiánya miatt blokkolja, zárd be a figyelmeztetést.
+2. Nyisd meg az **Apple menü → Rendszerbeállítások → Adatvédelem és biztonság**
+   oldalt, és görgess a **Biztonság** részhez. Keresd meg a blokkolt telepítő bejegyzését.
+3. Válaszd a **Megnyitás mindenképpen** lehetőséget, szükség esetén hitelesíts,
+   majd erősítsd meg a megnyitást. Angol rendszeren a gomb **Open Anyway**.
+   Ha eltűnt a lehetőség, próbáld újra megnyitni a PKG-t, majd térj vissza ide.
+4. Kövesd a macOS Telepítő lépéseit, majd indítsd az **Alkalmazások** mappából
+   a **StringScaleTuner** programot.
+5. Ha maga az alkalmazás is azonos fejlesztői figyelmeztetést kap, ismételd meg
+   rá a 2–3. lépést. Engedélyezd a mikrofonhozzáférést, külső interfész esetén is.
+
+A feliratok rendszerverziónként és nyelvenként eltérhetnek. macOS 12 alatt a
+beállításkezelő angol neve System Preferences. Felügyelt gépen a jóváhagyás korlátozott lehet.
+
+### Más jellegű biztonsági riasztás
+
+Kártevőriasztás, karantén vagy „sérült alkalmazás” üzenet esetén állj meg,
+és tölts le friss példányt a hivatalos kiadásból. Ellenőrizd a mellékelt SHA256-ot,
+és tartós probléma esetén jelezd a [hibajegyeknél](https://github.com/RobCZart82/StringScale-Tuner/issues).
+A rendszerszintű védelem maradjon bekapcsolva. A fenti lépések egy kiválasztott
+letöltés engedélyezésére szolgálnak, vírusirtó, SmartScreen vagy Gatekeeper kikapcsolása nélkül.
+
+Források: [Apple megnyitási útmutató](https://support.apple.com/en-us/102445),
+[Microsoft SmartScreen-tájékoztató](https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/smartscreen-reputation).

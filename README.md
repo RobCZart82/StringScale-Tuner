@@ -20,6 +20,14 @@ Desktop builds, DSP/capture regressions, GUI previews and installer smoke tests
 are checked in CI. Other instruments, interfaces and OS configurations need
 broader hardware testing.
 
+## Installation approval
+
+The public alpha is unsigned. On Windows, an unrecognized-app warning can offer
+**More info → Run anyway**. On macOS, after an initial blocked attempt, use
+**System Settings → Privacy & Security → Open Anyway** for the intended installer
+or app. [Step-by-step installation help](docs/INSTALLERS.md#installing-the-unsigned-preview)
+covers both systems and different security alerts.
+
 ## Concept
 
 - **Middle:** classic semicircular analog needle for **−50 to +50 cents**, with

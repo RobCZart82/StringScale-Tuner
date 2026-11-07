@@ -22,6 +22,15 @@ A CI az asztali buildet, a DSP- és hangbemeneti regressziókat, a GUI-előnéze
 és a telepítőpróbákat ellenőrzi. További hangszerek, interfészek és
 rendszerkonfigurációk még szélesebb hardveres tesztelést igényelnek.
 
+## Telepítési jóváhagyás
+
+A nyilvános alpha kiadói aláírás nélküli. Windows alatt az ismeretlen program
+figyelmeztetésében a **További információ → Futtatás mindenképpen** lehetőség
+jelenhet meg. Macen az első blokkolás után a **Rendszerbeállítások → Adatvédelem
+és biztonság → Megnyitás mindenképpen** útvonalon engedélyezhető a kiválasztott
+telepítő vagy alkalmazás. A [részletes telepítési segítség](docs/INSTALLERS_HU.md#az-aláíratlan-próbaverzió-telepítése)
+mindkét rendszer lépéseit és a más jellegű riasztásokat is ismerteti.
+
 ## Működés
 
 - Középen félköríves analóg mutató −50 és +50 cent között; nagyobb eltérésnél
