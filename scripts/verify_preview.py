@@ -3,19 +3,13 @@
 import argparse
 import hashlib
 import json
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 import stat
 
 from package_preview import digest
+from package_paths import relative_path, validate_inventory_links
 import zipfile
 
-
-def relative_path(value):
-    path = PurePosixPath(value)
-    if (not value or value == '.' or path.is_absolute() or '..' in path.parts or '\\' in value
-            or ':' in value or str(path) != value):
-        raise ValueError(f'Invalid package path: {value}')
-    return value
 
 
 def verify(archive, expected_info, platform):
@@ -43,6 +37,7 @@ def verify(archive, expected_info, platform):
         if archive.stem != f"StringScaleTuner-{info['version']}-{platform}-build{info['build_number']}":
             raise ValueError('Archive name does not identify this build')
         inventory = json.loads(payload.read(root + 'file-inventory.json'))
+        validate_inventory_links(inventory)
         listed = set()
         for item in inventory:
             name = root + relative_path(item['path'])
@@ -56,6 +51,8 @@ def verify(archive, expected_info, platform):
                 if payload.read(name).decode('utf-8') != item['symlink']:
                     raise ValueError(f'Symlink target changed: {name}')
             else:
+                if stat.S_ISLNK(entry.external_attr >> 16):
+                    raise ValueError(f'Unrecorded archive symlink: {name}')
                 if entry.file_size != item['bytes']:
                     raise ValueError(f'File size changed: {name}')
                 value = hashlib.sha256()

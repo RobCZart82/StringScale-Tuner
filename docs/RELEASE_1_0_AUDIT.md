@@ -3,7 +3,7 @@
 ## Current status after PR 31
 
 A1–A3 are implemented on main and covered by passing regressions.
-A4 and A5 remain open. The [follow-up review](REPOSITORY_REVIEW_2026_11_08.md)
+A4, A5 and A6 are implemented in the second fix batch described below. The [follow-up review](REPOSITORY_REVIEW_2026_11_08.md)
 adds A6, an analysis-frame counter overflow during prolonged closed-gate capture.
 The original reproductions below refer to the earlier baseline, before PR 31.
 
@@ -139,3 +139,18 @@ input case, and corrupt/valid legacy numeric settings.
 
 These fixes passed all four local CTest cases using Qt 6.11.2. A4 and A5 remain
 open. Real-instrument and performance acceptance remain required for 1.0.0.
+
+
+## Second fix batch
+
+A4 now has a documented 5-cent endpoint fringe, with accepted estimates clamped
+to the requested interval. Lag search extends beyond the endpoints so that
+outside tones can be rejected instead of producing an artificial edge minimum.
+A5 uses shared lexical path/link validation before archiving, ZIP verification
+and installer-stage copying. It rejects escapes, cycles and inventory entries
+under symlink parents while accepting the published framework layout.
+A6 saturates the readiness counter at 120 analysis frames during closed-gate
+capture as well as ordinary measurement.
+
+All four local Release CTest cases and 12 Python cases pass. A1–A6 regression
+coverage now passes locally. Hardware and final release acceptance remain open.

@@ -1,5 +1,21 @@
 # Fejlesztési és javítási napló
 
+## 2026-11-08 – A4–A6 határ- és csomagellenőrzési javítások
+
+Az elemzési minták számlálója 120-nál telítődik, így tartósan zárt kapunál
+nem fut túl. A hangbecslés 5 cent végponti tűrést használ, az elfogadott
+szélső becslést a kért tartományra korlátozva. A keresés túlnyúlik a határon,
+hogy a valóban kívül eső hangot megkülönböztesse a végponttól.
+
+A csomagútvonalak és symlinkek közös ellenőrzést kapnak az archiválás,
+ZIP-ellenőrzés és felhasználói stage létrehozása előtt. Kifelé mutató cél,
+ciklus, túl hosszú lánc és symlink szülő alatti leltárbejegyzés elutasítva.
+A publikált build 84 mindkét leltára és a macOS framework-linkek elfogadva.
+
+Helyi Release CTest 4/4, Python 12/12 sikeres. A dokumentáció a végponti
+tűrést és az új csomagellenőrzést is rögzíti.
+
+
 ## 2026-11-08 – ismételt repository-ellenőrzés és naplópótlás
 
 Ellenőrzött főág: `f5b517c2816ed34dbee92779a1368646df9a4a35`.

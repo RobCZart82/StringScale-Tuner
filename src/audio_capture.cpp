@@ -117,7 +117,10 @@ void AudioCapture::acceptSample(float sample) {
         pitchRing_[ringWrite_] = static_cast<float>(filtered);
         ringWrite_ = (ringWrite_ + 1) % pitchRing_.size();
         ringCount_ = std::min(ringCount_ + 1, pitchRing_.size());
-        ++framesSinceLastEstimate_;
+        // Only the readiness threshold matters. Keep closed-gate sessions
+        // bounded even when no estimate is made for days.
+        if (framesSinceLastEstimate_ < kAnalysisRate / 100)
+            ++framesSinceLastEstimate_;
     }
 }
 
