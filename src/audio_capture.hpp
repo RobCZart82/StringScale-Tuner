@@ -1,6 +1,7 @@
 #pragma once
 
 #include "pitch_detector.hpp"
+#include "pitch_prefilter.hpp"
 
 #include <QAudioDevice>
 #include <QAudioFormat>
@@ -15,7 +16,7 @@
 class QIODevice;
 
 // Audio input and own pitch tracking. All read() and DSP work takes place on
-// the Qt GUI thread in v0.1, without a blocking callback on the audio thread.
+// the Qt GUI thread, without a blocking callback on the audio thread.
 // A DSP worker is planned for later if profiling shows UI contention.
 class AudioCapture : public QObject {
     Q_OBJECT
@@ -68,7 +69,7 @@ private:
     std::vector<float> pitchRing_;
     std::size_t ringWrite_ = 0;
     std::size_t ringCount_ = 0;
-    double lowpass_ = 0.0;
+    PitchPrefilter prefilter_;
     double resamplePhase_ = 0.0;
     double sumSquares_ = 0.0;
     std::size_t blockSamples_ = 0;

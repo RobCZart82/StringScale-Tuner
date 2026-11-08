@@ -81,7 +81,7 @@ szintén ez a workflow építi és ellenőrzi. A GUI fejlődését a
 - `src/pitch_detector.*`: önálló YIN-családú motor, normalizált különbséggel
   és parabolikus periódusbecsléssel.
 - `src/tuning.*`: referenciahangok, húrszámok, legközelebbi húr és centeltérés.
-- `src/audio_capture.*`: Qt hangbemenet, normalizálás, egyszerű aluláteresztés,
+- `src/audio_capture.*`: Qt hangbemenet, normalizálás, aliasvédő aluláteresztés,
   12 kHz-es elemzés, jelszintmérés és hangmagasság-simítás.
 - `src/tuner_widgets.*`: saját rajzolású vektoros műszerek.
 - `src/main_window.*`: profilok, bemenet, kijelzés, beállítások.

@@ -1,5 +1,7 @@
 #include "audio_capture.hpp"
 #include "tuning.hpp"
+#include "numeric_setting.hpp"
+#include <limits>
 #include <QCoreApplication>
 #include <cmath>
 #include <cstring>
@@ -149,6 +151,46 @@ public:
             require(pitch > 0 && std::abs(strings::centsBetween(pitch, 648.5)) < 5.0,
                     "capture path incorrectly lowered a rich single-period tone");
         }
+        capture.resetAnalysis();
+        capture.processBytes(tone(18000), 10000);
+        capture.updateMeasurementsAt(10000);
+        require(pitch > 0, "sparse-input setup failed");
+        for (int tick = 1; tick <= 8; ++tick) {
+            capture.processBytes(tone(16), 10000 + tick * 65);
+            capture.updateMeasurementsAt(10000 + tick * 65);
+        }
+        require(pitch == 0, "sparse input held an expired pitch beyond 220 ms");
+
+        // Verify anti-alias rejection and the passband through the PCM adapter.
+        for (int rate : {12000, 22050, 44100, 48000, 96000}) {
+            capture.format_.setSampleRate(rate);
+            for (double hz : {30.867706, 82.406889, 329.627557,
+                              11917.593111, 12082.406889, 23917.593111}) {
+                if (hz >= rate / 2.0) continue;
+                capture.resetAnalysis();
+                const int frames = rate / 2;
+                QByteArray pcm(frames * 2 * sizeof(float), '\0');
+                for (int i = 0; i < frames; ++i) {
+                    const float value = 0.9 * std::sin(2 * 3.141592653589793 * hz * i / rate);
+                    std::memcpy(pcm.data() + i * 2 * sizeof(float), &value, sizeof(value));
+                }
+                capture.processBytes(pcm, 12000);
+                capture.updateMeasurementsAt(12000);
+                if (hz < 700)
+                    require(pitch > 0 && std::abs(strings::centsBetween(pitch, hz)) < 2,
+                            "prefilter changed a supported clean reference pitch");
+                else
+                    require(pitch == 0, "out-of-band tone aliased into the pitch readout");
+            }
+        }
+        for (const QVariant& bad : {QVariant(), QVariant("garbage"), QVariant("nan"),
+                                    QVariant(std::numeric_limits<double>::infinity())})
+            require(numericSetting(bad, 440, 430, 450) == 440,
+                    "invalid saved calibration did not restore the default");
+        require(numericSetting(QVariant("442"), 440, 430, 450) == 442,
+                "valid legacy calibration changed");
+        require(numericSetting(QVariant(500), 440, 430, 450) == 450,
+                "finite saved calibration did not respect its range");
         std::cout << "Capture packet jitter, stall, recovery, uncertainty, gate, silence, clipping and octaves passed\n";
     }
 };

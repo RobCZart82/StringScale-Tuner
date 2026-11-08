@@ -63,3 +63,13 @@ Az 1.0.0 előtt frissítési döntés és új bináris-/forrás-/licencellenőrz
 A program QAudioSource PCM-bemenetet használ, médiafájl- vagy URL-dekódert
 nem kínál. A felsorolt upstream hibák alkalmazáson keresztüli elérhetőségét
 ez az audit nem igazolta. [FFmpeg biztonsági javítások](https://ffmpeg.org/security.html).
+
+
+## Első javítási kör
+
+A1–A3 javítása elkészült. Nyolcadrendű Butterworth-szűrő előzi meg a ritkítást,
+a kevés hangadatnál is lejár a régi kijelzés, a mentett számértékek pedig
+konverzió- és végességellenőrzést kapnak. A regressziós tesztek a korábban
+hibázó eseteket, valamint öt mintavételen a B0/E2/E4 megtartását ellenőrzik.
+A négy helyi CTest sikeres volt Qt 6.11.2 mellett. A4 és A5 továbbra is nyitott,
+a valódi hangszeres és teljesítménymérések az 1.0.0 elfogadási feltételei.

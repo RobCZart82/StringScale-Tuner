@@ -118,3 +118,16 @@ should remain separate milestones unless explicitly added to 1.0.0 scope.
 
 The next implementation order is A2/A3 input-state handling, A1 resampling,
 measurement coverage, then version/channel and release automation.
+
+
+## Implementation follow-up
+
+The first fix batch implements A1–A3. Capture now applies an eighth-order
+Butterworth low-pass before decimation, and sparse input enforces pitch expiry.
+Numeric settings require successful conversion and a finite value before range
+clamping. Regression coverage includes the previously failing out-of-band tone,
+clean B0/E2/E4 and alias-band tones across five capture rates, the 520 ms sparse
+input case, and corrupt/valid legacy numeric settings.
+
+These fixes passed all four local CTest cases using Qt 6.11.2. A4 and A5 remain
+open. Real-instrument and performance acceptance remain required for 1.0.0.

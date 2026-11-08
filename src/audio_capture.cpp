@@ -89,7 +89,7 @@ void AudioCapture::stop() {
 void AudioCapture::resetPitchWindow() {
     ringWrite_ = 0;
     ringCount_ = 0;
-    lowpass_ = 0.0;
+    prefilter_.reset();
     resamplePhase_ = 0.0;
     framesSinceLastEstimate_ = 0;
 }
@@ -109,15 +109,12 @@ void AudioCapture::resetAnalysis() {
 }
 
 void AudioCapture::acceptSample(float sample) {
-    // A one-pole prefilter suppresses high-frequency content before decimation.
-    // The phase accumulator supports capture rates other than 48 kHz.
     const double sampleRate = static_cast<double>(format_.sampleRate());
-    const double alpha = std::min(1.0, 2.0 * 3.14159265358979323846 * 1200.0 / sampleRate);
-    lowpass_ += alpha * (static_cast<double>(sample) - lowpass_);
+    const double filtered = prefilter_.process(sample, format_.sampleRate());
     resamplePhase_ += kAnalysisRate;
     if (resamplePhase_ >= sampleRate) {
         resamplePhase_ -= sampleRate;
-        pitchRing_[ringWrite_] = static_cast<float>(lowpass_);
+        pitchRing_[ringWrite_] = static_cast<float>(filtered);
         ringWrite_ = (ringWrite_ + 1) % pitchRing_.size();
         ringCount_ = std::min(ringCount_ + 1, pitchRing_.size());
         ++framesSinceLastEstimate_;
@@ -213,7 +210,10 @@ void AudioCapture::updateMeasurementsAt(qint64 nowMs) {
     }
     gateOpen_ = true;
     // Avoid reanalyzing the same buffer when the capture source stalls.
-    if (framesSinceLastEstimate_ < kAnalysisRate / 100) return;
+    if (framesSinceLastEstimate_ < kAnalysisRate / 100) {
+        rejectPitch(nowMs);
+        return;
+    }
     framesSinceLastEstimate_ = 0;
 
     std::vector<float> frame(pitchRing_.size());

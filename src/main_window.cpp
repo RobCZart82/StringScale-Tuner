@@ -4,6 +4,7 @@
 #include "tuning.hpp"
 #include "about_dialog.hpp"
 #include "input_device_selection.hpp"
+#include "numeric_setting.hpp"
 #include <QMenu>
 #include <QAction>
 #include <QSignalBlocker>
@@ -75,9 +76,9 @@ QComboBox* makeComboBox() {
 MainWindow::MainWindow(QWidget* parent, bool preview)
     : QMainWindow(parent), capture_(this), mediaDevices_(this), preview_(preview) {
     QSettings settings;
-    minimumLevelDb_ = std::clamp(settings.value("input/minRmsDb", -45.0).toDouble(), -65.0, -20.0);
-    warningPeakDb_ = std::clamp(settings.value("input/warningPeakDb", -3.0).toDouble(), -12.0, -0.5);
-    calibration_ = std::clamp(settings.value("tuning/a4Hz", 440.0).toDouble(),430.0,450.0);
+    minimumLevelDb_ = numericSetting(settings.value("input/minRmsDb"), -45.0, -65.0, -20.0);
+    warningPeakDb_ = numericSetting(settings.value("input/warningPeakDb"), -3.0, -12.0, -0.5);
+    calibration_ = numericSetting(settings.value("tuning/a4Hz"), 440.0, 430.0, 450.0);
     capture_.setMinimumLevelDb(minimumLevelDb_);
     capture_.setWarningPeakDb(warningPeakDb_);
     buildInterface();
