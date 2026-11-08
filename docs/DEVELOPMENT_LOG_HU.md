@@ -1,5 +1,74 @@
 # Fejlesztési és javítási napló
 
+## 2026-11-08 – ismételt repository-ellenőrzés és naplópótlás
+
+Ellenőrzött főág: `f5b517c2816ed34dbee92779a1368646df9a4a35`.
+A teljes helyi Release build, CTest 4/4 és Python 9/9 sikeres. A Python-források
+szintaxisa és a dokumentáció helyi fájlhivatkozásai ellenőrizve.
+
+Új A6 megállapítás: a jelszintkapu alatt gyűlő elemzési minták signed int
+számlálója körülbelül 49,7 óra után túlcsordulhat. Gyorsított határpróbában
+az UndefinedBehaviorSanitizer a `src/audio_capture.cpp:120` soron jelezte.
+A 700 Hz-es végpont (A4) továbbra is kiesik. A5 ideiglenes csomagpróbával
+igazolva: a felhasználói stage-en kívülre mutató abszolút symlinket elfogadja
+a szűrő. A6, A4 és A5 javítása még nyitott.
+
+Ez a bejegyzés a napló korábban hiányzó november 6–8-i eseményeit is pótolja.
+Részletes jelentés: [ismételt audit](REPOSITORY_REVIEW_2026_11_08.md).
+Ebben a körben új windowsos vagy valódi hangszeres próba nem történt.
+
+## 2026-11-08 – 1.0.0 audit és első hibajavítások
+
+A #30 PR angol és magyar 1.0.0 auditot és elfogadási tervet adott.
+A következő cél 1.0.0 stabil, a publikált változat 0.2.0-alpha.1.
+
+A #31 PR javította az A1–A3 eseteket. Nyolcadrendű, 1,5 kHz-es
+Butterworth-szűrő előzi meg a 12 kHz-re ritkítást; kevés friss elemzési
+mintánál is érvényesül a 220 ms-os kijelzéslejárat; a mentett numerikus
+beállítások konverzió- és végességellenőrzést kapnak. Az új regressziók
+öt mintavételen ellenőrzik a B0/E2/E4 megtartását és az alias-tartományt.
+A PR helyi és GitHub-ellenőrzései sikeresek voltak, majd a főágba került.
+A valódi hangszeres és késleltetési elfogadás külön feladat.
+
+## 2026-11-07 – első nyilvános alpha és telepítési visszajelzés
+
+Megjelent a [v0.2.0-alpha.1](https://github.com/RobCZart82/StringScale-Tuner/releases/tag/v0.2.0-alpha.1)
+előzetes kiadás. Forráscommit:
+`4932abdd12c11545d92dd12ba3ab7b02e087cfca`, Desktop preview build 84.
+Nyolc release-melléklet került fel: Windows EXE és macOS PKG, a két-két
+SHA256-/JSON-fájl, valamint a Qt/FFmpeg forrás-ZIP és ellenőrzőösszege.
+A letöltött telepítők és a feltöltött mellékletek hash-ei ellenőrizve.
+
+Robert Windows 10 Intel és macOS Tahoe M1 gépen sikeres telepítésről és
+működésről számolt be, az aláírás hiányához kapcsolódó jóváhagyási lépésekkel.
+A #29 PR rögzítette a visszajelzést, és angol/magyar lépésenkénti segítséget
+adott a README-khez, a telepítési útmutatókhoz és a rövid csomagleíráshoz.
+A PDF-kézikönyvekben a fő jóváhagyási lépések már szerepeltek.
+
+## 2026-11-06 – kiadási és licencanyagok rendezése
+
+A #27 PR kiadási jegyzeteket és a letöltött Windows/macOS telepítőpár
+ellenőrzőjét adta. A #28 PR a Qt modulok 66 upstream értesítését, az FFmpeg
+7.1 licencleírását, a módosított könyvtárak használati útmutatóját és öt
+forrásarchívum rögzített SHA256-át gyűjtötte össze.
+
+A Windows-csomagolás a Qt 6.7+ deploy lépésben kihagyja az opcionális Mesa
+és Direct3D compiler DLL-eket. A CI a nyolc MSVC DLL-t név és hash alapján
+a Visual Studio x64 terjeszthető fájljaival veti össze.
+A licencfájlok LF sorvége külön rögzített. A #28 főágba olvadt november 6-án.
+A forráscsomag a november 7-i release melléklete lett.
+
+## 2026-11-05 – dokumentációs audit és túlvezérlési javítás
+
+A #25 PR az angolt tette a repository alapnyelvévé, README_HU-t és angol
+útmutatókat adott, valamint szigorította a csomagútvonalak ellenőrzését.
+A ZIP-mappabejegyzések kezelése külön javítást kapott. A megszűnt macos-14
+CI-futtatót macos-15 váltotta, a platformellenőrzések sikeresek lettek.
+
+A #26 PR túlvezérlés után eldobja a régi elemzési ablakot, és tiszta mintákból
+gyűjt újat. A PR főági beolvasztása november 6-án történt.
+
+
 ## 2026-11-05 – Windows licenc-hash ellenőrzés sorvégjavítása
 
 A #22 Windows CI-je a licencszöveg SHA256-tesztjén hibázott. A naplóban

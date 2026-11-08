@@ -20,6 +20,8 @@ Next stable release: [1.0.0 audit and acceptance plan](RELEASE_1_0_AUDIT.md) ·
 
 Technical reference: [Architecture](ARCHITECTURE.md), [third-party notices](THIRD_PARTY_NOTICES.md).
 
+Latest source review: [2026-11-08 follow-up](REPOSITORY_REVIEW_2026_11_08.md).
+
 Evidence and history: [current repository review](REPOSITORY_REVIEW.md),
 [original synthetic validation snapshot](TEST_RESULTS.md),
 [hardware feedback in Hungarian](HARDWARE_TEST_RESULTS_HU.md),
