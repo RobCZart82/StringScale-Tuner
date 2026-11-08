@@ -9,6 +9,7 @@ import shutil
 import subprocess
 import tempfile
 from runtime_licence_audit import create_audit
+from package_paths import validate_inventory_links
 
 
 def digest(path):
@@ -72,6 +73,7 @@ def main():
             inventory.append(dict(path=relative, symlink=os.readlink(path)))
         elif path.is_file() and path.name not in ("build-info.json", "file-inventory.json"):
             inventory.append(dict(path=relative, bytes=path.stat().st_size, sha256=digest(path)))
+    validate_inventory_links(inventory)
     (stage / "file-inventory.json").write_text(json.dumps(inventory, indent=2)+"\n", encoding="utf-8")
     (stage / "build-info.json").write_text(json.dumps(info, indent=2)+"\n", encoding="utf-8")
     output = args.output.resolve()

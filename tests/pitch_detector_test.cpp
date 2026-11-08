@@ -65,6 +65,16 @@ std::vector<float> filteredOddHarmonics(double hz, double phase) {
 int main() {
     strings::PitchDetector detector;
     const auto knownTone = signal(110.0, 12000);
+    for (double endpoint : {25.0, 700.0}) {
+        const auto estimate = detector.estimate(signal(endpoint, 12000), 12000, 25, 700);
+        expect(estimate.valid && std::abs(strings::centsBetween(estimate.hz, endpoint)) < 0.01,
+               "Inclusive endpoint tone must be recognized");
+    }
+    for (double outside : {24.8, 710.0}) {
+        const auto estimate = detector.estimate(signal(outside, 12000), 12000, 25, 700);
+        expect(!estimate.valid, "Tone beyond endpoint tolerance must be rejected");
+    }
+
     const double nan = std::numeric_limits<double>::quiet_NaN();
     const double infinity = std::numeric_limits<double>::infinity();
     for (double invalid : {nan, infinity, -infinity, 0.0, -1.0}) {

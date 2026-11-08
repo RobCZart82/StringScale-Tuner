@@ -18,9 +18,12 @@ PitchEstimate PitchDetector::estimate(const std::vector<float>& data,
 
     // Clamp in floating point before converting to int. Tiny positive bounds
     // can otherwise overflow the conversion, even with an ordinary 4096-frame input.
-    const double maximumLag = std::min(std::floor(sampleRate / minHz),
+    const double boundaryRatio = std::exp2(5.0 / 1200.0);
+    // Search past both limits so a minimum beyond the allowed interval is
+    // measured and rejected, rather than mistaken for a minimum at the edge.
+    const double maximumLag = std::min(std::ceil(sampleRate / minHz * boundaryRatio) + 1,
                                        static_cast<double>(data.size() / 2));
-    const double minimumLag = std::max(2.0, std::floor(sampleRate / maxHz));
+    const double minimumLag = std::max(2.0, std::floor(sampleRate / maxHz / boundaryRatio) - 1);
     if (!std::isfinite(minimumLag) || maximumLag <= minimumLag + 2) return result;
     const int maxLag = static_cast<int>(maximumLag);
     const int minLag = static_cast<int>(minimumLag);
@@ -144,8 +147,12 @@ PitchEstimate PitchDetector::estimate(const std::vector<float>& data,
     }
 
     const double hz = static_cast<double>(sampleRate) / refinedLag(bestLag);
-    if (!std::isfinite(hz) || hz < minHz || hz > maxHz) return result;
-    result.hz = hz;
+    // Interpolation can place an endpoint tone just outside the requested
+    // interval (about 3 cents at 700 Hz / 12 kHz). Allow a 5-cent fringe
+    // and snap only those endpoint estimates back into the stated interval.
+    if (!std::isfinite(hz) || hz < minHz / boundaryRatio ||
+        hz > maxHz * boundaryRatio) return result;
+    result.hz = std::clamp(hz, minHz, maxHz);
     result.confidence = std::clamp(1.0 - cmnd[bestLag], 0.0, 1.0);
     result.valid = result.confidence >= 0.73;
     return result;

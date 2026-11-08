@@ -3,7 +3,7 @@
 ## Aktuális állapot a #31 PR után
 
 A1–A3 javítása a főágban van, a regressziós tesztjeik sikeresek.
-A4 és A5 nyitott. Az [ismételt audit](REPOSITORY_REVIEW_2026_11_08.md) új A6
+A4, A5 és A6 javítása a következő javítási körben elkészült; részletek a dokumentum végén. Az [ismételt audit](REPOSITORY_REVIEW_2026_11_08.md) új A6
 hibát rögzít: tartósan zárt kapunál túlcsordulhat az elemzési minták számlálója.
 Az alábbi eredeti reprodukciók a #31 előtti forrásállapothoz tartoznak.
 
@@ -81,3 +81,14 @@ konverzió- és végességellenőrzést kapnak. A regressziós tesztek a korább
 hibázó eseteket, valamint öt mintavételen a B0/E2/E4 megtartását ellenőrzik.
 A négy helyi CTest sikeres volt Qt 6.11.2 mellett. A4 és A5 továbbra is nyitott,
 a valódi hangszeres és teljesítménymérések az 1.0.0 elfogadási feltételei.
+
+
+## Második javítási kör
+
+A4 a kért tartomány szélein 5 cent becslési tűrést kap, a kijelzett érték
+a határra korlátozott. A keresés a határon túl is vizsgál periódusokat,
+hogy a valóban kívül eső hangot el tudja utasítani. A5 közös csomagútvonal-
+és linkellenőrzést kap az archiválás, ZIP-ellenőrzés és stage-másolás előtt.
+A6 számlálója 120 elemzési mintánál telítődik, zárt kapunál is.
+A korábbi A1–A3 és az új A4–A6 regressziói sikeresek a helyi Release buildben.
+A valódi hangszeres és kiadási elfogadási feladatok továbbra is szükségesek.

@@ -191,6 +191,12 @@ public:
                 "valid legacy calibration changed");
         require(numericSetting(QVariant(500), 440, 430, 450) == 450,
                 "finite saved calibration did not respect its range");
+        capture.format_.setSampleRate(48000);
+        capture.resetAnalysis();
+        capture.framesSinceLastEstimate_ = capture.kAnalysisRate / 100 - 1;
+        for (int i = 0; i < 48000; ++i) capture.acceptSample(0);
+        require(capture.framesSinceLastEstimate_ == capture.kAnalysisRate / 100,
+                "closed-gate readiness counter must saturate at the analysis threshold");
         std::cout << "Capture packet jitter, stall, recovery, uncertainty, gate, silence, clipping and octaves passed\n";
     }
 };

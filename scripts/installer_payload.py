@@ -3,7 +3,7 @@ from pathlib import Path
 import shutil
 
 from package_preview import digest
-from verify_preview import relative_path
+from package_paths import relative_path, validate_inventory_links
 
 MANUALS = {
     'manuals/StringScale-Tuner-User-Manual-HU.pdf',
@@ -22,6 +22,7 @@ def is_runtime(name, platform):
 
 
 def create_user_stage(stage, destination, inventory, platform):
+    validate_inventory_links(inventory)
     selected = []
     for record in inventory:
         name = relative_path(record['path'])

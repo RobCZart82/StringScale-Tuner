@@ -18,7 +18,8 @@ not the original source-package snapshot.
    phase-accumulator decimator to 12,000 samples/second. Four biquad sections
    suppress out-of-band tones that could otherwise alias into the 25–700 Hz
    analysis band. Coefficients are prepared when the capture rate changes.
-   Filter history is cleared with the pitch window.
+   Filter history is cleared with the pitch window. The new-frame readiness
+   counter saturates at 120 analysis frames, including during a closed level gate.
 4. A 4096-sample rolling window (~341 ms) feeds the YIN-family difference/CMND
    estimator with parabolic refinement. Nonfinite bounds/samples and invalid
    ranges are rejected; lag limits are bounded by the input window before integer
@@ -31,6 +32,9 @@ not the original source-package snapshot.
    from being lowered solely because their doubled-period mismatch is smaller.
    This reduces weak-fundamental octave errors without guaranteeing detection
    of arbitrarily weak or absent fundamentals. The adapter searches 25-700 Hz internally.
+   A 5-cent endpoint fringe accommodates interpolation error; accepted fringe
+   estimates are clamped to the requested interval. Lag search extends beyond
+   the fringe to distinguish an actual nearby outside minimum from an edge.
 5. The 65 ms GUI timer drains pending PCM and measures newly received samples.
    A packet-free tick does not mean digital silence: level is retained until
    a 250 ms data timeout, which clears analysis history.
@@ -85,6 +89,11 @@ The desktop workflow builds Windows x64 and macOS arm64, runs CTest, deploys Qt
 and produces a verified developer ZIP. Native installers consume a filtered copy:
 app/runtime plus the two user manuals, short README and required licence material.
 Test sheets, SDK SBOMs and build/file-inventory JSON stay in developer/audit output.
+
+Package paths and symlinks are validated before archiving, on ZIP verification,
+and before installer-stage copying. Resolved link targets must remain within the
+package. Cycles, excessive chains and inventory entries beneath symlink parents
+are rejected; normal macOS framework aliases are preserved.
 
 The installer builder verifies staging against the archived inventory before
 filtering. macOS packaging seals the final deployed app with ad-hoc signing;
