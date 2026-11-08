@@ -87,7 +87,7 @@ with further real-instrument testing required beyond the documented configuratio
 - `src/tuning.*`: fixed pitch references, string numbering, nearest-string
   calculation and cents.
 - `src/audio_capture.*`: Qt Multimedia audio input, normalized samples,
-  simple low-pass + downsampling to 12 kHz, level measuring and pitch smoothing.
+  anti-alias low-pass + downsampling to 12 kHz, level measuring and pitch smoothing.
 - `src/tuner_widgets.*`: self-painted high-DPI vector instrument widgets.
 - `src/main_window.*`: profiles, device controls, live readouts, settings.
 - `tests/pitch_detector_test.cpp`: deterministic generated test tones.

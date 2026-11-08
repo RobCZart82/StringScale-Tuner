@@ -14,7 +14,11 @@ not the original source-package snapshot.
    changes update that preference, including before a permission prompt completes.
    Nonfinite selected samples are rejected;
    unrelated channels are not mixed into the measurement.
-3. A one-pole low-pass and phase accumulator decimate to 12,000 samples/second.
+3. An eighth-order Butterworth low-pass with a 1.5 kHz cutoff precedes the
+   phase-accumulator decimator to 12,000 samples/second. Four biquad sections
+   suppress out-of-band tones that could otherwise alias into the 25–700 Hz
+   analysis band. Coefficients are prepared when the capture rate changes.
+   Filter history is cleared with the pitch window.
 4. A 4096-sample rolling window (~341 ms) feeds the YIN-family difference/CMND
    estimator with parabolic refinement. Nonfinite bounds/samples and invalid
    ranges are rejected; lag limits are bounded by the input window before integer
@@ -32,6 +36,7 @@ not the original source-package snapshot.
    a 250 ms data timeout, which clears analysis history.
 6. A minimum-level gate uses 3 dB hysteresis. An uncertain estimate or short level
    dip retains the last valid pitch for at most 220 ms; failures cannot renew it.
+   Ticks with too few new analysis frames also enforce that deadline.
    When a meter update reports digital clipping, it clears the pitch and
    discards the analysis window. Pitch resumes once a fresh window of clean
    samples is available. Stopping or changing channels also clears pitch.
