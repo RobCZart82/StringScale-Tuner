@@ -1,5 +1,13 @@
 # Az 1.0.0 stabil kiadás előtti audit
 
+## Aktuális állapot a #31 PR után
+
+A1–A3 javítása a főágban van, a regressziós tesztjeik sikeresek.
+A4 és A5 nyitott. Az [ismételt audit](REPOSITORY_REVIEW_2026_11_08.md) új A6
+hibát rögzít: tartósan zárt kapunál túlcsordulhat az elemzési minták számlálója.
+Az alábbi eredeti reprodukciók a #31 előtti forrásállapothoz tartoznak.
+
+
 Dátum 2026-11-08. Ellenőrzött főág
 `d50d0d844379459903d1b1fcdd3c0e21473e1c0b`.
 [Részletes angol jelentés és elfogadási lista](RELEASE_1_0_AUDIT.md).

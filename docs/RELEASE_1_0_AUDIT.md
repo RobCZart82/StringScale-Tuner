@@ -1,5 +1,13 @@
 # Stable 1.0.0 readiness review
 
+## Current status after PR 31
+
+A1–A3 are implemented on main and covered by passing regressions.
+A4 and A5 remain open. The [follow-up review](REPOSITORY_REVIEW_2026_11_08.md)
+adds A6, an analysis-frame counter overflow during prolonged closed-gate capture.
+The original reproductions below refer to the earlier baseline, before PR 31.
+
+
 Review date 2026-11-08. Baseline commit
 `d50d0d844379459903d1b1fcdd3c0e21473e1c0b`.
 [Magyar](RELEASE_1_0_AUDIT_HU.md).
