@@ -1,10 +1,12 @@
 # Az 1.0.0 stabil kiadás előtti audit
 
-## Aktuális állapot a #31 PR után
+## Aktuális állapot a #33 PR után
 
-A1–A3 javítása a főágban van, a regressziós tesztjeik sikeresek.
-A4, A5 és A6 javítása a következő javítási körben elkészült; részletek a dokumentum végén. Az [ismételt audit](REPOSITORY_REVIEW_2026_11_08.md) új A6
-hibát rögzít: tartósan zárt kapunál túlcsordulhat az elemzési minták számlálója.
+A1–A6 javítása a `main` ágon van, regressziós tesztjeik sikeresek. A #34 PR
+eszközfüggetlen PCM-formátum- és csatornaelrendezés-lefedést ad; Windows,
+macOS, Linux és Qt 6.5 ellenőrzése sikeres, a PR felülvizsgálatra/beolvasztásra
+vár. Az [ismételt audit](REPOSITORY_REVIEW_2026_11_08.md) A6-ként rögzítette,
+hogy tartósan zárt kapunál túlcsordulhat az elemzési minták számlálója.
 Az alábbi eredeti reprodukciók a #31 előtti forrásállapothoz tartoznak.
 
 
@@ -29,7 +31,7 @@ A1 szintetikus magas hanggal, A2 szimuláltan lelassult adatérkezéssel,
 A3 sérült vagy külsőleg módosított beállítással jelentkezik. A szokásos
 gitárhasználatban való előfordulási gyakoriságuk külön vizsgálandó.
 
-## Ellenőrzések
+## Eredeti auditállapot ellenőrzései
 
 A teljes alkalmazás AppleClang 21 és Qt 6.11.2 mellett lefordult. A négy
 CTest és a kilenc Python-teszt sikeres, a Python-források szintaxisa érvényes.
@@ -42,14 +44,32 @@ sanitizer/fuzz-vizsgálat és telepítőfrissítési próba nem történt ebben 
 auditban. Az ideiglenes mérőkód kikerült a munkapéldányból. A PDF-eket az
 előző dokumentációs munka vizsgálta, az 1.0.0 jelölthöz frissíteni kell őket.
 
+## Utólagos ellenőrzés – 2026-11-08
+
+A #31 és #33 PR helyi Release capture/csomagtesztjei, valamint kötelező GitHub
+ellenőrzései sikeresek. A #34 PR 108 szintetikus hangmagasság-esetet ad UInt8,
+Int16, Int32 és Float PCM-re, 44,1/48/96 kHz-en, mono/sztereó/hatcsatornás
+elrendezésben. Darabolást, csatornaizolációt, jelszintmérést, telítést és hibás
+Float mintát is ellenőriz. Legújabb GitHub-futása sikeres Linux, macOS és
+Windows Core DSP-n, macOS ARM64 és Windows x64 asztali builden, valamint Qt
+6.5-kompatibilitásban. A helyi környezetben nincs Qt; az új Qt capture tesztet
+ezért a CI fordította és futtatta.
+
+A szintetikus teszt nem helyettesíti a valódi eszközpróbát. Minden hirdetett
+hangolás valódi hangszeres pontossága, indítási/engedélyezési hibák és
+helyreállítás, késleltetés/terhelés, tiszta rendszeren frissítés/eltávolítás,
+stabil verzióadatok és végleges csomag-/függőség-ellenőrzés még nyitott.
+
 ## Az 1.0.0-ig szükséges munka
 
-1. A1–A3 javítása regressziós tesztekkel, A4 végponti szabálya és A5 csomagellenőrzése.
+1. [x] A1–A6 javítása, A4 végponti szabálya és célzott regressziós tesztjei.
 2. Valódi gitár/basszus próbák minden hirdetett profilra, külön B0/E1, hét húros
    gitár, zaj, gyenge alaphang, húr- és oktávváltás. Előre rögzített pontossági
    és beállásiidő-kritériumok szükségesek.
-3. Több PCM-formátum, 44,1/48/96 kHz, csatornák, darabolt keretek, eszközcsere,
-   mikrofontiltás és visszaengedélyezés próbái mindkét rendszeren.
+3. [x] Eszközfüggetlen Float/Int16/Int32/UInt8 teszt 44,1/48/96 kHz-en,
+   csatornaizolációval és darabolt PCM-keretekkel.
+   [ ] Eszköz kihúzása/visszadugása, sikertelen indítás, mikrofonengedély
+   megtagadása és visszaengedélyezése Windows és macOS hardveren.
 4. Késleltetés és GUI-terhelés mérése. A jelenlegi ablak 341 ms hangot tartalmaz,
    az elemzés a GUI szálán fut. Mért szükség esetén külön feldolgozószál kell.
 5. Alpha → 1.0 frissítés, újratelepítés, beállításmegőrzés és eltávolítás
@@ -66,11 +86,16 @@ A történeti alpha-naplókat és a már kiadott taget meg kell őrizni.
 
 ## Függőségek karbantartása
 
-A mellékelt FFmpeg 7.1 után a 7.1.1 és 7.1.2 biztonsági javításokat kapott.
-Az 1.0.0 előtt frissítési döntés és új bináris-/forrás-/licencellenőrzés kell.
+A mellékelt FFmpeg-alapverzió 7.1. A 2026-11-08-i ellenőrzés szerint az upstream
+a 7.1-es ág legújabb karbantartási kiadásaként a 7.1.5-öt, legújabb stabil
+főverzióként a 9.0.2-t sorolja fel. Az 1.0.0 előtt a köztes biztonsági
+javításokat a pontosan csomagolt konfigurációval és a Qt támogatott FFmpeg-
+buildjével kell összevetni, majd dönteni kell a Qt/FFmpeg frissítésről.
+Frissítés esetén új bináris-, forrás-, hash- és licencellenőrzés szükséges.
 A program QAudioSource PCM-bemenetet használ, médiafájl- vagy URL-dekódert
 nem kínál. A felsorolt upstream hibák alkalmazáson keresztüli elérhetőségét
-ez az audit nem igazolta. [FFmpeg biztonsági javítások](https://ffmpeg.org/security.html).
+ez az audit nem igazolta. [FFmpeg kiadások](https://ffmpeg.org/download.html),
+[biztonsági javítások](https://ffmpeg.org/security.html).
 
 
 ## Első javítási kör
