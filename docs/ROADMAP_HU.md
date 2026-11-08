@@ -1,5 +1,9 @@
 # Roadmap
 
+Következő kiadási cél: **1.0.0 stabil**. A megjelent verzió 0.2.0-alpha.1.
+Az [audit és feladatlista](RELEASE_1_0_AUDIT_HU.md) rögzíti a kiadási feltételeket.
+
+
 - [x] M0: Original C++20 pitch-detector, tuning reference model, CI-core tests.
 - [x] M0: Implement Qt vector widgets for analog gauge, horizontal pitch map,
       on-line theme-colored pitch marker, and input level meter.

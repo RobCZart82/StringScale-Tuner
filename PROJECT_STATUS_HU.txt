@@ -1,37 +1,14 @@
-StringScale Tuner - ellenőrzött fejlesztési állapot (2026-11-04)
-============================================================
+StringScale Tuner - aktuális állapot, 2026-11-08
 
-Verzióforrás: CMakeLists.txt (PROJECT_VERSION + STRINGS_VERSION).
-A Névjegy és a build-info ugyanebből a generált értékből készül.
-Ez a fájl állapotösszefoglaló, nem külön alkalmazásverzió-forrás.
+A 0.2.0-alpha.1 kiadás megjelent 2026-11-07-én, build 84.
+Forrás: 4932abdd12c11545d92dd12ba3ab7b02e087cfca.
+https://github.com/RobCZart82/StringScale-Tuner/releases/tag/v0.2.0-alpha.1
 
-Elkészült:
-- Önálló C++20/Qt gitár- és basszushangoló, saját YIN-családú motorral.
-- Felül jelszintmérő, középen ±50 centes analóg mutató, alul logaritmikus
-  húrskála türkiz/zöld jelölővel; mért hang és oktáv, külön célhúr.
-- Standard és alternatív gitár-/basszusprofilok, eszköz- és csatornaválasztás.
-- Magyar/angol nyelv, világos/sötét téma, mentett 75/100/125/150% fix méret.
-- Windows x64 EXE és macOS Apple Silicon PKG próbatelepitők, natív ikonokkal.
-- Magyar és angol PDF-kézikönyv, letisztított telepített dokumentáció.
+A következő tervezett kiadás 1.0.0 stabil. Az előtte javítandó hibák,
+ellenőrzési eredmények és fejlesztési feladatok: docs/RELEASE_1_0_AUDIT_HU.md.
+A publikált build Windows 10 Intel és macOS Tahoe M1 próbája sikeres volt
+Robert visszajelzése szerint. Részletek: docs/HARDWARE_TEST_RESULTS_HU.md.
 
-Ellenőrzések:
-- A főág motortesztjei Linuxon, Windowson és macOS-en sikeresek.
-- Mindkét desktop build teljes GUI-t, capture-regressziót és GUI-integrációs
-  tesztet futtat. A telepítőket a CI valóban telepíti és indítja; Windowson
-  az eltávolítást is ellenőrzi. Külön teszt vizsgálja a dokumentumszűrést.
-- Robert Mac mini M1 / SSL 2+ és Windows 10 / Behringer UCG-102 konfigurációkon
-  mind a hat standard húrt és ±25–40 centes eltéréseket sikeresen próbálta.
-- A további kézi próbák pontos hatóköre: docs/HARDWARE_TEST_RESULTS_HU.md.
-
-A forrásarchívum, fejlesztői ZIP és telepítő külön csomag. Letölthető, aláíratlan
-próbatelepitők az Actions artifactjai között készülnek. Ez nem jelenti, hogy
-végleges, nyilvános GitHub Release már közzé lett téve.
-
-Kiadás előtt még szükséges:
-- A ténylegesen mellékelt függőségek teljes licenc-/forráselérhetőségi auditja.
-- A végleges forráscommit, csomagok, ellenőrzőösszegek és kiadási jegyzet lezárása.
-- A további hangszerek, interfészek és OS-verziók próbái a dokumentált körön túl.
-
-A saját kód MIT-licencű. A függőségek feltételei külön érvényesek.
-A Mac app technikai ad-hoc aláírása nem kiadói aláírás vagy Apple-notarizáció.
-Nem hitelesített mérőműszer. Részletek: README.md és docs/RELEASE_CHECKLIST_HU.md.
+Az alpha telepítők licencmellékletei és a Qt/FFmpeg forráscsomag elérhetők
+a kiadásban. Az 1.0.0 végleges csomagjain az ellenőrzést meg kell ismételni.
+A kiadói aláírás és notarizáció nyitott termékdöntés.

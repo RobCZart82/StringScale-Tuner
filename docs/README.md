@@ -15,6 +15,9 @@ validation claims. Version values come from CMakeLists.txt.
 | Plans | [Roadmap](ROADMAP.md) | [Ütemterv](ROADMAP_HU.md) |
 | User manuals | [PDF index](manuals/README.md) | Both languages in the index |
 
+Next stable release: [1.0.0 audit and acceptance plan](RELEASE_1_0_AUDIT.md) ·
+[Magyar összefoglaló](RELEASE_1_0_AUDIT_HU.md).
+
 Technical reference: [Architecture](ARCHITECTURE.md), [third-party notices](THIRD_PARTY_NOTICES.md).
 
 Evidence and history: [current repository review](REPOSITORY_REVIEW.md),

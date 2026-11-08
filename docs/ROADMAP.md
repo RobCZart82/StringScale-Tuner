@@ -1,5 +1,9 @@
 # Roadmap
 
+Next release target: **1.0.0 stable**. The published version remains 0.2.0-alpha.1.
+Priorities and required evidence are in the [stable readiness review](RELEASE_1_0_AUDIT.md).
+
+
 - [x] M0: Original C++20 pitch-detector, tuning reference model, CI-core tests.
 - [x] M0: Implement Qt vector widgets for analog gauge, horizontal pitch map,
       on-line theme-colored pitch marker, and input level meter.

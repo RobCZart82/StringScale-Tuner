@@ -2,7 +2,9 @@
 
 [Magyar](RELEASE_NOTES_HU.md)
 
-First public preview draft for Windows x64 and macOS on Apple Silicon.
+Published on 2026-11-07 for Windows x64 and macOS on Apple Silicon.
+[Release and downloads](https://github.com/RobCZart82/StringScale-Tuner/releases/tag/v0.2.0-alpha.1).
+The next planned release is stable 1.0.0.
 
 StringScale Tuner is a free standalone guitar and bass tuner. It shows input
 level, an analog ±50-cent needle, and a pitch scale with string numbers. The
@@ -31,6 +33,6 @@ not supplied. Earlier, configuration-specific trials are recorded in the
 additional devices still need broader hardware coverage. This preview targets
 Windows x64 and macOS arm64. VST3 and other platform builds remain planned work.
 
-Before publication, fill in the tested source revision and attach the verified
-installer files, SHA256 checksums and manifests using the
-[release procedure](RELEASE_CHECKLIST.md).
+Published source revision `4932abdd12c11545d92dd12ba3ab7b02e087cfca`, Desktop
+preview build 84. The next stable candidate follows the
+[1.0.0 acceptance plan](RELEASE_1_0_AUDIT.md).
