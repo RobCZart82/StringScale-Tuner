@@ -1,6 +1,7 @@
-# StringScale Tuner 0.2.0-alpha.1 – kiadási jegyzet tervezete
+# StringScale Tuner 0.2.0-alpha.1 – kiadási jegyzet
 
-Állapot: kiadásra előkészített szöveg; még nem közzétett GitHub Release.
+Megjelent 2026-11-07-én. [Kiadás és letöltés](https://github.com/RobCZart82/StringScale-Tuner/releases/tag/v0.2.0-alpha.1).
+A következő tervezett kiadás 1.0.0 stabil.
 
 Ingyenes, önálló gitár- és basszushangoló Windows x64 és macOS Apple Silicon
 rendszerekre. A felület felül jelszintmérőt, középen ±50 centes analóg mutatót,
@@ -33,17 +34,18 @@ figyelmeztethet. A telepített rövid README és a két PDF-kézikönyv ismertet
 
 A többi hangszer-/hangolási profil valós hardveres tesztelése részleges.
 VST3, Linux, Intel Mac és Windows ARM nem része ennek a kiadásnak.
-A teljes függőségi licencmelléklet és a végleges forrásállapot ellenőrzése még
-kiadási feltétel; ez a jegyzet nem jelenti ezek teljesítését.
-
-A kiadáshoz a végleges forráscommitot, ZIP-eket és SHA256-összegeket kell csatolni.
+A közzétett kiadásban a telepítők, manifestek, SHA256-fájlok és a Qt/FFmpeg
+forráscsomag elérhetők. A telepítők a függőségi licencértesítéseket is tartalmazzák.
 
 ## Újabb ellenőrzés
 
 A túlvezérlés javítása után a program friss, tiszta hangmintákra vár, mielőtt
 újra hangmagasságot jelez. 2026. november 6-án Robert macOS-en és Windowson
 is sikeres működésről számolt be. A pontos build és rendszerkonfiguráció
-ehhez a próbához nincs megadva. A közzététel előtt a két telepítőt a végleges
-forráscommithoz kell ellenőrizni a [kiadási eljárás](https://github.com/RobCZart82/StringScale-Tuner/blob/main/docs/RELEASE_CHECKLIST.md) szerint.
+ehhez a próbához nincs megadva. A november 7-i publikált build
+Windows 10 Intel és macOS Tahoe M1 próbáját a hardveres jegyzőkönyv rögzíti.
 
 [English release notes](https://github.com/RobCZart82/StringScale-Tuner/blob/main/docs/RELEASE_NOTES.md)
+
+A publikált alpha forrása `4932abdd12c11545d92dd12ba3ab7b02e087cfca`, build 84.
+Az [1.0.0 feltételeit](https://github.com/RobCZart82/StringScale-Tuner/blob/main/docs/RELEASE_1_0_AUDIT_HU.md) külön lista rögzíti.

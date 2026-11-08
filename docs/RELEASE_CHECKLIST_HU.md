@@ -1,5 +1,10 @@
 # Első kiadás előtti ellenőrzőlista
 
+Következő cél **1.0.0 stabil**. A következő kiadáshoz az
+[1.0.0 elfogadási lista](RELEASE_1_0_AUDIT_HU.md) tartozik.
+Az alábbi alpha-lista a korábbi kiadási folyamatot írja le.
+
+
 Tervezett első próbaverzió: 0.2.0-alpha.1, Windows x64 és macOS Apple Silicon.
 Az alpha elnevezés nem igazolja a hardveres tesztek sikerét. Ez a lista nem
 publikál automatikusan GitHub Release-t.

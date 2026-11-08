@@ -1,5 +1,9 @@
 # Release checklist
 
+Next target **1.0.0 stable**. Use the [stable acceptance plan](RELEASE_1_0_AUDIT.md)
+for the upcoming release. The alpha checklist below records the earlier release process.
+
+
 Target preview: 0.2.0-alpha.1, Windows x64 and macOS arm64. These are release gates,
 not a claim that the current commit has passed CI or hardware validation.
 
