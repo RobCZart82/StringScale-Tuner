@@ -12,6 +12,12 @@ A #34 ellenőrzése Windows x64, macOS ARM64, Linux Core DSP és Qt 6.5
 kompatibilitási futtatón sikeres. A helyi Qt nélküli környezetben a Core DSP
 Release CTest 2/2 ment át; a Qt-s rögzítési tesztet a CI fordította és futtatta.
 
+Az angol és magyar 1.0.0 audit aktuális állapotát és elfogadási listáját
+frissítettem: az A1–A6 hibajavítás és a szintetikus PCM-lefedés lezárt, a valódi
+hardveres és végső kiadási kapuk külön nyitottak. Az FFmpeg-függőség állapotát
+az upstream 7.1.5 karbantartási és 9.0.2 stabil kiadáshoz igazítottam;
+a csomagolt verzió/frissítési döntés még ellenőrzendő.
+
 ## 2026-11-08 – A4–A6 határ- és csomagellenőrzési javítások
 
 Az elemzési minták számlálója 120-nál telítődik, így tartósan zárt kapunál

@@ -1,11 +1,13 @@
 # Stable 1.0.0 readiness review
 
-## Current status after PR 31
+## Current status after PRs 31 and 33
 
-A1–A3 are implemented on main and covered by passing regressions.
-A4, A5 and A6 are implemented in the second fix batch described below. The [follow-up review](REPOSITORY_REVIEW_2026_11_08.md)
-adds A6, an analysis-frame counter overflow during prolonged closed-gate capture.
-The original reproductions below refer to the earlier baseline, before PR 31.
+A1–A6 are implemented on `main` and covered by passing regressions. PR 34 adds
+hardware-independent coverage for supported PCM formats and layouts; its
+Windows, macOS, Linux and Qt 6.5 checks pass, and it is awaiting review/merge.
+The [follow-up review](REPOSITORY_REVIEW_2026_11_08.md) adds A6, an
+analysis-frame counter overflow during prolonged closed-gate capture. The
+original reproductions below refer to the earlier baseline, before PR 31.
 
 
 Review date 2026-11-08. Baseline commit
@@ -28,10 +30,13 @@ version to 1.0.0 when the candidate is ready and the checks below have passed.
 
 ## Dependency maintenance finding
 
-The shipped FFmpeg baseline is 7.1. The upstream security page lists fixes in
-7.1.1 and 7.1.2, including CVE-2025-0518 and CVE-2025-1594.
-Review updating the supplied runtime before stable 1.0.0 and regenerate the
-matching source bundle, hashes and notices after that change.
+The shipped FFmpeg baseline is 7.1. As checked on 2026-11-08, upstream lists
+7.1.5 as the latest 7.1 maintenance release and 9.0.2 as the latest stable
+major release. Review the intervening security fixes against the exact shipped
+configuration and Qt's supported FFmpeg build before 1.0.0; decide whether to
+update the Qt/FFmpeg runtime. If updated, regenerate and verify matching
+binaries, source bundle, hashes and notices. This is a maintenance review, not
+a claim that the tuner exposes FFmpeg's media-decoding attack surface.
 The tuner currently captures PCM with QAudioSource and does not expose a media
 file/URL decoder. Reachability of these upstream issues through this application
 was not established. See the [upstream security record](https://ffmpeg.org/security.html).
@@ -46,7 +51,7 @@ guitar. A2 simulates degraded low-throughput delivery. A3 concerns corrupt or
 externally edited settings. These input conditions belong in regression coverage
 before the stable release.
 
-## Build and test evidence
+## Original audit baseline evidence
 
 - Full Release application compiled using AppleClang 21 and local Qt 6.11.2,
   with an explicit macOS deployment target of 13.0.
@@ -66,14 +71,29 @@ recordings, load profiling, sanitizer/fuzz runs and installer upgrade testing
 were not performed in this review. PDF binaries were retained. Their content
 was reviewed in the preceding documentation work and must be refreshed for 1.0.0.
 
+## Follow-up verification on 2026-11-08
+
+PRs 31 and 33 passed the local Release capture/package suites and their required
+GitHub checks. PR 34 adds 108 synthetic pitch cases across UInt8, Int16, Int32
+and Float PCM, 44.1/48/96 kHz, and mono/stereo/six-channel layouts, plus
+fragmentation, channel isolation, meter, clipping and invalid-float checks.
+Its latest GitHub run passed Core DSP on Linux, macOS and Windows, desktop
+packaging on macOS ARM64 and Windows x64, and Qt 6.5 compatibility. The local
+checkout lacks Qt, so this new Qt capture suite was not run locally.
+
+These synthetic tests do not replace real-device testing. Real instrument
+accuracy across every advertised tuning, startup/permission failure and
+recovery, latency/load measurement, clean-machine upgrade/uninstall checks,
+stable version metadata and final dependency/payload verification remain open.
+
 ## Documentation drift
 
 | Current source | Required action |
 | --- | --- |
-| `PROJECT_STATUS_HU.txt` dated November 4 | Record the published alpha, hardware feedback and next stable target. |
+| `PROJECT_STATUS_HU.txt` | Updated November 8 with the published alpha, reported hardware feedback and stable target. Recheck it when 1.0.0 candidate evidence changes. |
 | `docs/RELEASE_NOTES.md` and `_HU` | Identify the alpha as published, preserve its source/build, and create distinct 1.0.0 notes at release time. |
 | Both release checklists | Set 1.0.0 as the next target and distinguish completed alpha history from final-candidate evidence. |
-| `docs/ROADMAP.md` and `ROADMAP_HU.md` | Put stable acceptance criteria ahead of VST3 and platform expansion. |
+| `docs/ROADMAP.md` and `ROADMAP_HU.md` | Stable acceptance criteria precede VST3 and platform expansion. Keep this order while release gates remain open. |
 | `src/audio_capture.hpp` comment | Replace the old “v0.1” thread-model label with the current model. |
 | `resources/licenses`, runtime audit JSON | Existing notices/source bundle are implemented, while generated pending labels remain generic and always set release_cleared=false. Record per-candidate evidence without claiming blanket automatic legal clearance. |
 | CMake, build-info template, package/installer scripts, README.txt, PDFs | Release channel and version are hard-coded in several places. Introduce one version/channel source, derive preview metadata, and update versioned user documents at the final candidate. |
@@ -87,15 +107,16 @@ CI configuration, even though a release was published manually.
 
 ### Required before 1.0.0
 
-- [ ] Fix A1–A3 and decide/test the A4 boundary policy. Add targeted regression tests.
-- [ ] Close A5 packaging hardening with valid framework-link and escaping-link tests.
+- [x] Fix A1–A6, decide/test the A4 boundary policy and add targeted regressions.
+- [x] Close A5 packaging hardening with valid framework-link and escaping-link tests.
 - [ ] Measure tuning accuracy and settling time for every advertised preset,
       including real four/five-string bass B0/E1 and seven-string guitar.
       Include ±2/±25/±50-cent cases, noise, weak fundamentals and pitch changes.
       Agree numerical pass criteria before collecting results.
-- [ ] Verify Float/Int16/Int32/UInt8 decoding where supported, 44.1/48/96 kHz,
-      selected-channel isolation, split PCM frames, unplug/reconnect, start
-      failure and microphone permission denied/re-enabled on both systems.
+- [x] Add hardware-independent Float/Int16/Int32/UInt8 decoding regressions at
+      44.1/48/96 kHz, selected-channel isolation and split-frame coverage.
+- [ ] Verify device unplug/reconnect, start failure and microphone permission
+      denied/re-enabled on Windows and macOS hardware.
 - [ ] Profile worst-case DSP and GUI response. The current 4096-frame window
       covers about 341 ms at 12 kHz, and analysis runs on the GUI thread.
       Move DSP to a bounded worker if measured UI stalls or latency require it.
@@ -124,8 +145,9 @@ Manual target-string selection could help prevent tuning to the wrong octave,
 but remains a feature choice. VST3, Linux installers, Intel Mac and Windows ARM
 should remain separate milestones unless explicitly added to 1.0.0 scope.
 
-The next implementation order is A2/A3 input-state handling, A1 resampling,
-measurement coverage, then version/channel and release automation.
+The audio audit fixes and synthetic format coverage are complete. The next work
+is hardware acceptance and performance/latency measurements, followed by the
+FFmpeg maintenance decision and stable version/channel and release automation.
 
 
 ## Implementation follow-up
