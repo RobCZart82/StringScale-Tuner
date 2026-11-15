@@ -127,3 +127,5 @@ No warranty; not an accuracy-certified instrument. The documented successful
 hardware trials do not establish performance on all instruments or interfaces.
 
 Release preparation: [checklist](docs/RELEASE_CHECKLIST.md) · [hardware test sheet](docs/TEST_CHECKLIST_HU.md).
+
+Build channel: `STRINGS_PRERELEASE` defaults to `alpha.1`. For a stable build, set it to an empty string (`-DSTRINGS_PRERELEASE=`); version and preview metadata are derived together. The numeric version remains defined by CMake project VERSION.

@@ -1,5 +1,10 @@
 # Fejlesztési és javítási napló
 
+## 2026-11-15 – audit utáni javítások
+
+A prerelease utótag egy CMake-beállításból származik; az üres utótag stabil verziót és preview=false adatot eredményez. A váratlan hangforrás-leállás hibát jelez NoError mellett is, a szándékos stop előbb bontja az állapotjel kapcsolatát. Az auditban a #34 beolvasztása és az A4/A5 történeti állapota pontosítva.
+
+
 ## 2026-11-08 – PCM-bemeneti formátumok regressziós lefedése
 
 Új, hanghardver nélkül futó rögzítési teszt ellenőrzi a Qt UInt8, Int16, Int32
