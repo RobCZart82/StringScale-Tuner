@@ -1,5 +1,17 @@
 # Fejlesztési és javítási napló
 
+## 2026-11-15 – PR #35 ellenőrzési javítás
+
+A kiadási utótag ellenőrzése explicit üres szövegre vizsgál. Így a CMake
+hamisnak tekintett, de nem üres `0` és `off` értékei is prerelease buildet
+eredményeznek. A tényleges verziókonfiguráció üres, `0`, `off`, `alpha.1` és
+hibás szóközös bemenettel ellenőrizve.
+
+## 2026-11-15 – audit utáni javítások
+
+A prerelease utótag egy CMake-beállításból származik; az üres utótag stabil verziót és preview=false adatot eredményez. A váratlan hangforrás-leállás hibát jelez NoError mellett is, a szándékos stop előbb bontja az állapotjel kapcsolatát. Az auditban a #34 beolvasztása és az A4/A5 történeti állapota pontosítva.
+
+
 ## 2026-11-08 – PCM-bemeneti formátumok regressziós lefedése
 
 Új, hanghardver nélkül futó rögzítési teszt ellenőrzi a Qt UInt8, Int16, Int32

@@ -4,7 +4,7 @@
 
 A1–A6 are implemented on `main` and covered by passing regressions. PR 34 adds
 hardware-independent coverage for supported PCM formats and layouts; its
-Windows, macOS, Linux and Qt 6.5 checks pass, and it is awaiting review/merge.
+Windows, macOS, Linux and Qt 6.5 checks pass, and it has merged into main.
 The [follow-up review](REPOSITORY_REVIEW_2026_11_08.md) adds A6, an
 analysis-frame counter overflow during prolonged closed-gate capture. The
 original reproductions below refer to the earlier baseline, before PR 31.
@@ -159,8 +159,7 @@ clamping. Regression coverage includes the previously failing out-of-band tone,
 clean B0/E2/E4 and alias-band tones across five capture rates, the 520 ms sparse
 input case, and corrupt/valid legacy numeric settings.
 
-These fixes passed all four local CTest cases using Qt 6.11.2. A4 and A5 remain
-open. Real-instrument and performance acceptance remain required for 1.0.0.
+These fixes passed all four local CTest cases using Qt 6.11.2. A4 and A5 were still open at that stage; the second batch below closes them. Real-instrument and performance acceptance remain required for 1.0.0.
 
 
 ## Second fix batch

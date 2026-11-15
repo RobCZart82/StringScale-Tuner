@@ -110,3 +110,5 @@ AP Tuner-kód, logó, grafika vagy védett név engedély nélkül nem építhet
 Nincs garancia; a sikeres próbák nem igazolnak általános mérési pontosságot.
 
 [Kiadási ellenőrzőlista](docs/RELEASE_CHECKLIST_HU.md) · [Hardveres tesztlap](docs/TEST_CHECKLIST_HU.md)
+
+Kiadási csatorna: a `STRINGS_PRERELEASE` alapértéke `alpha.1`. Stabil buildhez üres érték kell (`-DSTRINGS_PRERELEASE=`); a verzió és a preview jelölés együtt képződik. A numerikus verziót a CMake project VERSION határozza meg.

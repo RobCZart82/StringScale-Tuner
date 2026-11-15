@@ -4,8 +4,7 @@
 
 A1–A6 javítása a `main` ágon van, regressziós tesztjeik sikeresek. A #34 PR
 eszközfüggetlen PCM-formátum- és csatornaelrendezés-lefedést ad; Windows,
-macOS, Linux és Qt 6.5 ellenőrzése sikeres, a PR felülvizsgálatra/beolvasztásra
-vár. Az [ismételt audit](REPOSITORY_REVIEW_2026_11_08.md) A6-ként rögzítette,
+macOS, Linux és Qt 6.5 ellenőrzése sikeres, a PR a főágba olvadt. Az [ismételt audit](REPOSITORY_REVIEW_2026_11_08.md) A6-ként rögzítette,
 hogy tartósan zárt kapunál túlcsordulhat az elemzési minták számlálója.
 Az alábbi eredeti reprodukciók a #31 előtti forrásállapothoz tartoznak.
 
@@ -104,7 +103,7 @@ A1–A3 javítása elkészült. Nyolcadrendű Butterworth-szűrő előzi meg a r
 a kevés hangadatnál is lejár a régi kijelzés, a mentett számértékek pedig
 konverzió- és végességellenőrzést kapnak. A regressziós tesztek a korábban
 hibázó eseteket, valamint öt mintavételen a B0/E2/E4 megtartását ellenőrzik.
-A négy helyi CTest sikeres volt Qt 6.11.2 mellett. A4 és A5 továbbra is nyitott,
+A négy helyi CTest sikeres volt Qt 6.11.2 mellett. A4 és A5 ekkor még nyitott volt; a második kör lezárta őket,
 a valódi hangszeres és teljesítménymérések az 1.0.0 elfogadási feltételei.
 
 
