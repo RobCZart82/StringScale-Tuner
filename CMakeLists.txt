@@ -5,16 +5,7 @@ if(CMAKE_HOST_APPLE AND NOT DEFINED CMAKE_OSX_DEPLOYMENT_TARGET)
     set(CMAKE_OSX_DEPLOYMENT_TARGET "12.0" CACHE STRING "Minimum macOS version")
 endif()
 project(StringScaleTuner VERSION 0.2.0 LANGUAGES CXX)
-set(STRINGS_PRERELEASE "alpha.1" CACHE STRING "Prerelease suffix; empty for stable builds")
-if(NOT "${STRINGS_PRERELEASE}" STREQUAL "" AND NOT STRINGS_PRERELEASE MATCHES "^[0-9a-z]+([.-][0-9a-z]+)*$")
-    message(FATAL_ERROR "Invalid STRINGS_PRERELEASE suffix")
-endif()
-set(STRINGS_VERSION "${PROJECT_VERSION}")
-set(STRINGS_PREVIEW false)
-if(NOT "${STRINGS_PRERELEASE}" STREQUAL "")
-    string(APPEND STRINGS_VERSION "-${STRINGS_PRERELEASE}")
-    set(STRINGS_PREVIEW true)
-endif()
+include(cmake/version.cmake)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -31,6 +22,10 @@ else()
 endif()
 
 if(BUILD_TESTING)
+    add_test(NAME version_metadata_tests COMMAND "${CMAKE_COMMAND}"
+        "-DSOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}"
+        "-DTEST_DIR=${CMAKE_CURRENT_BINARY_DIR}/version-tests"
+        -P "${CMAKE_CURRENT_SOURCE_DIR}/tests/version_metadata_test.cmake")
     add_executable(strings_core_tests tests/pitch_detector_test.cpp)
     target_link_libraries(strings_core_tests PRIVATE strings_core)
     add_test(NAME strings_core_tests COMMAND strings_core_tests)

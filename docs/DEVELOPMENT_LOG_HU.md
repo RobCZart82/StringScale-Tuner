@@ -1,5 +1,13 @@
 # Fejlesztési és javítási napló
 
+## 2026-11-17 – kiadási verzióadatok regressziós tesztje
+
+A verzió- és csatornaképzés közös CMake-modulba került. Az új CTest a
+tényleges build-info JSON-t olvassa vissza stabil, 0, off, alpha.1 és rc.2
+utótaggal; hibás utótagok elutasítását is vizsgálja. A Core DSP workflow
+Windows, macOS és Linux futtatóin automatikusan végrehajtja.
+
+
 ## 2026-11-15 – PR #35 ellenőrzési javítás
 
 A kiadási utótag ellenőrzése explicit üres szövegre vizsgál. Így a CMake
