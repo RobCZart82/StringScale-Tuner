@@ -1,50 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
-<path d="M272 64H752C894 64 960 130 960 272V752C960 894 894 960 752 960H272C130 960 64 894 64 752V272C64 130 130 64 272 64Z" fill="#252D38"/>
-<rect x="146" y="174" width="732" height="116" rx="28" fill="#303B49"/>
-<rect x="176" y="214" width="28" height="36" rx="7" fill="#39DCC1"/>
-<rect x="214" y="214" width="28" height="36" rx="7" fill="#39DCC1"/>
-<rect x="252" y="214" width="28" height="36" rx="7" fill="#39DCC1"/>
-<rect x="290" y="214" width="28" height="36" rx="7" fill="#39DCC1"/>
-<rect x="328" y="214" width="28" height="36" rx="7" fill="#39DCC1"/>
-<rect x="366" y="214" width="28" height="36" rx="7" fill="#39DCC1"/>
-<rect x="404" y="214" width="28" height="36" rx="7" fill="#39DCC1"/>
-<rect x="442" y="214" width="28" height="36" rx="7" fill="#39DCC1"/>
-<rect x="480" y="214" width="28" height="36" rx="7" fill="#39DCC1"/>
-<rect x="518" y="214" width="28" height="36" rx="7" fill="#39DCC1"/>
-<rect x="556" y="214" width="28" height="36" rx="7" fill="#39DCC1"/>
-<rect x="594" y="214" width="28" height="36" rx="7" fill="#39DCC1"/>
-<rect x="632" y="214" width="28" height="36" rx="7" fill="#39DCC1"/>
-<rect x="670" y="214" width="28" height="36" rx="7" fill="#718096"/>
-<rect x="708" y="214" width="28" height="36" rx="7" fill="#718096"/>
-<rect x="746" y="214" width="28" height="36" rx="7" fill="#718096"/>
-<rect x="784" y="214" width="28" height="36" rx="7" fill="#718096"/>
-<rect x="822" y="214" width="28" height="36" rx="7" fill="#718096"/>
-<path d="M242 640A270 270 0 0 1 782 640" fill="none" stroke="#B8C4D2" stroke-width="18" stroke-linecap="round"/>
-<g id="fineTicks" stroke="#EDF1F5" stroke-width="10" stroke-linecap="round">
-<path d="M242.00 640.00L272.00 640.00"/>
-<path d="M251.20 570.12L269.55 575.04"/>
-<path d="M278.17 505.00L294.63 514.50"/>
-<path d="M321.08 449.08L342.29 470.29"/>
-<path d="M377.00 406.17L386.50 422.63"/>
-<path d="M442.12 379.20L447.04 397.55"/>
-<path d="M512.00 370.00L512.00 400.00"/>
-<path d="M581.88 379.20L576.96 397.55"/>
-<path d="M647.00 406.17L637.50 422.63"/>
-<path d="M702.92 449.08L681.71 470.29"/>
-<path d="M745.83 505.00L729.37 514.50"/>
-<path d="M772.80 570.12L754.45 575.04"/>
-<path d="M782.00 640.00L752.00 640.00"/>
-</g>
-<path d="M486 371Q512 367 538 371" fill="none" stroke="#39DCC1" stroke-width="24"/>
-<path d="M512 640V397" fill="none" stroke="#39DCC1" stroke-width="22" stroke-linecap="round"/>
-<circle cx="512" cy="640" r="22" fill="#39DCC1"/>
-<rect x="146" y="744" width="732" height="116" rx="28" fill="#303B49"/>
-<path d="M190 804H834" fill="none" stroke="#EDF1F5" stroke-width="14" stroke-linecap="round"/>
-<path d="M262 783V825" stroke="#EDF1F5" stroke-width="12" stroke-linecap="round"/>
-<path d="M362 783V825" stroke="#EDF1F5" stroke-width="12" stroke-linecap="round"/>
-<path d="M462 783V825" stroke="#EDF1F5" stroke-width="12" stroke-linecap="round"/>
-<path d="M562 783V825" stroke="#EDF1F5" stroke-width="12" stroke-linecap="round"/>
-<path d="M662 783V825" stroke="#EDF1F5" stroke-width="12" stroke-linecap="round"/>
-<path d="M762 783V825" stroke="#EDF1F5" stroke-width="12" stroke-linecap="round"/>
-<circle cx="562" cy="804" r="19" fill="#39DCC1"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-labelledby="title">
+  <title id="title">StringScale Tuner — winged guitar and tuning fork</title>
+  <rect x="0" y="0" width="1024" height="1024" rx="220" fill="#102441"/>
+  <g transform="translate(512 512) scale(1.10) translate(-512 -534)">
+  <g fill="#FFF1CE">
+    <path d="M 428,189 C 306,215 223,284 224,363 C 225,424 285,454 341,506 C 370,533 375,565 354,603 C 359,566 325,544 287,521 C 235,488 191,450 164,404 C 143,491 208,542 303,572 C 234,566 179,546 139,510 C 151,583 209,624 309,627 C 249,638 200,631 157,611 C 187,678 250,699 315,678 C 280,706 240,713 205,707 C 236,753 285,758 330,729 C 326,762 306,794 277,814 C 333,811 371,768 391,711 C 411,667 396,625 390,595 C 383,558 406,534 387,495 C 369,460 322,430 288,397 C 219,328 316,247 428,210 Z"/>
+    <path d="M 428,189 C 306,215 223,284 224,363 C 225,424 285,454 341,506 C 370,533 375,565 354,603 C 359,566 325,544 287,521 C 235,488 191,450 164,404 C 143,491 208,542 303,572 C 234,566 179,546 139,510 C 151,583 209,624 309,627 C 249,638 200,631 157,611 C 187,678 250,699 315,678 C 280,706 240,713 205,707 C 236,753 285,758 330,729 C 326,762 306,794 277,814 C 333,811 371,768 391,711 C 411,667 396,625 390,595 C 383,558 406,534 387,495 C 369,460 322,430 288,397 C 219,328 316,247 428,210 Z" transform="translate(1024 0) scale(-1 1)"/>
+    <path d="M 485,557 C 454,566 441,550 435,522 C 430,499 414,502 405,526 C 388,570 411,600 412,635 C 413,670 373,703 373,759 C 373,826 432,865 512,882 C 592,865 651,826 651,759 C 651,714 614,679 612,644 C 610,616 630,593 619,569 C 610,548 593,554 586,577 C 579,600 558,606 538,597 V 683 H 485 Z" fill="#102441" stroke="#102441" stroke-width="16" stroke-linejoin="round"/>
+    <path d="M 451,183 V 420 C 451,461 486,465 486,507 V 694 H 538 V 507 C 538,465 573,461 573,420 V 183 H 544 V 415 C 544,440 530,453 512,465 C 494,453 480,440 480,415 V 183 Z"/>
+    <path d="M 485,557 C 454,566 441,550 435,522 C 430,499 414,502 405,526 C 388,570 411,600 412,635 C 413,670 373,703 373,759 C 373,826 432,865 512,882 C 592,865 651,826 651,759 C 651,714 614,679 612,644 C 610,616 630,593 619,569 C 610,548 593,554 586,577 C 579,600 558,606 538,597 V 683 H 485 Z"/>
+  </g>
+  <g fill="none" stroke="#102441" stroke-linecap="round">
+    <path d="M497 508 V688 M512 508 V688 M527 508 V688" stroke-width="5"/>
+    <path d="M489 527 H535 M489 570 H535 M489 607 H535 M489 639 H535 M489 666 H535 M489 689 H535" stroke-width="6"/>
+  </g>
+  <g fill="#102441">
+    <rect x="480" y="695" width="64" height="17" rx="7"/>
+    <rect x="480" y="726" width="64" height="17" rx="7"/>
+    <rect x="470" y="765" width="84" height="20" rx="6"/>
+    <circle cx="585" cy="770" r="12"/>
+  </g>
+  </g>
 </svg>
