@@ -151,7 +151,7 @@ def main():
     checksum.write_text(f'{digest(destination)}  {destination.name}\n', encoding='utf-8')
     manifest = destination.with_suffix(destination.suffix + '.json')
     manifest.write_text(json.dumps(dict(application=info['application'], version=info['version'],
-        revision=info['revision'], platform=args.platform, build_number=info['build_number'],
+        revision=info['revision'], preview=info['preview'], platform=args.platform, build_number=info['build_number'],
         installer=destination.name, sha256=digest(destination), publisher_signed=False,
         notarized=False, payload_archive=args.archive.name), indent=2)+'\n', encoding='utf-8')
     print(destination)
