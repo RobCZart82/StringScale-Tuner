@@ -4,6 +4,25 @@ Következő cél **1.0.0 stabil**. A következő kiadáshoz az
 [1.0.0 elfogadási lista](RELEASE_1_0_AUDIT_HU.md) tartozik.
 Az alábbi alpha-lista a korábbi kiadási folyamatot írja le.
 
+## A stabil kiadásjelölt hardveres próbáinak rögzítése
+
+A két telepítő ugyanabból a sikeres Desktop preview futásból származzon.
+Próbánként rögzítsd a verziót, a teljes forráscommitot, a futás számát,
+az operációs rendszer verzióját, a hanginterfészt, a csatornát és a hangszert.
+Ellenőrizd a letöltött telepítőpárt a jelölt tényleges verziójával.
+
+| Próba | Rögzítendő |
+| --- | --- |
+| Minden hirdetett hangolás, köztük az öthúros basszus B0 és a héthúros gitár B1 | Referenciahangoló vagy jelforrás, húr, várt és mért centérték, a stabil kijelzésig eltelt idő |
+| Bemenet kihúzása és visszacsatlakoztatása hangolás közben | Törlődik-e a régi hang, milyen állapot jelenik meg, és kell-e újraválasztani a bemenetet |
+| Mikrofonengedély megtagadása, majd visszaadása | Kijelzett állapot, a helyreállítás lépései és kellett-e újraindítani az alkalmazást |
+| Frissítés a közzétett alpháról, majd eltávolítás | Telepítési eredmény, megmaradt beállítások és az alkalmazás eltávolításának eredménye |
+
+A pontosság és a beállási idő elfogadási határait a mérés előtt rögzítsd.
+Minden próbát jelölj sikeresnek, sikertelennek vagy el nem végzettnek.
+A kimaradt próbákat és a hibák ismétlési lépéseit is jegyezd fel.
+A jelölt eredményeit az [alpha korábbi eredményeitől](HARDWARE_TEST_RESULTS_HU.md)
+külön rögzítsd.
 
 Tervezett első próbaverzió: 0.2.0-alpha.1, Windows x64 és macOS Apple Silicon.
 Az alpha elnevezés nem igazolja a hardveres tesztek sikerét. Ez a lista nem
