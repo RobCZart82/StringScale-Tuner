@@ -1,4 +1,4 @@
-set(STRINGS_PRERELEASE "alpha.1" CACHE STRING "Prerelease suffix; empty for stable builds")
+set(STRINGS_PRERELEASE "rc.1" CACHE STRING "Prerelease suffix; empty for stable builds")
 if(NOT "${STRINGS_PRERELEASE}" STREQUAL "" AND NOT STRINGS_PRERELEASE MATCHES "^[0-9a-z]+([.-][0-9a-z]+)*$")
     message(FATAL_ERROR "Invalid STRINGS_PRERELEASE suffix")
 endif()
