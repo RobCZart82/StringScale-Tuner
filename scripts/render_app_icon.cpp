@@ -16,12 +16,6 @@ int main(int argc, char** argv) {
     auto svg=source.readAll();
     const int size=QString::fromLocal8Bit(argv[3]).toInt();
     if(size<16 || size>1024) return 3;
-    if(size<=32) {
-        // Optical adjustment: keep the needle and arc clear at taskbar sizes.
-        svg.replace("stroke-width=\"18\"", "stroke-width=\"40\"");
-        svg.replace("stroke-width=\"22\"", "stroke-width=\"48\"");
-        svg.replace("id=\"fineTicks\"", "id=\"fineTicks\" display=\"none\"");
-    }
     QSvgRenderer renderer(svg);
     if(!renderer.isValid()) return 4;
     QImage image(size,size,QImage::Format_ARGB32_Premultiplied);
