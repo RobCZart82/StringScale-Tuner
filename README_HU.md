@@ -111,4 +111,4 @@ Nincs garancia; a sikeres próbák nem igazolnak általános mérési pontosság
 
 [Kiadási ellenőrzőlista](docs/RELEASE_CHECKLIST_HU.md) · [Hardveres tesztlap](docs/TEST_CHECKLIST_HU.md)
 
-Kiadási csatorna: a `STRINGS_PRERELEASE` alapértéke `alpha.1`. Stabil buildhez üres érték kell (`-DSTRINGS_PRERELEASE=`); a verzió és a preview jelölés együtt képződik. A numerikus verziót a CMake project VERSION határozza meg.
+Kiadási csatorna: a `STRINGS_PRERELEASE` alapértéke `rc.1` (a jelenlegi forrásból `1.0.0-rc.1` készül). Stabil buildhez üres érték kell (`-DSTRINGS_PRERELEASE=`); a verzió és a preview jelölés együtt képződik. A numerikus verziót a CMake project VERSION határozza meg.

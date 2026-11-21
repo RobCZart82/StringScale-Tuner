@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.21)
 if(CMAKE_HOST_APPLE AND NOT DEFINED CMAKE_OSX_DEPLOYMENT_TARGET)
     set(CMAKE_OSX_DEPLOYMENT_TARGET "12.0" CACHE STRING "Minimum macOS version")
 endif()
-project(StringScaleTuner VERSION 0.2.0 LANGUAGES CXX)
+project(StringScaleTuner VERSION 1.0.0 LANGUAGES CXX)
 include(cmake/version.cmake)
 
 set(CMAKE_CXX_STANDARD 20)

@@ -1,4 +1,4 @@
-StringScale Tuner 0.2.0-alpha.1
+StringScale Tuner
 MAGYAR / ENGLISH
 
 MAGYAR
