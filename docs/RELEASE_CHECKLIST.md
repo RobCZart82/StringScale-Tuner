@@ -3,6 +3,24 @@
 Next target **1.0.0 stable**. Use the [stable acceptance plan](RELEASE_1_0_AUDIT.md)
 for the upcoming release. The alpha checklist below records the earlier release process.
 
+## Record hardware acceptance for the stable candidate
+
+Use the two installers from the same successful Desktop preview run. Record
+the version, full source commit, run number, OS version, audio interface,
+input channel and instrument for each session. Verify the downloaded installer
+pair using the procedure below, with the candidate's actual version.
+
+| Scenario | Record |
+| --- | --- |
+| Each advertised tuning, including five-string bass B0 and seven-string guitar B1 | Reference tuner or signal source, string, expected and measured cents, and time to a steady reading |
+| Input disconnected and reconnected while listening | Whether stale pitch clears, what status appears, and whether capture resumes automatically or after reselection |
+| Microphone access denied, then restored | Status shown, recovery steps and whether an app restart was necessary |
+| Upgrade from the published alpha, then uninstall | Installer result, retained settings and whether the app was removed |
+
+Set pass criteria for accuracy and settling time before collecting measurements.
+Mark each result Pass, Fail or Not tested, and record omissions and failures
+with reproduction steps. Keep the candidate results separate from the
+[historical alpha feedback](HARDWARE_TEST_RESULTS_HU.md).
 
 Target preview: 0.2.0-alpha.1, Windows x64 and macOS arm64. These are release gates,
 not a claim that the current commit has passed CI or hardware validation.
