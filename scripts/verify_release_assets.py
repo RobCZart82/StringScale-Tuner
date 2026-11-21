@@ -46,6 +46,10 @@ def verify_release_assets(directory, version, revision, build_number):
         for key, value in expected.items():
             if metadata.get(key) != value:
                 raise ValueError(f'{installer.name}: installer manifest mismatch for {key}')
+        is_preview = '-' in version
+        # Published alpha manifests predate the preview field.
+        if metadata.get('preview', True) is not is_preview:
+            raise ValueError(f'{installer.name}: installer manifest mismatch for preview')
         verified.extend((installer, checksum, manifest))
     return verified
 
