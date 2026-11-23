@@ -1,4 +1,4 @@
-Third-party licence texts - StringScale Tuner preview
+Third-party licence texts - StringScale Tuner
 
 LGPL-3.0-only.txt and GPL-3.0-only.txt: the LGPL v3 supplements GPL v3;
 both texts are included for the dynamically linked open-source Qt libraries.
