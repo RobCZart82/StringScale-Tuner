@@ -1,6 +1,6 @@
 # User manuals
 
-Two 8-page colour PDF manuals for 0.2.0-alpha.1, in Hungarian and English.
+Two 8-page colour PDF manuals in Hungarian and English, updated for the 1.0.0 release candidate. The installed About dialog identifies the exact version and build.
 They cover Windows EXE/macOS PKG installation, current ZIP previews, input/channel
 selection, the three displays, standard/Drop D tuning, themes/languages and support.
 
