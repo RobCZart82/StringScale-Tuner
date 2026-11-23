@@ -5,6 +5,8 @@ for the upcoming release. The alpha checklist below records the earlier release 
 
 ## Record hardware acceptance for the stable candidate
 
+Robert confirmed that the installer and application worked on Windows x64 and macOS Apple Silicon for 1.0.0-rc.1 build 113. See the [hardware test record](HARDWARE_TEST_RESULTS_HU.md#2026-11-23--100-rc1-113-as-build) for the result and its scope.
+
 Use the two installers from the same successful Desktop preview run. Record
 the version, full source commit, run number, OS version, audio interface,
 input channel and instrument for each session. Verify the downloaded installer

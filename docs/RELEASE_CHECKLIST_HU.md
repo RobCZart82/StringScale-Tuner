@@ -6,6 +6,8 @@ Az alábbi alpha-lista a korábbi kiadási folyamatot írja le.
 
 ## A stabil kiadásjelölt hardveres próbáinak rögzítése
 
+Robert visszajelzése szerint az 1.0.0-rc.1 113-as build telepítője és alkalmazása működött Windows x64-en és macOS Apple Siliconon. A próba hatóköre a [hardveres naplóban](HARDWARE_TEST_RESULTS_HU.md#2026-11-23--100-rc1-113-as-build) olvasható.
+
 A két telepítő ugyanabból a sikeres Desktop preview futásból származzon.
 Próbánként rögzítsd a verziót, a teljes forráscommitot, a futás számát,
 az operációs rendszer verzióját, a hanginterfészt, a csatornát és a hangszert.
