@@ -61,3 +61,14 @@ kapcsolódó jóváhagyási lépések. A visszajelzés a telepítést és az alk
 kipróbált profilok és külön pontosságmérés ehhez a próbához nincsenek megadva.
 
 [Publikált kiadás](https://github.com/RobCZart82/StringScale-Tuner/releases/tag/v0.2.0-alpha.1)
+
+## 2026-11-23 – 1.0.0-rc.1, 113-as build
+
+Robert visszajelzése szerint a telepítő és az alkalmazás is működött
+Windows x64-en és macOS Apple Siliconon. A csomagok a [113-as Desktop preview
+futásból](https://github.com/RobCZart82/StringScale-Tuner/actions/runs/44959398209)
+származnak. A PR build forráscommitja: `7d04747a19e7acca29fa56f0b11f21825a3cf542`.
+
+A pontos OS-verziókat és a részletes próbaeredményeket ez a visszajelzés nem
+tartalmazza. Az alpháról frissítés, a beállítások megőrzése, a bemenet
+visszacsatlakoztatása és a hangolási pontosság külön igazolandó.
