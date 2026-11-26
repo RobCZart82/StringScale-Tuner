@@ -72,3 +72,8 @@ származnak. A PR build forráscommitja: `7d04747a19e7acca29fa56f0b11f21825a3cf5
 A pontos OS-verziókat és a részletes próbaeredményeket ez a visszajelzés nem
 tartalmazza. Az alpháról frissítés, a beállítások megőrzése, a bemenet
 visszacsatlakoztatása és a hangolási pontosság külön igazolandó.
+
+## 2026-11-26 – újabb kiadásjelölt próba
+
+Robert a legfrissebb buildet macOS-en és Windowson is kipróbálta.
+A pontos buildszámot és a részletes eredményeket nem adta meg.

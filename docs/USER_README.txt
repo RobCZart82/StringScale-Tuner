@@ -10,6 +10,7 @@ Indítás: Windows alatt a Start menüből; macOS-en az Alkalmazások mappából
 Válaszd ki az audiointerfészt, a megfelelő bemeneti csatornát és a hangolási
 profilt. Egyszerre egy húrt pengess meg. A fogaskerék Beállítások pontjában
 nyelvet, világos/sötét témát és felületméretet választhatsz.
+A Hang menüben az A4 referenciahang 430–450 Hz között állítható; alapértéke 440 Hz.
 
 Ezek a csomagok kiadói aláírás és Apple-notarizáció nélkül készültek.
 Az első indítás biztonsági engedélyezését a PDF-kézikönyv mutatja be.
@@ -43,6 +44,7 @@ Illustrated Hungarian and English PDF user manuals are in the manuals folder. Se
 Launch from the Windows Start menu or macOS Applications. Select your audio
 interface, input channel and tuning profile. Pluck one string at a time.
 The gear > Settings menu offers language, light/dark appearance and UI size.
+Audio settings allow an A4 reference of 430–450 Hz (default: 440 Hz).
 
 These packages have no publisher signature or Apple notarization.
 See the PDF manual for first-launch security prompts. On macOS, microphone

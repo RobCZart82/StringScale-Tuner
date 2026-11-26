@@ -375,21 +375,35 @@ QDialog* MainWindow::openSettings(bool audio) {
         auto* minSpin=new QDoubleSpinBox;minSpin->setRange(-65,-20);minSpin->setSuffix(" dBFS RMS");minSpin->setValue(minimumLevelDb_);
         auto* maxSpin=new QDoubleSpinBox;maxSpin->setRange(-12,-0.5);maxSpin->setSuffix(" dBFS peak");maxSpin->setValue(warningPeakDb_);
         auto* minLabel=new QLabel;minLabel->setBuddy(minSpin);auto* maxLabel=new QLabel;maxLabel->setBuddy(maxSpin);form->addRow(minLabel,minSpin);form->addRow(maxLabel,maxSpin);
+        auto* calibrationSpin=new QDoubleSpinBox;
+        calibrationSpin->setObjectName("calibrationSpin");
+        calibrationSpin->setRange(430,450);
+        calibrationSpin->setDecimals(1);
+        calibrationSpin->setSingleStep(0.1);
+        calibrationSpin->setSuffix(" Hz");
+        calibrationSpin->setValue(calibration_);
+        auto* calibrationLabel=new QLabel;
+        calibrationLabel->setBuddy(calibrationSpin);
+        form->addRow(calibrationLabel,calibrationSpin);
         auto* buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);layout->addWidget(buttons);
-        const auto translate=[dialog,channelLabel,refreshChannels,minLabel,maxLabel,hint,buttons] {
+        const auto translate=[dialog,channelLabel,refreshChannels,minLabel,maxLabel,calibrationLabel,hint,buttons] {
             dialog->setWindowTitle(uiText("Hang","Audio"));channelLabel->setText(uiText("Bemeneti csatorna","Input channel"));refreshChannels();minLabel->setText(uiText("Minimum jelszint","Minimum input level"));maxLabel->setText(uiText("Maximum jelszint jelzése","High-level warning"));
+            calibrationLabel->setText(uiText("A4 referencia (alap: 440 Hz)","A4 reference (default: 440 Hz)"));
             hint->setText(uiText("A csatornaválasztás azonnal mentődik. Válaszd azt a csatornát, ahová a gitárt csatlakoztattad. A jelszintküszöbök önmagukban nem garantálják a mérés pontosságát.","The input channel is saved immediately. Choose the channel connected to your guitar. Input level limits alone do not guarantee pitch accuracy."));
             buttons->button(QDialogButtonBox::Ok)->setText(uiText("Mentés","Save"));buttons->button(QDialogButtonBox::Cancel)->setText(uiText("Mégse","Cancel"));
         };
         connect(&UiLanguage::instance(),&UiLanguage::changed,dialog,translate);translate();
         connect(buttons,&QDialogButtonBox::rejected,dialog,&QDialog::close);
-        connect(buttons,&QDialogButtonBox::accepted,dialog,[this,dialog,minSpin,maxSpin] {
+        connect(buttons,&QDialogButtonBox::accepted,dialog,[this,dialog,minSpin,maxSpin,calibrationSpin] {
             minimumLevelDb_=minSpin->value();warningPeakDb_=maxSpin->value();capture_.setMinimumLevelDb(minimumLevelDb_);capture_.setWarningPeakDb(warningPeakDb_);levelMeter_->setLimits(minimumLevelDb_,warningPeakDb_);
-            if(!preview_){QSettings s;s.setValue("input/minRmsDb",minimumLevelDb_);s.setValue("input/warningPeakDb",warningPeakDb_);}
+            calibration_=calibrationSpin->value();
+            pitchScale_->setPreset(selected_,calibration_);
+            handlePitch(detectedHz_,1);
+            if(!preview_){QSettings s;s.setValue("input/minRmsDb",minimumLevelDb_);s.setValue("input/warningPeakDb",warningPeakDb_);s.setValue("tuning/a4Hz",calibration_);}
             dialog->close();
         });
     }
-    UiScale::instance().prepare(dialog,audio?QSize(620,360):QSize(560,320),!preview_);dialog->show();return dialog;
+    UiScale::instance().prepare(dialog,audio?QSize(620,420):QSize(560,320),!preview_);dialog->show();return dialog;
 }
 
 void MainWindow::chooseInputChannel(int channel) {
